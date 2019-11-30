@@ -1,6 +1,6 @@
 const config = require("config");
 const mongoose = require("mongoose");
-const usersRoute = require("./routes/user.route");
+const usersRoute = require("./routes/users.route");
 const express = require("express");
 const app = express();
 
@@ -13,7 +13,7 @@ if (!config.get("myprivatekey")) {
 
 //connect to mongodb
 mongoose
-  .connect("mongodb://localhost/nodejsauth", { useNewUrlParser: true })
+  .connect("mongodb://localhost/United_Way_App", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB..."))
   .catch(err => console.error("Could not connect to MongoDB..."));
 

@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 
   //find an existing user
   let user = await User.findOne({ email: req.body.email });
-  if (user) return res.status(400).send("User already registered.");
+  if (user) return res.status(400).send("User already registered with that email address.");
 
   user = new User({
     name: req.body.name,
@@ -28,11 +28,14 @@ router.post("/", async (req, res) => {
   user.password = await bcrypt.hash(user.password, 10);
   await user.save();
 
+  // Future: Modify to encrypted token
+  // Future: Add Accress, Admin Rights, ect
   const token = user.generateAuthToken();
   res.header("x-auth-token", token).send({
     _id: user._id,
     name: user.name,
-    email: user.email
+    email: user.email,
+    password: user.password
   });
 });
 
