@@ -1,3 +1,5 @@
+// This is our custom middleware that will be used to check if there is an existing and valid JWT present in the request headers. This is how we will be identifying the user.
+
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
