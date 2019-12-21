@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
     fullName: req.body.fullName,
     addressOne: req.body.addressOne,
     addressTwo: req.body.addressTwo,
+    phone: req.body.phone,
     city: req.body.city,
     state: req.body.state,
     zip: req.body.zip,
@@ -37,7 +38,6 @@ router.post("/", async (req, res) => {
 
   // Hash password
   //  ++ Add Salt
-  user.password = await bcrypt.hash(user.password, 10);
   console.log('Registered User: ' + user);
 
   await user.save();

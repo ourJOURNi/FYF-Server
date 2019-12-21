@@ -1,7 +1,7 @@
-var User        = require('../models/user');
+var User        = require('../models/user.model');
 var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt  = require('passport-jwt').ExtractJwt;
-var config      = require('../config/config');
+var config      = require('../config/default.json');
 
 var opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50
     },
+    phone: {
+      type: String,
+      minlength: 10,
+      maxlength: 10
+    },
     city: {
       type: String,
       minlength: 3,
@@ -73,8 +78,7 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: 6,
-      maxlength: 120
+      minlength: 6
     }
   });
 
@@ -92,27 +96,21 @@ UserSchema.pre('save', function(next){
       if (err) return next(err);
 
       user.password = hash;
+      this.password = user.password;
       console.log('Password Hashed');
-      console.log(hash);
+      console.log(user.password);
       next();
     })
   })
 })
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  console.log('password: ' + this.password);
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch)  {
-    console.log('Passwords Match: ' + isMatch);
-    if (err) {
-      console.log('There has been an Error');
-    } else if (!isMatch) {
-      console.log('Passwords do NOT match');
-    } else {
-      console.log('Passwords match');
-    }
-    // console.log('entered password: ' + candidatePassword);
-    // if (err) return cb(err);
-    // cb(null, isMatch);
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    // console.log('Password: ' + candidatePassword);
+    // console.log('Hashed Password: ' + this.password);
+    // console.log('Passwords Match: ' + isMatch);
+    if (err) return cb(err);
+    cb(null, isMatch);
   })
 }
 
