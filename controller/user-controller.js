@@ -27,10 +27,11 @@ exports.registerUser = (req, res) => {
             if (err) {
                 return res.status(400).json({ 'msg': err });
             }
-            return res.status(201).json(user);
+            return res.status(200).json(user);
         });
     });
 };
+
 
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {

@@ -1,7 +1,6 @@
-const express = require("express");
+const express           = require("express");
 const router = express.Router();
 var userController  = require('../controller/user-controller');
-var passport	    = require('passport');
 
 router.get('/', (req, res) => { res.send('Hello!')});
 
