@@ -20,9 +20,19 @@ exports.sendEmailApplication = (req, res) => {
 //  configuration for email details
  const mailOptions = {
   from: 'eddielacrosse2@gmail.com', // sender address
-  to: 'eddielacrosse2@gmail.com', // list of receivers
-  subject: `United Way User ${user.fullName} Has Applied for your Job`,
-  html: `<p>${user.fullName} has applied for the job </p>`
+  to: `${user.jobCompanyEmail}`, // list of receivers
+  subject: `United Way User ${user.fullName} Has Applied for your Position of ${user.jobTitle}`,
+  html: `
+  <p>${user.fullName} has applied for the job of ${user.jobTitle} </p>
+  <p>Age ${user.dob}</p>
+  <p>Gender ${user.gender}</p>
+  <p>Address ${user.addressOne}, ${user.addressOne},${user.city}, ${user.state}, ${user.zip}</p>
+  <p>School ${user.school}</p>
+  <p>Grade ${user.grade}</p>
+  <p>Email ${user.email}</p>
+  <p>Profile Picture: ${user.profilePicture}</p>
+  <p>Resume ${user.resume}</p>
+  `
 };
 
  transporter.sendMail(mailOptions, function (err, info) {
