@@ -43,5 +43,5 @@ exports.sendEmailApplication = (req, res) => {
 });
 
   console.log('Applied for Job');
-  res.end('Applied for Job').status(200);
+  res.json('Applied for Job').status(200);
 }
