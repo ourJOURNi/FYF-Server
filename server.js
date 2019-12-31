@@ -11,6 +11,7 @@ const signupRoute       = require("./routes/signup.route");
 const loginCredentialsRoute = require("./routes/login-credentials");
 const userRoute      = require("./routes/user.route");
 const photoRoute        = require("./routes/photo.route");
+const jobRoute        = require("./routes/job.route");
 
 // Admin Routes
 const adminLoginRoute  = require("./routes/admin/login.route");
@@ -43,18 +44,14 @@ passport.use(passportMiddleware);
 
 app.use(cors());
 app.use(express.json());
-  // Landing page
 app.use("/api/", landingRoute);
-  // Signup page
+// Signup
 app.use("/api/login-credentials", loginCredentialsRoute);
-// API for saving users
 app.use("/api/signup", signupRoute);
-// API Profile Page
 app.use("/api/home/user", userRoute);
-// API Profile Page
 // app.use("/api/home/jobs", profileRoute);
-// API for uploading an image
 app.use("/api/photo", photoRoute);
+app.use("/api/job", jobRoute);
 
 // Admin 
 app.use("/api/admin/", adminLoginRoute);
