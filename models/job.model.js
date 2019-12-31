@@ -9,6 +9,10 @@ const JobSchema = new mongoose.Schema({
     type: String,
     maxlength: 80
   },
+  companyEmail: {
+    type: String,
+    maxlength: 80
+  },
   summary: {
     type: String,
     maxlength: 100

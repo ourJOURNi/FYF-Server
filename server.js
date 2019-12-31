@@ -9,13 +9,13 @@ const cors              = require('cors');
 const landingRoute      = require("./routes/landing.route");
 const signupRoute       = require("./routes/signup.route");
 const loginCredentialsRoute = require("./routes/login-credentials");
-const profileRoute      = require("./routes/profile.route");
+const userRoute      = require("./routes/user.route");
 const photoRoute        = require("./routes/photo.route");
 
 // Admin Routes
-const jobsRoute        = require("./routes/admin/jobs.route");
 const adminLoginRoute  = require("./routes/admin/login.route");
-
+const jobsRoute        = require("./routes/admin/jobs.route");
+const studentsRoute  = require("./routes/admin/students.route");
 
 // use config module to get the privatekey, if no private key set, end the application
 if (!config.get("jwtSecret")) {
@@ -50,14 +50,16 @@ app.use("/api/login-credentials", loginCredentialsRoute);
 // API for saving users
 app.use("/api/signup", signupRoute);
 // API Profile Page
-app.use("/api/home/profile", profileRoute);
+app.use("/api/home/user", userRoute);
+// API Profile Page
+// app.use("/api/home/jobs", profileRoute);
 // API for uploading an image
 app.use("/api/photo", photoRoute);
 
-// Admin Login
+// Admin 
 app.use("/api/admin/", adminLoginRoute);
-// Admin Jobs
 app.use("/api/admin/jobs", jobsRoute);
+app.use("/api/admin/students", studentsRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

@@ -11,8 +11,8 @@ exports.getJobs = (req, res) => {
 
 exports.addJob = (req, res) => {
 
-  if ( !req.body.title || !req.body.companyName || !req.body.summary || !req.body.fullJobDescription || !req.body.rateOfPay ) {
-    return res.status(400).send('Please enter a title, company name, summary, full job description, and rate of pay. You are missing one or more fields.');
+  if ( !req.body.title || !req.body.companyName || !req.body.companyEmail || !req.body.summary || !req.body.fullJobDescription || !req.body.rateOfPay ) {
+    return res.status(400).send('Please enter a title, company name, company email, summary, full job description, rate of pay, and date created. You are missing one or more fields.');
   }
 
   let newJob = Job(req.body);
@@ -26,12 +26,30 @@ exports.addJob = (req, res) => {
   })
 }
 
-exports.deleteJob = (req, res) => {
-  console.log('Deleting Job');
+exports.updateJob = (req, res) => {
+  if ( !req.body.title || !req.body.companyName || !req.body.companyEmail || !req.body.summary || !req.body.fullJobDescription || !req.body.rateOfPay ) {
+    return res.status(400).send('Please enter a title, company name, company email, summary, full job description, rate of pay, and date created. You are missing one or more fields.');
+  }
 
-  Job.deleteOne( {_id: req.body._id}, (err) => {
+  let updatedJob = req.body;
+  let condition = { _id: req.body.id };
+
+  Job.updateOne(condition, updatedJob, (err, job) => {
+    if ( err ) {
+      return res.status(400).send('There was an error updating the job in the database: \n\n' + err);
+    }
+
+    console.log('Updated Job: ' + job);
+    return res.status(200).send(job);
+    }
+  )
+}
+
+exports.deleteJob = (req, res) => {
+
+  Job.findByIdAndDelete( req.params.id, (err) => {
     if (err) return err;
   } );
-  console.log(req.body._id + 'Job deleted');
-  res.status(200).send(req.body._id + 'Job deleted');
+  console.log(req.params.id + 'Job deleted');
+  res.status(200).json(req.params.id + 'Job deleted');
 }
