@@ -1,8 +1,6 @@
 const User = require('../models/user.model');
 const nodemailer = require('nodemailer');
 
-
-
 exports.sendEmailApplication = (req, res) => {
   var user = req.body
   console.log(user);

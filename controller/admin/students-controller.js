@@ -2,6 +2,7 @@
 const User = require('../../models/user.model');
 
 exports.getUsers = (req, res) => {
+
   User.find((err, users) => {
     if (err) {
       return res.status(400).json(err);
@@ -12,6 +13,21 @@ exports.getUsers = (req, res) => {
     }
 
     return res.send(users);
+  });
+}
+
+exports.findUser = (req, res) => {
+  console.log(req);
+  User.findOne( {email: req.body.email} ,(err, user) => {
+    if (err) {
+      return res.status(400).json(err);
+    }
+
+    if (!user) {
+      return res.status(400).json('There were no users with that email');
+    }
+
+    return res.send(user);
   });
 }
 
