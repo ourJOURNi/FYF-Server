@@ -10,6 +10,35 @@ const imageSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now }
 });
 
+let JobSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    maxlength: 80
+  },
+  companyName: {
+    type: String,
+    maxlength: 80
+  },
+  companyEmail: {
+    type: String,
+    maxlength: 80
+  },
+  summary: {
+    type: String,
+    maxlength: 100
+  },
+  fullJobDescription: {
+    type: String,
+    maxlength: 500
+  },
+  rateOfPay: {
+    type: Number
+  },
+  dateCreated: {
+    type: Date
+  }
+});
+
 // const resumeSchema = new mongoose.Schema({
 
 // });
@@ -86,7 +115,9 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: 6
-    }
+    },
+    favoriteJobs: [JobSchema],
+
   });
 
 // Called before save method on the model

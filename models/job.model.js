@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const JobSchema = new mongoose.Schema({
+let JobSchema = new mongoose.Schema({
   title: {
     type: String,
     maxlength: 80

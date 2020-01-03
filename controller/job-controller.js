@@ -1,6 +1,46 @@
 const User = require('../models/user.model');
 const nodemailer = require('nodemailer');
 
+exports.favoriteJob = (req, res) => {
+  // post it to users favoriteJobs array in User Model
+  User.findOneAndUpdate(
+    { email: req.body.userEmail },
+    { $push: { favoriteJobs: req.body }},
+    (err, user) => {
+
+    if (err) {
+      console.log('Error finding user in database');
+    }
+    if (!user) {
+      console.log('This user does not exist');
+    }
+    console.log('Favoriting Jobs');
+    res.status(200).send(user);
+  })
+
+}
+
+exports.unFavoriteJob = (req, res) => {
+
+  // find user
+  // pull from favoriteJobs if the requested job's _id matches an _id from the favoriteJobs array.
+   User.findOneAndUpdate(
+     { email: req.body.userEmail },
+     { $pull: { favoriteJobs: { _id: req.body._id }}  },
+     (err, user) => {
+
+      if (err) {
+        console.log('Error finding user in database');
+      }
+      if (!user) {
+        console.log('This user does not exist');
+      }
+      console.log('Unfavoriting Jobs');
+      res.status(200).send(user.favoriteJobs);
+     }
+   )
+}
+
 exports.sendEmailApplication = (req, res) => {
   var user = req.body
   console.log(user);
