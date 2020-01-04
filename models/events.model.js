@@ -13,18 +13,18 @@ let EventsSchema = new mongoose.Schema({
     type: String,
   },
   date: {
-    type: Date,
+    type: String,
   },
   description: {
     type: String,
     maxlength: 500
   },
   photo: {
-    type: Number
+    type: String
   },
   dateCreated: {
     type: Date
   }
 });
 
-module.exports = Job = mongoose.model('Event', EventsSchema);
+module.exports = Event = mongoose.model('Event', EventsSchema);

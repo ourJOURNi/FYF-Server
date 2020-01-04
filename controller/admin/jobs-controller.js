@@ -32,7 +32,7 @@ exports.updateJob = (req, res) => {
   }
 
   let updatedJob = req.body;
-  let condition = { _id: req.body.id };
+  let condition = { _id: req.body._id };
 
   Job.updateOne(condition, updatedJob, (err, job) => {
     if ( err ) {
@@ -47,9 +47,9 @@ exports.updateJob = (req, res) => {
 
 exports.deleteJob = (req, res) => {
 
-  Job.findByIdAndDelete( req.params.id, (err) => {
+  Job.findByIdAndDelete( req.params._id, (err) => {
     if (err) return err;
   } );
-  console.log(req.params.id + 'Job deleted');
-  res.status(200).json(req.params.id + 'Job deleted');
+  console.log(req.params._id + ' Job deleted');
+  res.status(200).json(req.params._id + ' Job deleted');
 }

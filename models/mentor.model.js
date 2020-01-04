@@ -19,24 +19,25 @@ let MentorSchema = new mongoose.Schema({
   },
   state: {
     type: String,
-    maxlength: 80
+    maxlength: 6
   },
   zip: {
     type: String,
-    maxlength: 80
+    maxlength: 6
   },
   phone: {
     type: String,
-    maxlength: 80
+    maxlength: 11
+  },
+  title: {
+    type: String,
   },
   description: {
     type: String,
-    maxlength: 100
   },
   photo: {
     type: String,
-    maxlength: 500
   }
 });
 
-module.exports = Job = mongoose.model('Mentor', MentorSchema);
+module.exports = Mentor = mongoose.model('Mentor', MentorSchema);
