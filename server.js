@@ -12,13 +12,15 @@ const loginCredentialsRoute = require("./routes/login-credentials");
 const userRoute      = require("./routes/user.route");
 const photoRoute        = require("./routes/photo.route");
 const jobRoute        = require("./routes/job.route");
+const eventRoute        = require("./routes/events.route");
+const mentorRoute        = require("./routes/mentors.route");
 
 // Admin Routes
 const adminLoginRoute  = require("./routes/admin/login.route");
-const jobsRoute        = require("./routes/admin/jobs.route");
-const studentsRoute  = require("./routes/admin/students.route");
-const mentorsRoute  = require("./routes/admin/mentor.route");
-const eventsRoute  = require("./routes/admin/events.route");
+const adminJobsRoute        = require("./routes/admin/jobs.route");
+const adminStudentsRoute  = require("./routes/admin/students.route");
+const adminMentorsRoute  = require("./routes/admin/mentor.route");
+const adminEventsRoute  = require("./routes/admin/events.route");
 
 // use config module to get the privatekey, if no private key set, end the application
 if (!config.get("jwtSecret")) {
@@ -54,13 +56,15 @@ app.use("/api/home/user", userRoute);
 // app.use("/api/home/jobs", profileRoute);
 app.use("/api/photo", photoRoute);
 app.use("/api/job", jobRoute);
+app.use("/api/mentors", mentorRoute);
+app.use("/api/events", eventRoute);
 
 // Admin
 app.use("/api/admin/", adminLoginRoute);
-app.use("/api/admin/jobs", jobsRoute);
-app.use("/api/admin/students", studentsRoute);
-app.use("/api/admin/mentors", mentorsRoute);
-app.use("/api/admin/events", eventsRoute);
+app.use("/api/admin/jobs", adminJobsRoute);
+app.use("/api/admin/students", adminStudentsRoute);
+app.use("/api/admin/mentors", adminMentorsRoute);
+app.use("/api/admin/events", adminEventsRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
