@@ -58,3 +58,12 @@ exports.loginUser = (req, res) => {
         });
     });
 };
+
+exports.forgotPassword = (req, res) => {
+    console.log('request');
+    console.log(req.body);
+
+    if ( !req.body.password || !req.body.newPassword) {
+        res.status(400).send('Please enter an old password and a new password')
+      }
+}

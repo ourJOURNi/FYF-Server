@@ -83,17 +83,14 @@ const UserSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     dob: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     school: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     grade: {
@@ -101,15 +98,16 @@ const UserSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50
     },
-    profilePicture: [imageSchema],
+    profilePicture: {
+      type: String,
+      maxlength: 50
+    },
     resume: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     email: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     password: {

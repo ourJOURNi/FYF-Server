@@ -41,18 +41,6 @@ router.post("/", async (req, res) => {
   console.log('Registered User: ' + user);
 
   await user.save();
-  await res.send('Posted to Database');
-
-  // Future: Modify to encrypted token
-  // Future: Add Accress, Admin Rights, ect
-  // const token = user.generateAuthToken();
-  // res.header("x-auth-token", token).send({
-  //   _id: user._id,
-  //   name: user.name,
-  //   email: user.email,
-  //   password: user.password,
-  //   hashedPassword: user.hashedPassword,
-  // }).status(200);
 });
 
 module.exports = router;
