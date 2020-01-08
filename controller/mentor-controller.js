@@ -20,14 +20,14 @@ exports.mentorMessage = (req, res) => {
           user: 'eddielacrosse2@gmail.com',
           pass: 'taliaferro2'
       },
-      debug: true, // show debug output
-      logger: true // log information in console
+      // debug: true, // show debug output
+      // logger: true // log information in console
   });
 
 //  configuration for email details
  const mailOptions = {
   from: 'eddielacrosse2@gmail.com', // sender address
-  to: `demekcoe@gmail.com`, // list of receivers
+  to: `${mentorMessage.mentorEmail}`, // list of receivers
   subject: `United Way User ${mentorMessage.studentName} sent you a message.`,
   html: `
   <p>${mentorMessage.studentName}'s information: </p>
