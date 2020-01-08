@@ -23,7 +23,7 @@ exports.getUserDetails = (req, res) => {
       return res.status(400).send({ 'msg': 'No user with that email' });
     } else
     {
-      console.log('This users details: ' + user)
+      // console.log('This users details: ' + user)
       return res.status(200).send(user);
     }
   })
