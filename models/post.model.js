@@ -22,9 +22,7 @@ const PostSchema = new mongoose.Schema({
   followers : {
     type: String
   },
-  comments: {
-    type: String
-  },
+  comments: [CommentSchema],
   post : {
     type: String,
     maxlength: 500

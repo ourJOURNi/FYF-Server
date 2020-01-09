@@ -1,5 +1,7 @@
 const Post = require('../models/post.model');
+const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
+const Comment = require('../models/comment.model');
 
 exports.getPosts = (req, res) => {
 
@@ -10,6 +12,9 @@ exports.getPosts = (req, res) => {
   })
 }
 
+// Adding a Post involves being added to the PostQueue first
+// Admin has access to PostQueue for verification
+// Admin sends verified posts to Post collection. 
 exports.addTextPost = (req, res) => {
 
   if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post) {
@@ -17,7 +22,7 @@ exports.addTextPost = (req, res) => {
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
 
-  let newPost = Post(req.body);
+  let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
     if (err) {
@@ -37,7 +42,7 @@ exports.addVideoPosts = (req, res) => {
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
 
-  let newPost = Post(req.body);
+  let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
     if (err) {
@@ -57,7 +62,7 @@ exports.addPhotoPosts = (req, res) => {
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
 
-  let newPost = Post(req.body);
+  let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
     if (err) {
@@ -120,8 +125,39 @@ exports.getComments = (req, res) => {
 }
 
 exports.comment = (req, res) => {
-  console.log('Commenting on this post');
-  res.status(200).json({message: 'Commenting on this post'});
+
+  // get post ID
+  let id = req.body._id;
+  let comment = {
+    date: Date.now(),
+    user: req.body.email,
+    comment: req.body.comment
+  }
+  let newComment = Comment(comment);
+
+  Post.findByIdAndUpdate( id, { $push: { comments: newComment  } }, (err, post) => {
+
+    if ( err ) return res.status(400).send(err);
+    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+
+    // insert comment inside Post
+    return res.status(200).json(post);
+  })
+}
+
+exports.deleteComment = (req, res) => {
+
+  // get post ID
+  let id = req.body._id;
+  let cid = req.body.cid;
+
+  Post.findByIdAndUpdate( id, { $pull: { comments: { _id: cid } } }  ,(err, post) => {
+
+    if ( err ) return res.status(400).send(err);
+    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+
+    return res.status(200).json(post);
+  })
 }
 
 exports.reportPost = (req, res) => {
