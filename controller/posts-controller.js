@@ -2,6 +2,7 @@ const Post = require('../models/post.model');
 const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
 const Comment = require('../models/comment.model');
+const ReportedComment = require('../models/reported-comment');
 
 exports.getPosts = (req, res) => {
 
@@ -179,16 +180,60 @@ exports.deleteComment = (req, res) => {
 }
 
 exports.reportComment = (req, res) => {
-  console.log('Reporting a post');
-  res.status(200).json({message: 'Reporting a post'});
+
+  req.body.date = Date.now();
+
+  if ( !req.body.commentID || !req.body.comment || !req.body.postID || !req.body.post || !req.body.userEmail || !req.body.userFullname || !req.body.reportedUserEmail|| !req.body.reportedUserName ) {
+    return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
+  }
+
+  let reportedComment = ReportedComment(req.body);
+  reportedComment.save( (err, comment ) => {
+
+    if ( err ) return res.status(400).json({message: 'There was an error saving reported comment to database', error: err})
+
+    return res.status(200).json(comment);
+  });
 }
 
 exports.likeComment = (req, res) => {
-  console.log('Liking a comment');
-  res.status(200).json({message: 'Liking a comment'});
+  // comment ID
+  if ( !req.body.postID || !req.body.commentID) return res.status(400).json({message: 'There is no comment ID or Post ID in request'})
+
+  let postID = req.body.postID;
+  let commentID = req.body.commentID;
+
+  Post.updateOne(
+    {
+        _id: postID,
+        'comments._id': commentID
+    },
+    { $inc: { 'comments.$.likes': 1 } },
+     (err, post) => {
+
+       if (err) return res.status(400).json(err)
+       if (!post) return res.status(400).json({message: 'There were no posts with that'})
+       res.status(200).json({ message: 'liked comment', post});
+  })
 }
 
 exports.unLikeComment = (req, res) => {
-  console.log('Unliking a comment');
-  res.status(200).json({message: 'Unliking a comment'});
+  // comment ID
+  if ( !req.body.postID || !req.body.commentID) return res.status(400).json({message: 'There is no comment ID or Post ID in request'})
+
+  let postID = req.body.postID;
+  let commentID = req.body.commentID;
+
+  Post.updateOne(
+    {
+        _id: postID,
+        'comments._id': commentID
+    },
+    { $inc: { 'comments.$.likes': -1 } },
+     (err, post) => {
+
+       if (err) return res.status(400).json(err)
+       if (!post) return res.status(400).json({message: 'There were no posts with that'})
+  res.status(200).json({ message: 'unliked comment', post});
+  })
 }
