@@ -39,6 +39,25 @@ let JobSchema = new mongoose.Schema({
   }
 });
 
+const PostSchema = new mongoose.Schema({
+  creator : {
+    type: String
+  },
+  date : {
+    type: String
+  },
+  followers : {
+    type: String
+  },
+  comments: {
+    type: String
+  },
+  post : {
+    type: String,
+    maxlength: 500
+  }
+})
+
 // const resumeSchema = new mongoose.Schema({
 
 // });
@@ -115,6 +134,7 @@ const UserSchema = new mongoose.Schema(
       minlength: 6
     },
     favoriteJobs: [JobSchema],
+    followedPost: [PostSchema],
 
   });
 
