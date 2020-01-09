@@ -6,7 +6,9 @@ const Comment = require('../models/comment.model');
 exports.getPosts = (req, res) => {
 
   Post.find( (err, posts) => {
-    if (err) return res.status(400).send('Error finding Posts');
+
+    if (err) return res.status(400).json({ message: 'Error finding Posts'});
+    if (!posts) return res.status(400).json({ message: 'There are no posts with that ID'});
     console.log('Getting all Posts');
     return res.status(200).json(posts);
   })
@@ -77,6 +79,10 @@ exports.addPhotoPosts = (req, res) => {
 
 exports.followPost = (req, res) => {
 
+  if (!req.body._id || !req.body.email) {
+    return res.status(400).json({message: 'Call needs a Post _id and an email to identify user'});
+  }
+
   // Get this Post's ID
   let id = req.body._id;
   let email = req.body.email;
@@ -98,6 +104,10 @@ exports.followPost = (req, res) => {
 }
 
 exports.unFollowPost = (req, res) => {
+
+  if (!req.body._id || !req.body.email) {
+    return res.status(400).json({message: 'Call needs a Post _id and an email to identify user'});
+  }
 
   // Get this Post's ID
   let id = req.body._id;
@@ -126,6 +136,10 @@ exports.getComments = (req, res) => {
 
 exports.comment = (req, res) => {
 
+  if (!req.body._id || !req.body.email || !req.body.comment ) {
+    return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
+  }
+
   // get post ID
   let id = req.body._id;
   let comment = {
@@ -147,6 +161,10 @@ exports.comment = (req, res) => {
 
 exports.deleteComment = (req, res) => {
 
+  if (!req.body._id || !req.body.cid) {
+    return res.status(400).json({message: 'Call needs a Post _id and a comments _id , cid'});
+  }
+
   // get post ID
   let id = req.body._id;
   let cid = req.body.cid;
@@ -160,7 +178,7 @@ exports.deleteComment = (req, res) => {
   })
 }
 
-exports.reportPost = (req, res) => {
+exports.reportComment = (req, res) => {
   console.log('Reporting a post');
   res.status(200).json({message: 'Reporting a post'});
 }

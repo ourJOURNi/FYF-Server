@@ -17,7 +17,7 @@ router.get('/get-comments', postController.getComments)
 router.post('/comment', postController.comment)
 router.post('/delete-comment', postController.deleteComment)
 
-router.post('/report', postController.reportPost)
+router.post('/report', postController.reportComment)
 
 router.post('/like-comment', postController.likeComment)
 router.post('/unlike-comment', postController.unLikeComment)
