@@ -64,8 +64,6 @@ exports.verifyNo = (req, res) => {
 }
 
 exports.getFollowers = (req, res) => {
-  //  get post id
-  //  get followers
 
   if ( !req.body._id ) {
     return res.status(400).json({message: 'Request needs a post _id'})
@@ -80,6 +78,41 @@ exports.getFollowers = (req, res) => {
       let followers = post.followers;
       console.log(`Followers of post ${id}: \n` + followers);
       return res.status(200).json({message: `Post ID ${id}'s followers: ` ,followers});
+    }
+  )
+
+}
+
+// Get comments for given Post
+exports.getComments = (req, res) => {
+
+  if ( !req.body._id ) {
+    return res.status(400).json({message: 'Request needs a post _id'})
+  }
+
+  let id = req.body._id;
+  Post.findById(
+    id,
+    ( err, post ) => {
+
+      if ( err ) return res.status(400).json(err);
+      let comments = post.comments;
+      console.log(`Comments of post ${id}: \n` + comments);
+      return res.status(200).json({message: `Post ID ${id}'s comments: ` ,comments});
+    }
+  )
+
+}
+
+// Get comments for given Post
+exports.getReportedComments = (req, res) => {
+  ReportedComment.find(
+    ( err, reportedComments ) => {
+
+      if ( err ) return res.status(400).json(err);
+
+      console.log(`Reported Comments: \n` + reportedComments);
+      return res.status(200).json({message: `Reported Comments` ,reportedComments});
     }
   )
 

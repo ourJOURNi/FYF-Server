@@ -10,8 +10,8 @@ router.post('/verify-yes', postController.verifyYes)
 router.post('/verify-no', postController.verifyNo)
 
 router.post('/followers', postController.getFollowers)
-// router.get('/comment', postController.getComments)
-// router.get('/reported-comments', postController.getReportedComments)
+router.get('/comments', postController.getComments)
+router.get('/reported-comments', postController.getReportedComments)
 
 
 // router.delete('/delete-post', postController.deletePost)
