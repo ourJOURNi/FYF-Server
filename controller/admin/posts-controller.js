@@ -64,5 +64,26 @@ exports.verifyNo = (req, res) => {
 }
 
 exports.getFollowers = (req, res) => {
-  
+  //  get post id
+  //  get followers
+
+  if ( !req.body._id ) {
+    return res.status(400).json({message: 'Request needs a post _id'})
+  }
+
+  let id = req.body._id;
+  Post.findById(
+    id,
+    ( err, post ) => {
+
+      if ( err ) return res.status(400).json(err);
+      let followers = post.followers;
+      console.log(`Followers of post ${id}: \n` + followers);
+      return res.status(200).json({message: `Post ID ${id}'s followers: ` ,followers});
+    }
+  )
+
 }
+
+
+

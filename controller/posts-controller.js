@@ -149,6 +149,7 @@ exports.getComments = (req, res) => {
   res.status(200).json({message: 'Getting all Comments for this post'});
 }
 
+
 exports.comment = (req, res) => {
 
   if (!req.body._id || !req.body.email || !req.body.comment ) {
