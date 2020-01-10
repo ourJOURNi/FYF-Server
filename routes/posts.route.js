@@ -9,9 +9,11 @@ router.get('/', postController.getPosts)
 router.post('/add-text-post', postController.addTextPost)
 router.post('/add-video-post', postController.addVideoPosts)
 router.post('/add-photo-post', postController.addPhotoPosts)
+// router.delete('/', postController.deletePost)
 
 router.post('/follow', postController.followPost)
 router.post('/unfollow', postController.unFollowPost)
+// router.get('/get-followers', postController.getFollowers)
 
 router.get('/get-comments', postController.getComments)
 router.post('/comment', postController.comment)

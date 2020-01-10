@@ -1,5 +1,22 @@
 const mongoose = require('mongoose');
 
+const CommentSchema = new mongoose.Schema({
+  date : {
+    type: String
+  },
+  user : {
+    type: String
+  },
+  comment : {
+    type: String
+  },
+  likes : {
+    type: Number,
+    default: 0
+  }
+})
+
+
 const PostQueueSchema = new mongoose.Schema({
   creator : {
     type: String
@@ -7,6 +24,10 @@ const PostQueueSchema = new mongoose.Schema({
   date : {
     type: Date
   },
+  followers : {
+    type: String
+  },
+  comments: [CommentSchema],
   post : {
     type: String,
     maxlength: 500

@@ -16,7 +16,7 @@ const CommentSchema = new mongoose.Schema({
   }
 })
 
-const PostSchema = new mongoose.Schema({
+const UnverifiedPostSchema = new mongoose.Schema({
   creator : {
     type: String
   },
@@ -24,13 +24,9 @@ const PostSchema = new mongoose.Schema({
     type: String
   },
   followers : {
-    type: Array,
-    default: []
+    type: String
   },
-  comments: {
-    type: [CommentSchema],
-    default: []
-},
+  comments: [CommentSchema],
   post : {
     type: String,
     maxlength: 500
@@ -39,4 +35,4 @@ const PostSchema = new mongoose.Schema({
 
 
 
-module.exports = Post = mongoose.model('Post', PostSchema);
+module.exports = UnverifedPost = mongoose.model('Unverifed Post', UnverifiedPostSchema);

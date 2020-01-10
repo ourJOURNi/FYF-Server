@@ -3,6 +3,8 @@ const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
 const Comment = require('../models/comment.model');
 const ReportedComment = require('../models/reported-comment');
+const mongoose          = require("mongoose");
+
 
 exports.getPosts = (req, res) => {
 
@@ -25,6 +27,9 @@ exports.addTextPost = (req, res) => {
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
 
+  // Add Current Date to Post
+  req.body.date = Date.now()
+
   let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
@@ -44,6 +49,9 @@ exports.addVideoPosts = (req, res) => {
     console.log('Please enter a creator, date, followers, comments, and post');
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
+
+  // Add Current Date to Post
+  req.body.date = Date.now()
 
   let newPost = PostQueue(req.body);
 
@@ -65,6 +73,9 @@ exports.addPhotoPosts = (req, res) => {
     return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
   }
 
+  // Add Current Date to Post
+  req.body.date = Date.now()
+
   let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
@@ -85,10 +96,13 @@ exports.followPost = (req, res) => {
   }
 
   // Get this Post's ID
-  let id = req.body._id;
+  let id = mongoose.Types.ObjectId(req.body._id);
   let email = req.body.email;
 
-  Post.findById(id, (err, post) => {
+  Post.findByIdAndUpdate(
+    id,
+    { $push: { followers: email } },
+    (err, post) => {
 
     if (err) return res.status(400).json(err);
 
@@ -96,7 +110,7 @@ exports.followPost = (req, res) => {
     User.findOneAndUpdate(
       { email },
       { $push: { followedPost: post}},
-       (err, user) => {
+      (err, user) => {
 
       if (err) return res.status(400).json(err);
       res.status(200).json(user);
@@ -181,11 +195,12 @@ exports.deleteComment = (req, res) => {
 
 exports.reportComment = (req, res) => {
 
-  req.body.date = Date.now();
-
   if ( !req.body.commentID || !req.body.comment || !req.body.postID || !req.body.post || !req.body.userEmail || !req.body.userFullname || !req.body.reportedUserEmail|| !req.body.reportedUserName ) {
     return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
   }
+
+  // Add Current Date to Post
+  req.body.date = Date.now()
 
   let reportedComment = ReportedComment(req.body);
   reportedComment.save( (err, comment ) => {

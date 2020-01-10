@@ -3,4 +3,20 @@ const router = express.Router();
 
 var postController  = require('../../controller/admin/posts-controller');
 
+router.get('/', postController.getPosts)
+router.get('/verify', postController.getPostsToBeVerified)
+
+router.post('/verify-yes', postController.verifyYes)
+router.post('/verify-no', postController.verifyNo)
+
+// router.post('follow', postController.follow);
+// router.get('/followers', postController.getFollowers)
+// router.get('/comment', postController.getComments)
+// router.get('/reported-comments', postController.getReportedComments)
+
+
+// router.delete('/delete-post', postController.deletePost)
+// router.delete('/delete-comment', postController.deleteComment)
+
+
 module.exports = router;
