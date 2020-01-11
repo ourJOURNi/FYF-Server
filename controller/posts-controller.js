@@ -19,12 +19,12 @@ exports.getPosts = (req, res) => {
 
 // Adding a Post involves being added to the PostQueue first
 // Admin has access to PostQueue for verification
-// Admin sends verified posts to Post collection. 
+// Admin sends verified posts to Post collection.
 exports.addTextPost = (req, res) => {
 
-  if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post) {
-    console.log('Please enter a creator, date, followers, comments, and post');
-    return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.post) {
+    console.log('Please enter a creator name, creator email, and a post');
+    return res.status(200).json({message: 'Please enter a creator name, creator email, and a post'});
   }
 
   // Add Current Date to Post
@@ -45,9 +45,9 @@ exports.addTextPost = (req, res) => {
 
 exports.addVideoPosts = (req, res) => {
 
-  if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post) {
-    console.log('Please enter a creator, date, followers, comments, and post');
-    return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.post) {
+    console.log('Please enter a creator name, creator email, and a post');
+    return res.status(200).json({message: 'Please enter a creator name, creator email, and a post'});
   }
 
   // Add Current Date to Post
@@ -68,9 +68,9 @@ exports.addVideoPosts = (req, res) => {
 
 exports.addPhotoPosts = (req, res) => {
 
-  if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post) {
-    console.log('Please enter a creator, date, followers, comments, and post');
-    return res.status(200).json({message: 'Please enter a post creator, date, followers, comments, and post'});
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.post) {
+    console.log('Please enter a creator name, creator email, and a post');
+    return res.status(200).json({message: 'Please enter a creator name, creator email, and a post'});
   }
 
   // Add Current Date to Post

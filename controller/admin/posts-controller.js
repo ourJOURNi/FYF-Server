@@ -83,7 +83,6 @@ exports.getFollowers = (req, res) => {
 
 }
 
-// Get comments for given Post
 exports.getComments = (req, res) => {
 
   if ( !req.body._id ) {
@@ -104,7 +103,6 @@ exports.getComments = (req, res) => {
 
 }
 
-// Get comments for given Post
 exports.getReportedComments = (req, res) => {
   ReportedComment.find(
     ( err, reportedComments ) => {
@@ -118,7 +116,6 @@ exports.getReportedComments = (req, res) => {
 
 }
 
-// Get comments for given Post
 exports.deletePost = (req, res) => {
 
   let id = req.body._id;
@@ -136,7 +133,28 @@ exports.deletePost = (req, res) => {
       return res.status(200).json({message: `Posted Delete` ,post});
     }
   )
+}
 
+exports.deleteComment = (req, res) => {
+
+  let id = req.body._id;
+  let comment_id = req.body.commentID
+
+  if ( !id || !comment_id ) {
+    return res.status(400).json({message: 'Request needs a post _id and commentID'})
+  }
+
+  Post.findByIdAndDelete(
+    id,
+    { $pull : { comments: commentID } },
+    ( err, post ) => {
+      if ( err ) return res.status(400).json(err);
+
+      let comments = post.comments;
+      console.log(`Deleted Post: \n` + comments);
+      return res.status(200).json({message: `Posted Deleted` ,comments});
+    }
+  )
 }
 
 

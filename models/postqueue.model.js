@@ -22,12 +22,16 @@ const PostQueueSchema = new mongoose.Schema({
     type: String
   },
   date : {
-    type: Date
-  },
-  followers : {
     type: String
   },
-  comments: [CommentSchema],
+  followers : {
+    type: Array,
+    default: []
+  },
+  comments: {
+    type: [CommentSchema],
+    default: []
+},
   post : {
     type: String,
     maxlength: 500

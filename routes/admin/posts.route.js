@@ -15,7 +15,7 @@ router.get('/reported-comments', postController.getReportedComments)
 
 
 router.delete('/delete-post', postController.deletePost)
-// router.delete('/delete-comment', postController.deleteComment)
+router.delete('/delete-comment', postController.deleteComment)
 
 
 module.exports = router;
