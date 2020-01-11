@@ -17,16 +17,23 @@ const CommentSchema = new mongoose.Schema({
 })
 
 const UnverifiedPostSchema = new mongoose.Schema({
-  creator : {
+  creatorName : {
+    type: String
+  },
+  creatorEmail : {
     type: String
   },
   date : {
-    type: String
+    type: Date
   },
   followers : {
-    type: String
+    type: Array,
+    default: []
   },
-  comments: [CommentSchema],
+  comments: {
+    type: [CommentSchema],
+    default: []
+},
   post : {
     type: String,
     maxlength: 500

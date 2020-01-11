@@ -29,7 +29,6 @@ exports.addTextPost = (req, res) => {
 
   // Add Current Date to Post
   req.body.date = Date.now()
-
   let newPost = PostQueue(req.body);
 
   newPost.save( (err, post) => {
@@ -37,8 +36,7 @@ exports.addTextPost = (req, res) => {
       return res.status(400).json({message: 'There was an error saving the post to the database: \n\n' + err});
     }
 
-
-    console.log('Added Text Post: ' + post);
+    console.log('Added Text Post to PostQueue: ' + post);
     return res.status(200).json(post);
   })
 }
@@ -61,7 +59,7 @@ exports.addVideoPosts = (req, res) => {
     }
 
 
-    console.log('Added Video Post: ' + post);
+    console.log('Added Video Post to PostQueue: ' + post);
     return res.status(200).json(post);
   })
 }
@@ -84,7 +82,7 @@ exports.addPhotoPosts = (req, res) => {
     }
 
 
-    console.log('Added Photo Post: ' + post);
+    console.log('Added Photo Post to PostQueue: ' + post);
     return res.status(200).json(post);
   })
 }
@@ -165,13 +163,13 @@ exports.comment = (req, res) => {
   }
   let newComment = Comment(comment);
 
-  Post.findByIdAndUpdate( id, { $push: { comments: newComment  } }, (err, post) => {
+  Post.findByIdAndUpdate( id, { $push: { comments: newComment  } }, (err, comment) => {
 
     if ( err ) return res.status(400).send(err);
-    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+    if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });
 
     // insert comment inside Post
-    return res.status(200).json(post);
+    return res.status(200).json(comment);
   })
 }
 

@@ -30,36 +30,62 @@ exports.getPostsToBeVerified = (req, res) => {
 // Posts go to Post Collection
 exports.verifyYes = (req, res) => {
 
-  if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post ) {
-    return res.status(400).json({message: "There was either no creator, date, followers, comments, or no post included in request body "});
+  let id = req.body._id;
+
+  if ( !id ) {
+    return res.status(400).json({message: "There was no id in request body"});
   }
 
-  let post = Post(req.body);
+  PostQueue.findByIdAndDelete( {_id: id}, (err, post) => {
 
-  post.save( (err, post) => {
+    if ( err ) return res.status(400).json(err)
+    let postInfo = {
+      creatorName: post.creatorName,
+      creatorEmail: post.creatorEmail,
+      post: post.post,
+      date: post.date
+    }
+
+    let verifiedPost = Post(postInfo);
+
+    verifiedPost.save( (err, post) => {
 
     if (err)  {
       return res.status(400).json(err)
     };
     return res.status(200).json({message: 'Post has been verified and added to Post Collection' , post});
   })
+  })
 }
 
 // Posts go to Unverified Post Collection
 exports.verifyNo = (req, res) => {
 
-  if (!req.body.creator || !req.body.date || !req.body.followers || !req.body.comments || !req.body.post ) {
-    return res.status(400).json({message: "There was either no creator, date, followers, comments, or no post included in request body "});
+  let id = req.body._id;
+
+  if ( !id ) {
+    return res.status(400).json({message: "There was no id in request body"});
   }
 
-  let unverifiedPost = UnverifiedPost(req.body);
+  PostQueue.findByIdAndDelete( {_id: id}, (err, post) => {
 
-  unverifiedPost.save( (err, post) => {
+    if ( err ) return res.status(400).json(err)
+    let postInfo = {
+      creatorName: post.creatorName,
+      creatorEmail: post.creatorEmail,
+      post: post.post,
+      date: post.date
+    }
+
+    let unverifiedPost = UnverifiedPost(postInfo);
+
+    unverifiedPost.save( (err, post) => {
 
     if (err)  {
       return res.status(400).json(err)
     };
-    return res.status(200).json({message: 'Post has not been verified and added to Unverified Post Collection' , post});
+    return res.status(200).json({message: 'Post has not been verified and will be added to Unverified Post Collection' , post});
+  })
   })
 }
 
@@ -144,15 +170,14 @@ exports.deleteComment = (req, res) => {
     return res.status(400).json({message: 'Request needs a post _id and commentID'})
   }
 
-  Post.findByIdAndDelete(
+  Post.findById(
     id,
-    { $pull : { comments: commentID } },
+    { $pull : { comments: comment_id } },
     ( err, post ) => {
       if ( err ) return res.status(400).json(err);
 
-      let comments = post.comments;
-      console.log(`Deleted Post: \n` + comments);
-      return res.status(200).json({message: `Posted Deleted` ,comments});
+      console.log(`Deleted Post: \n`);
+      return res.status(200).json({message: `Posted Deleted` ,post});
     }
   )
 }

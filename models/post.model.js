@@ -17,11 +17,14 @@ const CommentSchema = new mongoose.Schema({
 })
 
 const PostSchema = new mongoose.Schema({
-  creator : {
+  creatorName : {
+    type: String
+  },
+  creatorEmail : {
     type: String
   },
   date : {
-    type: String
+    type: Date
   },
   followers : {
     type: Array,
