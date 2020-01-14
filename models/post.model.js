@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const CommentSchema = new mongoose.Schema({
   date : {
-    type: String
+    type: Date
   },
   userFullName : {
     type: String
