@@ -17,6 +17,20 @@ exports.getPosts = (req, res) => {
   })
 }
 
+exports.getPostInfo = (req, res) => {
+
+  let id = req.body._id;
+
+  if (!id ) return res.status(400).json({message: 'The request body did not have an _id'})
+  Post.findById( id, (err, post) => {
+
+    if (err) return res.status(400).json({ message: 'Error finding Post'});
+    if (!post) return res.status(400).json({ message: 'There are no posts with that ID'});
+    console.log('Getting all Posts');
+    return res.status(200).json(post);
+  })
+}
+
 // Adding a Post involves being added to the PostQueue first
 // Admin has access to PostQueue for verification
 // Admin sends verified posts to Post collection.
@@ -142,28 +156,31 @@ exports.unFollowPost = (req, res) => {
   })
 }
 
-exports.getComments = (req, res) => {
-  console.log('Getting all Comments for this post');
-  res.status(200).json({message: 'Getting all Comments for this post'});
-}
-
-
 exports.comment = (req, res) => {
 
-  if (!req.body._id || !req.body.email || !req.body.comment ) {
-    return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
-  }
+  console.log(req.body);
+  let postID = req.body.postID;
+  let userEmail = req.body.userEmail;
+  let userFullName = req.body.userFullName;
+  let comment = req.body.comment;
+  let date = req.body.date;
+
+  // if (!postID || !userEmail || !userFullName ||  !comment || !date  ) {
+  //   console.log('figure it out');
+  //   return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
+  // }
 
   // get post ID
-  let id = req.body._id;
-  let comment = {
-    date: Date.now(),
-    user: req.body.email,
-    comment: req.body.comment
+  let commentDetails = {
+    date,
+    userEmail,
+    comment,
+    userFullName,
+    userEmail
   }
-  let newComment = Comment(comment);
+  let newComment = Comment(commentDetails);
 
-  Post.findByIdAndUpdate( id, { $push: { comments: newComment  } }, (err, comment) => {
+  Post.findByIdAndUpdate( postID, { $push: { comments: newComment  } }, (err, comment) => {
 
     if ( err ) return res.status(400).send(err);
     if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });

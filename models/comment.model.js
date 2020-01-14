@@ -4,7 +4,10 @@ const CommentSchema = new mongoose.Schema({
   date : {
     type: String
   },
-  user : {
+  userFullName : {
+    type: String
+  },
+  userEmail : {
     type: String
   },
   comment : {
