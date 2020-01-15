@@ -14,7 +14,7 @@ router.get('/comments', postController.getComments)
 router.get('/reported-comments', postController.getReportedComments)
 
 
-router.delete('/delete-post', postController.deletePost)
+router.delete('/delete-post/:_id', postController.deletePost)
 router.delete('/delete-comment', postController.deleteComment)
 
 

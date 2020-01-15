@@ -144,21 +144,11 @@ exports.getReportedComments = (req, res) => {
 
 exports.deletePost = (req, res) => {
 
-  let id = req.body._id;
-
-  if ( !id ) {
-    return res.status(400).json({message: 'Request needs a post _id'})
-  }
-
-  Post.findByIdAndDelete(
-    id,
-    ( err, post ) => {
-      if ( err ) return res.status(400).json(err);
-
-      console.log(`Deleted Post: \n` + post);
-      return res.status(200).json({message: `Posted Delete` ,post});
-    }
-  )
+  Post.findByIdAndDelete( req.params._id, (err) => {
+    if (err) return err;
+  } );
+  console.log(req.params._id + ' Post deleted');
+  res.status(200).json(req.params._id + ' Post deleted');
 }
 
 exports.deleteComment = (req, res) => {
