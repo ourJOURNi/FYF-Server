@@ -96,14 +96,27 @@ exports.getFollowers = (req, res) => {
   }
 
   let id = req.body._id;
+
   Post.findById(
     id,
     ( err, post ) => {
 
       if ( err ) return res.status(400).json(err);
       let followers = post.followers;
-      console.log(`Followers of post ${id}: \n` + followers);
-      return res.status(200).json({message: `Post ID ${id}'s followers: ` ,followers});
+      followersWithInfo = [];
+
+      for (let i = 0; i < followers.length; i++) {
+
+        User.findOne({email: followers[i]}, (err, follower) => {
+
+          if(err) return res.send(400).json(err);
+          if(!followers) return res.send(400).json({message: 'There was no user with that ID'});
+
+        })
+
+        followersWithInfo.push();
+      }
+      return res.status(200).json({Post_ID: `${id}` , followersWithInfo});
     }
   )
 
@@ -130,6 +143,7 @@ exports.getComments = (req, res) => {
 }
 
 exports.getReportedComments = (req, res) => {
+
   ReportedComment.find(
     ( err, reportedComments ) => {
 
@@ -153,21 +167,42 @@ exports.deletePost = (req, res) => {
 
 exports.deleteComment = (req, res) => {
 
-  let id = req.body._id;
-  let comment_id = req.body.commentID
-
-  if ( !id || !comment_id ) {
-    return res.status(400).json({message: 'Request needs a post _id and commentID'})
-  }
-
-  Post.findById(
-    id,
-    { $pull : { comments: comment_id } },
+  Post.updateOne(
+    { _id: req.params._id },
+    { $pull : { comments: { _id: req.params.commentID} } },
     ( err, post ) => {
       if ( err ) return res.status(400).json(err);
 
-      console.log(`Deleted Post: \n`);
-      return res.status(200).json({message: `Posted Deleted` ,post});
+      console.log(`Deleted Comment: \n`);
+      return res.status(200).json({message: `Comment Deleted` ,post});
+    }
+  )
+}
+
+exports.deleteReportedComment = (req, res) => {
+
+  Post.updateOne(
+
+    { _id: req.params._id },
+    { $pull : { comments: { _id: req.params.commentID} } },
+    ( err, post ) => {
+      if ( err ) return res.status(400).json(err);
+
+      console.log(`Deleted Reported Comment from Post: \n`);
+      console.log(post);
+
+      ReportedComment.findOneAndDelete(
+        { commentID: req.params.commentID},
+        (err, reportedComment) => {
+
+          if ( err ) return res.status(400).json(err);
+
+          console.log(`Deleted Reported Comment from Post, and from Report Comments Collection: \n`);
+          console.log(reportedComment);
+
+          return res.status(200).json({message: `Deleted Reported Comment from Post, and from Report Comments Collection` ,reportedComment});
+        }
+      )
     }
   )
 }
