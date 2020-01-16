@@ -5,9 +5,10 @@ var postController  = require('../../controller/admin/posts-controller');
 
 router.get('/', postController.getPosts)
 router.get('/verify', postController.getPostsToBeVerified)
+router.get('/denied', postController.getDenied)
 
-router.post('/verify-yes', postController.verifyYes)
-router.post('/verify-no', postController.verifyNo)
+router.post('/verify', postController.verify)
+router.post('/deny', postController.deny)
 
 router.post('/followers', postController.getFollowers)
 router.get('/comments', postController.getComments)

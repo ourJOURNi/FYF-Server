@@ -1,5 +1,5 @@
 const Post = require('../../models/post.model');
-const UnverifiedPost = require('../../models/unverified-post.model');
+const DeniedPost = require('../../models/denied-post.model');
 const PostQueue = require('../../models/postqueue.model');
 const User = require('../../models/user.model');
 const Comment = require('../../models/comment.model');
@@ -28,7 +28,7 @@ exports.getPostsToBeVerified = (req, res) => {
 }
 
 // Posts go to Post Collection
-exports.verifyYes = (req, res) => {
+exports.verify = (req, res) => {
 
   let id = req.body._id;
 
@@ -58,8 +58,19 @@ exports.verifyYes = (req, res) => {
   })
 }
 
+exports.getDenied = (req, res) => {
+
+  DeniedPost.find( (err, posts) => {
+
+    if (err) return res.status(400).json({ message: 'Error finding Posts'});
+    if (!posts) return res.status(400).json({ message: 'There are no posts with that ID'});
+    console.log('Getting all Posts');
+    return res.status(200).json(posts);
+  })
+}
+
 // Posts go to Unverified Post Collection
-exports.verifyNo = (req, res) => {
+exports.deny = (req, res) => {
 
   let id = req.body._id;
 
@@ -77,7 +88,7 @@ exports.verifyNo = (req, res) => {
       date: post.date
     }
 
-    let unverifiedPost = UnverifiedPost(postInfo);
+    let unverifiedPost = DeniedPost(postInfo);
 
     unverifiedPost.save( (err, post) => {
 
