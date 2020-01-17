@@ -2,7 +2,7 @@ const Post = require('../models/post.model');
 const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
 const Comment = require('../models/comment.model');
-const ReportedComment = require('../models/reported-comment');
+const ReportedComment = require('../models/reported-comment.model');
 const mongoose          = require("mongoose");
 
 

@@ -3,7 +3,9 @@ const DeniedPost = require('../../models/denied-post.model');
 const PostQueue = require('../../models/postqueue.model');
 const User = require('../../models/user.model');
 const Comment = require('../../models/comment.model');
-const ReportedComment = require('../../models/reported-comment');
+const ReportedComment = require('../../models/reported-comment.model');
+const ReportedCommentArchive = require('../../models/reported-comment-archieve.model');
+
 
 exports.getPosts = (req, res) => {
 
@@ -164,7 +166,44 @@ exports.getReportedComments = (req, res) => {
       return res.status(200).json({message: `Reported Comments` ,reportedComments});
     }
   )
+}
 
+exports.getReportedArchive = (req, res) => {
+
+  ReportedCommentArchive.find(
+    ( err, reportedComments ) => {
+
+      if ( err ) return res.status(400).json(err);
+      if ( !reportedComments ) {
+
+        console.log('There were no comments in the reported Archives section. Please check Reported Comments Archive Collection');
+
+        res.status(400).json({message: 'There were no comments in the reported Archives section. Please check Reported Comments Archive Collection'})
+      }
+
+      console.log(`Reported Comments Archive: \n` + reportedComments);
+      return res.status(200).json({message: `Reported Comments Archive` ,reportedComments});
+    }
+  )
+}
+
+exports.goToReportedArchive = (req, res) => {
+
+  ReportedCommentArchive.find(
+    ( err, reportedComments ) => {
+
+      if ( err ) return res.status(400).json(err);
+      if ( !reportedComments ) {
+
+        console.log('There were no comments in the reported Archives section. Please check Reported Comments Archive Collection');
+
+        res.status(400).json({message: 'There were no comments in the reported Archives section. Please check Reported Comments Archive Collection'})
+      }
+
+      console.log(`Reported Comments Archive: \n` + reportedComments);
+      return res.status(200).json({message: `Reported Comments Archive` ,reportedComments});
+    }
+  )
 }
 
 exports.deletePost = (req, res) => {
@@ -198,6 +237,7 @@ exports.deleteReportedComment = (req, res) => {
     { $pull : { comments: { _id: req.params.commentID} } },
     ( err, post ) => {
       if ( err ) return res.status(400).json(err);
+      if ( !post ) return res.status(400).json({message: 'There was no post with that ID in the Posts section'});
 
       console.log(`Deleted Reported Comment from Post: \n`);
       console.log(post);
@@ -207,11 +247,29 @@ exports.deleteReportedComment = (req, res) => {
         (err, reportedComment) => {
 
           if ( err ) return res.status(400).json(err);
+          if ( !reportedComment ) return res.status(400).json({ message: 'There was no comment with that ID in the Reported Comments Collection'});
 
-          console.log(`Deleted Reported Comment from Post, and from Report Comments Collection: \n`);
           console.log(reportedComment);
 
-          return res.status(200).json({message: `Deleted Reported Comment from Post, and from Report Comments Collection` ,reportedComment});
+          let finalReportedComment = ReportedCommentArchive({
+            postID: reportedComment.postID,
+            post: reportedComment.post,
+            commentID: reportedComment.commentID,
+            comment: reportedComment.comment,
+            userEmail: reportedComment.userEmail,
+            userFullname: reportedComment.userFullname,
+            reportedUserEmail: reportedComment.reportedUserEmail,
+            reportedUserName: reportedComment.reportedUserName,
+          })
+
+          finalReportedComment.save((err, comment) => {
+
+            if (err) return res.status(400).json(err)
+
+            console.log('Reported Comment has been saved to Archives AFTER it was deleted from Reported Comments Collection');
+
+            return res.status(200).json({message: `Deleted Reported Comment from Post, and from Report Comments Collection` ,reportedComment});
+          })
         }
       )
     }
