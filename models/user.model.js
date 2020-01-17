@@ -133,10 +133,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: 6
     },
-    favoriteJobs: [JobSchema],
-    followedPost: [PostSchema],
-
-  });
+    favoriteJobs: {
+      type: Array,
+      default: []
+    },
+    followedPost: {
+    type: Array,
+    default: []
+  }
+})
 
 // Called before save method on the model
 // Turns user entered password into a hash value, with salt

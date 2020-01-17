@@ -14,7 +14,7 @@ router.post('/add-photo-post', postController.addPhotoPosts)
 
 router.post('/follow', postController.followPost)
 router.post('/unfollow', postController.unFollowPost)
-// router.get('/get-followers', postController.getFollowers)
+router.post('/get-followed-posts', postController.getFollowedPosts)
 
 router.post('/comment', postController.comment)
 router.post('/delete-comment', postController.deleteComment)

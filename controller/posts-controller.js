@@ -102,13 +102,14 @@ exports.addPhotoPosts = (req, res) => {
 }
 
 exports.followPost = (req, res) => {
+  console.log('Attemping to follow post from API')
 
   if (!req.body._id || !req.body.email) {
     return res.status(400).json({message: 'Call needs a Post _id and an email to identify user'});
   }
 
   // Get this Post's ID
-  let id = mongoose.Types.ObjectId(req.body._id);
+  let id = req.body._id;
   let email = req.body.email;
 
   Post.findByIdAndUpdate(
@@ -117,14 +118,17 @@ exports.followPost = (req, res) => {
     (err, post) => {
 
     if (err) return res.status(400).json(err);
+    console.log('Adding follower ...');
 
     // Add this Posts's ID to this User's followedPost property
     User.findOneAndUpdate(
-      { email },
-      { $push: { followedPost: post}},
+      email,
+      { $push: { followedPost: { postID: id} } },
       (err, user) => {
 
       if (err) return res.status(400).json(err);
+      console.log('Updating Users Followed Posts');
+      console.log(user.followedPost);
       res.status(200).json(user);
     })
   })
@@ -140,19 +144,54 @@ exports.unFollowPost = (req, res) => {
   let id = req.body._id;
   let email = req.body.email;
 
-  Post.findById(id, (err, post) => {
+  Post.findByIdAndUpdate(
+    id,
+    { $pull: { followers: email } }, (err, post) => {
 
     if (err) return res.status(400).json(err);
 
     // Delete Post from User's followedPost property
     User.findOneAndUpdate(
       { email },
-      { $pull: { followedPost: { _id: id } } },
+      { $pull: { followedPost: { postID: id } } },
        (err, user) => {
 
       if (err) return res.status(400).json(err);
       res.status(200).json(user);
     })
+  })
+}
+
+exports.getFollowedPosts = (req, res) => {
+  console.log(req.body)
+  let userId = req.body._id;
+
+  User.findById(
+    userId,
+    (err, user) => {
+
+    if (err) return res.status(400).json({ message: 'Error finding User'});
+    if (!user) return res.status(400).json({ message: 'There are no Users with that ID'});
+
+    this.followedPost = Object.values(user.followedPost);
+    let finalFollowedPost = []
+    for (let i = 0; i < this.followedPost.length; i++) {
+      finalFollowedPost.push(this.followedPost[i].postID)
+    }
+
+    console.log(finalFollowedPost)
+
+    Post.find({
+      _id : { $in: finalFollowedPost}},
+      (err, posts) => {
+
+        if (err) return res.status(400).json(err);
+        if (!posts) return res.status(400).json({ message: 'There are no Posts with those IDs'});
+
+        return res.status(200).send(posts);
+
+      }
+    )
   })
 }
 
