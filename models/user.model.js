@@ -67,17 +67,14 @@ const UserSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     addressOne: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     addressTwo: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     phone: {
@@ -87,12 +84,10 @@ const UserSchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     state: {
       type: String,
-      minlength: 2,
       maxlength: 50
     },
     zip: {
@@ -102,19 +97,15 @@ const UserSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      maxlength: 50
     },
     dob: {
       type: String,
-      maxlength: 50
     },
     school: {
       type: String,
-      maxlength: 50
     },
     grade: {
       type: String,
-      minlength: 3,
       maxlength: 50
     },
     profilePicture: {
