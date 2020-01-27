@@ -9,21 +9,32 @@ let EventsSchema = new mongoose.Schema({
     type: String,
     maxlength: 250
   },
-  location: {
+  addressOne: {
+    type: String,
+  },
+  addressTwo: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  zip: {
     type: String,
   },
   date: {
-    type: String,
-  },
-  description: {
-    type: String,
-    maxlength: 500
-  },
-  photo: {
-    type: String
+    type: Date,
   },
   dateCreated: {
     type: Date
+  },
+  description: {
+    type: String,
+  },
+  photo: {
+    type: String
   }
 });
 
