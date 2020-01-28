@@ -35,7 +35,12 @@ let EventsSchema = new mongoose.Schema({
   },
   photo: {
     type: String
+  },
+  going: {
+    type: Array,
+    default: []
   }
+
 });
 
 module.exports = Event = mongoose.model('Event', EventsSchema);

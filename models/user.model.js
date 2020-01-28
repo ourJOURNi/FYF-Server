@@ -3,63 +3,97 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 
-const imageSchema = new mongoose.Schema({
-  filename: String,
-  originalName: String,
-  desc: String,
-  created: { type: Date, default: Date.now }
-});
+// const imageSchema = new mongoose.Schema({
+//   filename: String,
+//   originalName: String,
+//   desc: String,
+//   created: { type: Date, default: Date.now }
+// });
 
-let JobSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    maxlength: 80
-  },
-  companyName: {
-    type: String,
-    maxlength: 80
-  },
-  companyEmail: {
-    type: String,
-    maxlength: 80
-  },
-  summary: {
-    type: String,
-    maxlength: 100
-  },
-  fullJobDescription: {
-    type: String,
-    maxlength: 500
-  },
-  rateOfPay: {
-    type: Number
-  },
-  dateCreated: {
-    type: Date
-  }
-});
+// let JobSchema = new mongoose.Schema({
+//   title: {
+//     type: String,
+//     maxlength: 80
+//   },
+//   companyName: {
+//     type: String,
+//     maxlength: 80
+//   },
+//   companyEmail: {
+//     type: String,
+//     maxlength: 80
+//   },
+//   summary: {
+//     type: String,
+//     maxlength: 100
+//   },
+//   fullJobDescription: {
+//     type: String,
+//     maxlength: 500
+//   },
+//   rateOfPay: {
+//     type: Number
+//   },
+//   dateCreated: {
+//     type: Date
+//   }
+// });
 
-const PostSchema = new mongoose.Schema({
-  creator : {
-    type: String
-  },
-  date : {
-    type: String
-  },
-  followers : {
-    type: String
-  },
-  comments: {
-    type: String
-  },
-  post : {
-    type: String,
-    maxlength: 500
-  }
-})
+// const PostSchema = new mongoose.Schema({
+//   creator : {
+//     type: String
+//   },
+//   date : {
+//     type: String
+//   },
+//   followers : {
+//     type: String
+//   },
+//   comments: {
+//     type: String
+//   },
+//   post : {
+//     type: String,
+//     maxlength: 500
+//   }
+// })
 
-// const resumeSchema = new mongoose.Schema({
-
+// let EventsSchema = new mongoose.Schema({
+//   title: {
+//     type: String,
+//     maxlength: 250
+//   },
+//   organizer: {
+//     type: String,
+//     maxlength: 250
+//   },
+//   addressOne: {
+//     type: String,
+//   },
+//   addressTwo: {
+//     type: String,
+//   },
+//   city: {
+//     type: String,
+//   },
+//   state: {
+//     type: String,
+//   },
+//   zip: {
+//     type: String,
+//   },
+//   date: {
+//     type: Date,
+//   },
+//   dateCreated: {
+//     type: Date
+//   },
+//   description: {
+//     type: String,
+//   },
+//   photo: {
+//     type: String
+//   }
 // });
 
 
@@ -131,7 +165,11 @@ const UserSchema = new mongoose.Schema(
     followedPost: {
     type: Array,
     default: []
-  }
+  },
+    eventsGoing: {
+    type: Array,
+    default: []
+}
 })
 
 // Called before save method on the model
