@@ -9,6 +9,7 @@ exports.getEvents = (req, res) => {
 }
 
 exports.getEventsGoing = (req, res) => {
+  console.log(req.body);
   let id = req.body.id;
 
   User.findById(
