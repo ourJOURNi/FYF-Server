@@ -17,8 +17,8 @@ router.post('/',  (req, res) => {
           user: 'eddielacrosse2@gmail.com',
           pass: 'taliaferro2'
       },
-      // debug: true, // show debug output
-      // logger: true // log information in console
+      debug: true, // show debug output
+      logger: true // log information in console
   });
 
 //  configuration for email details

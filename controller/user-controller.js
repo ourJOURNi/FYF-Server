@@ -32,6 +32,18 @@ exports.registerUser = (req, res) => {
     });
 };
 
+exports.savePicture = (req, res) => {
+
+    if (!req.body) {
+        console.log('No response body');
+        return res.send('Not fournd')
+      }
+
+    if (req.body) {
+        console.log(req.body)
+    }
+}
+
 
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {

@@ -1,28 +1,31 @@
 const config            = require("config");
 const mongoose          = require("mongoose");
 const express           = require("express");
+const multer            = require("multer");
+const fs                = require("fs");
 const passport 	        = require('passport');
 const app               = express();
 const cors              = require('cors');
 
 // User Routes
-const landingRoute      = require("./routes/landing.route");
-const signupRoute       = require("./routes/signup.route");
-const loginCredentialsRoute = require("./routes/login-credentials");
-const userRoute      = require("./routes/user.route");
-const photoRoute        = require("./routes/photo.route");
-const jobRoute        = require("./routes/job.route");
-const eventRoute        = require("./routes/events.route");
-const mentorRoute        = require("./routes/mentors.route");
-const postRoute        = require("./routes/posts.route");
+const landingRoute           = require("./routes/landing.route");
+const signupRoute            = require("./routes/signup.route");
+const loginCredentialsRoute  = require("./routes/login-credentials");
+const userRoute              = require("./routes/user.route");
+const photoRoute             = require("./routes/photo.route");
+const jobRoute               = require("./routes/job.route");
+const eventRoute             = require("./routes/events.route");
+const mentorRoute            = require("./routes/mentors.route");
+const postRoute              = require("./routes/posts.route");
 
 // Admin Routes
-const adminLoginRoute  = require("./routes/admin/login.route");
-const adminJobsRoute        = require("./routes/admin/jobs.route");
-const adminStudentsRoute  = require("./routes/admin/students.route");
-const adminMentorsRoute  = require("./routes/admin/mentor.route");
-const adminEventsRoute  = require("./routes/admin/events.route");
-const adminPostsRoute  = require("./routes/admin/posts.route");
+const adminLoginRoute        = require("./routes/admin/login.route");
+const adminJobsRoute         = require("./routes/admin/jobs.route");
+const adminStudentsRoute     = require("./routes/admin/students.route");
+const adminMentorsRoute      = require("./routes/admin/mentor.route");
+const adminEventsRoute       = require("./routes/admin/events.route");
+const adminPostsRoute        = require("./routes/admin/posts.route");
+
 
 // use config module to get the privatekey, if no private key set, end the application
 if (!config.get("jwtSecret")) {
@@ -50,6 +53,7 @@ passport.use(passportMiddleware);
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/api/", landingRoute);
 // Signup
 app.use("/api/login-credentials", loginCredentialsRoute);

@@ -143,8 +143,8 @@ const UserSchema = new mongoose.Schema(
       maxlength: 50
     },
     profilePicture: {
+      data: Buffer,
       type: String,
-      maxlength: 50
     },
     resume: {
       type: String,
