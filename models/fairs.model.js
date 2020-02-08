@@ -92,28 +92,44 @@ let FairSchema = new mongoose.Schema({
   date: {
     type: Date,
   },
-  description: {
+  time: {
     type: Date,
   },
   address: {
-    type: Date,
+    type: String,
   },
   city: {
-    type: Date,
+    type: String,
   },
   state: {
+    type: String,
+  },
+  zip: {
+    type: String
+  },
+  dateCreated: {
     type: Date,
   },
+  summary: {
+    type: String,
+    maxlength: 250
+  },
+  description: {
+    type: String,
+  },
   students: {
-    type: StudentSchema,
+    type: [StudentSchema],
+    default: []
   },
   partners: {
-    type: PartnerSchema,
+    type: [PartnerSchema],
+    default: []
   },
   chaperones: {
-    type: ChaperoneSchema,
+    type: [ChaperoneSchema],
+    default: []
   }
 })
 
 
-module.exports = Event = mongoose.model('Event', EventsSchema);
+module.exports = Fair = mongoose.model('Fair', FairSchema);

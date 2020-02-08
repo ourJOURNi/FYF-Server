@@ -17,6 +17,7 @@ const jobRoute               = require("./routes/job.route");
 const eventRoute             = require("./routes/events.route");
 const mentorRoute            = require("./routes/mentors.route");
 const postRoute              = require("./routes/posts.route");
+const fairsRoute             = require("./routes/fairs.route");
 
 // Admin Routes
 const adminLoginRoute        = require("./routes/admin/login.route");
@@ -25,6 +26,7 @@ const adminStudentsRoute     = require("./routes/admin/students.route");
 const adminMentorsRoute      = require("./routes/admin/mentor.route");
 const adminEventsRoute       = require("./routes/admin/events.route");
 const adminPostsRoute        = require("./routes/admin/posts.route");
+const adminFairsRoute        = require("./routes/admin/fairs.route");
 
 
 // use config module to get the privatekey, if no private key set, end the application
@@ -65,6 +67,7 @@ app.use("/api/job", jobRoute);
 app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/fairs", fairsRoute);
 
 // Admin
 app.use("/api/admin/", adminLoginRoute);
@@ -73,6 +76,7 @@ app.use("/api/admin/students", adminStudentsRoute);
 app.use("/api/admin/mentors", adminMentorsRoute);
 app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
+app.use("/api/admin/fairs", adminFairsRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
