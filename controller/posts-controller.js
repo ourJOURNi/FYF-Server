@@ -3,7 +3,6 @@ const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
 const Comment = require('../models/comment.model');
 const ReportedComment = require('../models/reported-comment.model');
-const mongoose          = require("mongoose");
 
 
 exports.getPosts = (req, res) => {
@@ -219,7 +218,11 @@ exports.comment = (req, res) => {
   }
   let newComment = Comment(commentDetails);
 
-  Post.findByIdAndUpdate( postID, { $push: { comments: newComment  } }, (err, comment) => {
+  Post.findByIdAndUpdate(
+    postID,
+    { $push:
+      { comments: newComment  } },
+      (err, comment) => {
 
     if ( err ) return res.status(400).send(err);
     if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });

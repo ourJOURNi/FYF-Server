@@ -1,89 +1,5 @@
 const mongoose = require('mongoose');
 
-let StudentSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    maxlength: 100
-  },
-  school: {
-    type: String,
-    maxlength: 100
-  },
-  grade: {
-    type: String,
-    maxlength: 100
-  },
-  phone: {
-    type: String,
-    maxlength: 100
-  },
-  email: {
-    type: String,
-    maxlength: 100
-  },
-  gender: {
-    type: String,
-    maxlength: 100
-  },
-  lunch: {
-    type: String,
-    maxlength: 100
-  }
-})
-
-let ChaperoneSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    maxlength: 100
-  },
-  school: {
-    type: String,
-    maxlength: 100
-  },
-  email: {
-    type: String,
-    maxlength: 100
-  },
-  phone: {
-    type: String,
-  },
-  lunch: {
-    type: String,
-  }
-})
-
-let PartnerSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    maxlength: 100
-  },
-  email: {
-    type: String,
-    maxlength: 100
-  },
-  phone: {
-    type: String,
-    maxlength: 100
-  },
-  organization: {
-    type: String,
-    maxlength: 100
-  },
-  logo: {
-    type: String,
-    maxlength: 100
-  },
-  lunch: {
-    type: String,
-    maxlength: 100
-  },
-  additionalNames: {
-    type: String,
-    maxlength: 100
-  }
-
-})
-
 let FairSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -107,7 +23,7 @@ let FairSchema = new mongoose.Schema({
   zip: {
     type: String
   },
-  dateCreated: {
+  dateRegistered: {
     type: Date,
   },
   summary: {
@@ -118,15 +34,15 @@ let FairSchema = new mongoose.Schema({
     type: String,
   },
   students: {
-    type: [StudentSchema],
+    type: [],
     default: []
   },
   partners: {
-    type: [PartnerSchema],
+    type: Array,
     default: []
   },
   chaperones: {
-    type: [ChaperoneSchema],
+    type: Array,
     default: []
   }
 })
