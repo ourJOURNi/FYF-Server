@@ -19,7 +19,9 @@ exports.getFair = (req, res) => {
   console.log('Fairs Controller: ')
   console.log(id);
 
-  Fair.findById( id, (err, fair) => {
+  Fair.findById(
+    id,
+    (err, fair) => {
     if (err) return res.status(400).send('Error finding fair');
     return res.status(200).send(fair);
   })
@@ -39,8 +41,7 @@ exports.registerStudent = (req, res) => {
   questionTwo = req.body.questionTwo,
   questionThree = req.body.questionThree,
   questionFour = req.body.questionFour,
-  questionFive = req.body.questionFive,
-  dateRegistered = Date.now()
+  questionFive = req.body.questionFive
 
   let student = {
     name,
@@ -61,67 +62,93 @@ exports.registerStudent = (req, res) => {
 
   let fairStudent = FairStudent(student)
 
-  Fair.findOneAndUpdate(
-    {_id: id},
-    { $push:
-      { students: fairStudent} },
-    async (err, fair) => {
+  Fair.findById(
+    id,
+    (err, fair) => {
+    if (err) return res.status(400).send('Error finding fair');
 
-    if (err) return await res.status(400).send('Error finding fairs');
+    let fairStudents = Object.values(fair.students);
 
-    await console.log( fair);
+    console.log('student email');
+    console.log(student.email);
+    let studentFound = false;
 
-    fairDate = format(fair.date, 'MMMM dd, yyyy'),
-    fairTime = format(fair.date, 'hh:mm a')
+    // Saerch for any matching email addresses
+    for(let i = 0; i < fairStudents.length; i++) {
 
-    const studentMailOptions = {
-      from: 'eddielacrosse2@gmail.com', // sender address
-      to: `${email}`, // list of receivers
-      subject: `You have registered for ${fair.title}`,
-      html: `
-      <h3>Hi ${student.name}!<br>
-      You have registered as a Student for ${fair.title} on the date of ${student.dateRegistered} at ${student.timeRegistered}.</h3>
-      <br>
-
-      <h1>Fair Details</h1>
-      <h3 style="color: #999;"> Date: ${fairDate}</h3>
-      <h3 style="color: #999;"> Time: ${fairTime}</h3>
-      <p>${fair.summary}</p>
-      <p>Title: ${fair.title}</p>
-      <p>Address: ${fair.address}</p>
-      <p>City: ${fair.city}</p>
-      <p>State: ${fair.state}</p>
-      <p>Zip: ${fair.zip}</p>
-      <p>${fair.description}</p>
-
-      <h1 style="margin-top: 100px;">${student.name}'s Details</h1>
-      <p>Email: ${student.email}</p>
-      <p>School: ${student.school}</p>
-      <p>Phone: ${student.phone}</p>
-      <p>Gender: ${student.gender}</p>
-      <p>Lunch: ${student.lunch}</p>
-
-      <p>Email: ${student.email}</p>
-      <p>School: ${student.school}</p>
-      <p>Phone: ${student.phone}</p>
-      <p>Gender: ${student.gender}</p>
-      <p>Lunch: ${student.lunch}</p>
-
-      <hr>
-      <p>If you need to change any of this information, please send an email to [enter email here] </p>
-      `
+        // If User enters an email that has already been registered.
+        if ( fairStudents[i].email === student.email) {
+          console.log('A Student already has that email address')
+          // An Error Validation Message would go nice here. Toast? Alert?
+          return res.status(400).json('A Student already has that email address');
+        }
     }
 
-    await studentEmail.sendMail(studentMailOptions, function (err, info) {
-      if(err)
-        console.log(err)
-      else
-        console.log(info);
-    });
+    // Update Fair with Student if Email address is Valid
+    Fair.findOneAndUpdate(
+      {_id: id},
+      { $push:
+        { students: fairStudent} },
+      async (err, fair) => {
 
-    return await res.status(200).json(fair);
+      if (err) return await res.status(400).send('Error finding fairs');
+
+      // await console.log( fair);
+
+      fairDate = format(fair.date, 'MMMM dd, yyyy'),
+      fairTime = format(fair.date, 'hh:mm a')
+
+      const studentMailOptions = {
+        from: 'eddielacrosse2@gmail.com', // sender address
+        to: `${email}`, // list of receivers
+        subject: `You have registered for ${fair.title}`,
+        html: `
+        <h3>Hi ${student.name}!<br>
+        You have registered as a Student for ${fair.title} on the date of ${student.dateRegistered} at ${student.timeRegistered}.</h3>
+        <br>
+
+        <h1>Fair Details</h1>
+        <h3 style="color: #999;"> Date: ${fairDate}</h3>
+        <h3 style="color: #999;"> Time: ${fairTime}</h3>
+        <p>${fair.summary}</p>
+        <p>Title: ${fair.title}</p>
+        <p>Address: ${fair.address}</p>
+        <p>City: ${fair.city}</p>
+        <p>State: ${fair.state}</p>
+        <p>Zip: ${fair.zip}</p>
+        <p>${fair.description}</p>
+
+        <h1 style="margin-top: 100px;">${student.name}'s Details</h1>
+        <p>Email: ${student.email}</p>
+        <p>School: ${student.school}</p>
+        <p>Phone: ${student.phone}</p>
+        <p>Gender: ${student.gender}</p>
+        <p>Lunch: ${student.lunch}</p>
+
+        <p>Email: ${student.email}</p>
+        <p>School: ${student.school}</p>
+        <p>Phone: ${student.phone}</p>
+        <p>Gender: ${student.gender}</p>
+        <p>Lunch: ${student.lunch}</p>
+
+        <hr>
+        <p>If you need to change any of this information, please send an email to [enter email here] </p>
+        `
+      }
+
+      await studentEmail.sendMail(studentMailOptions, function (err, info) {
+        if(err)
+          console.log(err)
+        else
+          console.log(info);
+      });
+
+      return await res.status(200).json(fair);
+    })
   })
 }
+
+
 
 
 exports.registerChaperone = (req, res) => {
