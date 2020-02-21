@@ -44,6 +44,10 @@ let FairSchema = new mongoose.Schema({
   chaperones: {
     type: Array,
     default: []
+  },
+  agenda: {
+    type: Array,
+    default: []
   }
 })
 
