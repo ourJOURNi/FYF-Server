@@ -9,9 +9,6 @@ FairPartnerSchema = new mongoose.Schema({
     type: String,
     maxlength: 100
   },
-  logo: {
-    type: String,
-  },
   phone: {
     type: String,
   },

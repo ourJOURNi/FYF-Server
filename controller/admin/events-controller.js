@@ -54,7 +54,7 @@ exports.updateEvent = (req, res) => {
   let updatedEvent = req.body;
   let condition = { _id: req.body._id };
 
-  Event.updateOne(condition, {updatedEvent}, (err, event) => {
+  Event.updateOne(condition, updatedEvent, (err, event) => {
     if ( err ) {
       return res.status(400).send('There was an error updating the event in the database: \n\n' + err);
     }

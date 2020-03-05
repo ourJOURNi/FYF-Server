@@ -59,7 +59,10 @@ exports.updateFair = (req, res) => {
   let updatedJob = req.body;
   let condition = { _id: req.body._id };
 
-  Fair.updateOne(condition, {updatedJob}, (err, fair) => {
+  Fair.updateOne(
+    condition,
+    updatedJob,
+    (err, fair) => {
     if ( err ) {
       return res.status(400).send('There was an error updating the fair in the database: \n\n' + err);
     }

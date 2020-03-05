@@ -21,6 +21,9 @@ FairStudentSchema = new mongoose.Schema({
   lunch: {
     type: String,
   },
+  interests: {
+    type: String,
+  },
   questionOne: {
     type: String,
   },

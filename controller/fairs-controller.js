@@ -2,8 +2,54 @@ const Fair = require('../models/fairs.model');
 const FairStudent = require('../models/fair-student.model');
 const FairChaperone = require('../models/fair-chaperone.model');
 const FairPartner = require('../models/fair-partner.model');
+const FairVolunteer = require('../models/fair-volunteer.model');
 const nodemailer = require('nodemailer');
 const format = require('date-fns/format');
+
+
+// Email Logic
+
+// Set transport service which will send the emails
+var partnerEmail =  nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+        user: 'eddielacrosse2@gmail.com',
+        pass: 'taliaferro2'
+    },
+    // debug: true, // show debug output
+    // logger: true // log information in console
+});
+
+var studentEmail =  nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+        user: 'eddielacrosse2@gmail.com',
+        pass: 'taliaferro2'
+    },
+    // debug: true, // show debug output
+    // logger: true // log information in console
+});
+
+var chaperoneEmail =  nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+        user: 'eddielacrosse2@gmail.com',
+        pass: 'taliaferro2'
+    },
+    // debug: true, // show debug output
+    // logger: true // log information in console
+});
+
+var volunteerEmail =  nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+        user: 'eddielacrosse2@gmail.com',
+        pass: 'taliaferro2'
+    },
+    // debug: true, // show debug output
+    // logger: true // log information in console
+});
+//  configuration for email details
 
 
 exports.getFairs = (req, res) => {
@@ -37,6 +83,7 @@ exports.registerStudent = (req, res) => {
   phone = req.body.phone,
   gender = req.body.gender,
   lunch = req.body.lunch,
+  interests = req.body.interests,
   questionOne = req.body.questionOne,
   questionTwo = req.body.questionTwo,
   questionThree = req.body.questionThree,
@@ -89,9 +136,9 @@ exports.registerStudent = (req, res) => {
       {_id: id},
       { $push:
         { students: fairStudent} },
-      async (err, fair) => {
+       (err, fair) => {
 
-      if (err) return await res.status(400).send('Error finding fairs');
+      if (err) return res.status(400).send('Error finding fairs');
 
       // await console.log( fair);
 
@@ -136,20 +183,17 @@ exports.registerStudent = (req, res) => {
         `
       }
 
-      await studentEmail.sendMail(studentMailOptions, function (err, info) {
+       studentEmail.sendMail(studentMailOptions, function (err, info) {
         if(err)
           console.log(err)
         else
           console.log(info);
       });
 
-      return await res.status(200).json(fair);
+      return  res.status(200).json(fair);
     })
   })
 }
-
-
-
 
 exports.registerChaperone = (req, res) => {
   console.log(req.body);
@@ -222,7 +266,6 @@ exports.registerChaperone = (req, res) => {
   })
 
 }
-
 
 exports.registerPartner = (req, res) => {
 
@@ -298,47 +341,57 @@ exports.registerPartner = (req, res) => {
   })
 }
 
+exports.registerVolunteer = (req, res) => {
+
+  let id = req.body.id
+  let date = Date.now();
+
+  let volunteer = {
+    name: req.body.name,
+    email: req.body.email,
+    date: format(date, 'MMMM dd, yyyy')
+  }
+
+  let fairVolunteer = FairVolunteer(volunteer);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    { $push: { volunteers: fairVolunteer} },
+    async (err, fair) => {
+
+    if (err) return await res.status(400).send('Error finding volunteers');
+
+    if (!volunteer) return await res.status(400).send('There were no volunteers with that id');
+
+    await console.log(fair);
+
+
+    const volunteerMailOptions = {
+      from: 'eddielacrosse2@gmail.com', // sender address
+      to: `${volunteer.email}`, // list of receivers
+      subject: `You have started registering for ${fair.title} as a Volunteer.`,
+      html: `
+      <h3>Hi ${volunteer.name}!<br>
+
+      <p>Additional Message goes here</p>
+
+      <a href="www.google.com">Link goes here</a>
+      <br>
+      `
+    }
+
+    await volunteerEmail.sendMail(volunteerMailOptions, function (err, info) {
+      if(err)
+        console.log(err)
+      else
+        console.log(info);
+    });
+
+    return await res.status(200).json(fair);
+  }
+  )
 
 
 
 
-
-
-// Email Logic
-
-// Set transport service which will send the emails
-var partnerEmail =  nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-        user: 'eddielacrosse2@gmail.com',
-        pass: 'taliaferro2'
-    },
-    // debug: true, // show debug output
-    // logger: true // log information in console
-});
-
-var studentEmail =  nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-        user: 'eddielacrosse2@gmail.com',
-        pass: 'taliaferro2'
-    },
-    // debug: true, // show debug output
-    // logger: true // log information in console
-});
-
-var chaperoneEmail =  nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-        user: 'eddielacrosse2@gmail.com',
-        pass: 'taliaferro2'
-    },
-    // debug: true, // show debug output
-    // logger: true // log information in console
-});
-//  configuration for email details
-
-
-
-
-
+}

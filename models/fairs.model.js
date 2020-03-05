@@ -45,7 +45,31 @@ let FairSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  agenda: {
+  volunteers: {
+    type: Array,
+    default: []
+  },
+  studentAgenda: {
+    type: Array,
+    default: []
+  },
+  chaperoneAgenda: {
+    type: Array,
+    default: []
+  },
+  volunteerAgenda: {
+    type: Array,
+    default: []
+  },
+  partnerAgenda: {
+    type: Array,
+    default: []
+  },
+  partnerFAQ: {
+    type: Array,
+    default: []
+  },
+  volunteerFAQ: {
     type: Array,
     default: []
   }

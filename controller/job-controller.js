@@ -16,7 +16,7 @@ exports.favoriteJob = (req, res) => {
   // post it to users favoriteJobs array in User Model
   User.findOneAndUpdate(
     { email: req.body.userEmail },
-    { $push: { favoriteJobs: req.body }},
+    { $push: { favoriteJobs: req.body._id }},
     (err, user) => {
 
     if (err) {
@@ -33,11 +33,14 @@ exports.favoriteJob = (req, res) => {
 
 exports.unFavoriteJob = (req, res) => {
 
+  console.log('Unfavorite Request Object Id');
+  console.log(req.body._id);
+
   // find user
   // pull from favoriteJobs if the requested job's _id matches an _id from the favoriteJobs array.
    User.findOneAndUpdate(
      { email: req.body.userEmail },
-     { $pull: { favoriteJobs: { _id: req.body._id }}  },
+     { $pull: { favoriteJobs: req.body._id }  },
      (err, user) => {
 
       if (err) {
