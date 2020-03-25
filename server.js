@@ -42,7 +42,7 @@ mongoose
   .set('useFindAndModify', false)
 
   // 127.0.0.1 is local database
-  .connect("mongodb://127.0.0.1/United_Way_App", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect("mongodb://eddietal2:Et061792@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false", { useNewUrlParser: true, useUnifiedTopology: true })
 
   // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
   // mongodb://127.0.0.1/United_Way_App"
