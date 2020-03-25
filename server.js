@@ -65,7 +65,7 @@ app.use("/api/login-credentials", loginCredentialsRoute);
 app.use("/api/signup", signupRoute);
 app.use("/api/home/user", userRoute);
 // app.use("/api/home/jobs", profileRoute);
-app.use("/api/photo", photoRoute);
+// app.use("/api/photo", photoRoute);
 app.use("/api/job", jobRoute);
 app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
