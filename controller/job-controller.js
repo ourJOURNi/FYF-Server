@@ -1,7 +1,6 @@
 const User = require('../models/user.model');
 const nodemailer = require('nodemailer');
 
-exports.getJobs = () => {
   exports.getJobs = (req, res) => {
     console.log('Getting all Jobs');
 
@@ -10,6 +9,20 @@ exports.getJobs = () => {
       return res.send(jobs);
     });
   }
+
+
+exports.getFavorites = (req, res) => {
+  console.log('Getting all favorited Jobs');
+
+  userId = req.body.email;
+
+  User.findOne(
+    email,
+    (err, favs) => {
+      if (err) return res.status(400).send('Error finding jobs');
+      return res.send(favs);
+    }
+  )
 }
 
 exports.favoriteJob = (req, res) => {

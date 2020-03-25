@@ -44,6 +44,9 @@ mongoose
   // 127.0.0.1 is local database
   .connect("mongodb://127.0.0.1/United_Way_App", { useNewUrlParser: true, useUnifiedTopology: true })
 
+  // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
+  // mongodb://127.0.0.1/United_Way_App"
+
   .then(() => console.log("Connected to MongoDB..."))
 
   .catch(err => console.error("Could not connect to MongoDB..."));
@@ -77,6 +80,9 @@ app.use("/api/admin/mentors", adminMentorsRoute);
 app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
 app.use("/api/admin/fairs", adminFairsRoute);
+
+// console.log('Attempting to connect to Amazon Document DB');
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
