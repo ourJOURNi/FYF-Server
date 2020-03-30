@@ -36,8 +36,11 @@ if (!config.get("jwtSecret")) {
 }
 
 // config and connect to mongodb
+console.log('Attempting to connect to Amazon Document DB');
+
 mongoose
   // For DeprecationWarning:  collection.ensureIndex is deprecated.  Use createIndexes instead.
+
   .set('useCreateIndex', true)
   .set('useFindAndModify', false)
 
@@ -49,8 +52,8 @@ mongoose
 
   .then(() => console.log("Connected to MongoDB..."))
 
-  .catch(err => console.error("Could not connect to MongoDB..."));
-
+  .catch(err =>
+    console.error(err))
 // // Use the passport package in our application
 app.use(passport.initialize());
 var passportMiddleware = require('./middleware/passport');
@@ -81,8 +84,7 @@ app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
 app.use("/api/admin/fairs", adminFairsRoute);
 
-// console.log('Attempting to connect to Amazon Document DB');
 
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => console.log(`Listening on port ${port}...`));
