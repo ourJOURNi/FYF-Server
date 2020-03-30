@@ -44,6 +44,8 @@ mongoose
   .set('useCreateIndex', true)
   .set('useFindAndModify', false)
 
+  // This is a test
+
   // 127.0.0.1 is local database
   .connect("mongodb://eddietal2:Et061792@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false", { useNewUrlParser: true, useUnifiedTopology: true })
 
