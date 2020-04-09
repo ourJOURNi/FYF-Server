@@ -37,7 +37,7 @@ if (!config.get("jwtSecret")) {
 
 // config and connect to mongodb
 console.log('Attempting connection to Amazon Document DB...');
-console.log('Connecting via Mongoose --');
+console.log('Connecting via Mongoose to host: ' + env.dev.DB_HOST);
 
 mongoose
   // For DeprecationWarning:  collection.ensureIndex is deprecated.  Use createIndexes instead.
@@ -48,7 +48,7 @@ mongoose
   // This is a test
 
   // 127.0.0.1 is local database
-  .connect("mongodb://journi:Et061792@find-your-future.cluster-ct1amymfttlr.us-east-2.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(env.dev.DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
 
   // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
   // mongodb://127.0.0.1/United_Way_App"
