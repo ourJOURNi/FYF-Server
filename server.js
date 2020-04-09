@@ -36,7 +36,8 @@ if (!config.get("jwtSecret")) {
 }
 
 // config and connect to mongodb
-console.log('Attempting to connect to Amazon Document DB');
+console.log('Attempting connection to Amazon Document DB...');
+console.log('Connecting via Mongoose --');
 
 mongoose
   // For DeprecationWarning:  collection.ensureIndex is deprecated.  Use createIndexes instead.
@@ -47,7 +48,7 @@ mongoose
   // This is a test
 
   // 127.0.0.1 is local database
-  .connect("mongodb://eddietal2:Et061792@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect("mongodb://127.0.0.1/United_Way_App", { useNewUrlParser: true, useUnifiedTopology: true })
 
   // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
   // mongodb://127.0.0.1/United_Way_App"
@@ -86,7 +87,5 @@ app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
 app.use("/api/admin/fairs", adminFairsRoute);
 
-
-
-// const port = process.env.PORT || 3000;
-// app.listen(port, () => console.log(`Listening on port ${port}...`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
