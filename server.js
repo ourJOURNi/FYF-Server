@@ -36,8 +36,8 @@ if (!config.get("jwtSecret")) {
 }
 
 // config and connect to mongodb
-console.log('Attempting connection to Amazon Document DB...');
-console.log('Connecting via Mongoose to host: ' + process.env.DB_HOST);
+console.log('Attempting connection to Mongo Atlas...');
+console.log('Connecting via Mongoose to host: ');
 
 mongoose
   // For DeprecationWarning:  collection.ensureIndex is deprecated.  Use createIndexes instead.
@@ -48,7 +48,7 @@ mongoose
   // This is a test
 
   // 127.0.0.1 is local database
-  .connect(process.env.DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect("mongodb+srv://eddietal2:CORo4rdF2o9w6vYK@fyf-zi8ll.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
 
   // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
   // mongodb://127.0.0.1/United_Way_App"
