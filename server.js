@@ -45,9 +45,6 @@ mongoose
   .set('useCreateIndex', true)
   .set('useFindAndModify', false)
 
-  // This is a test
-
-  // 127.0.0.1 is local database
   .connect("mongodb+srv://eddietal2:CORo4rdF2o9w6vYK@fyf-zi8ll.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
 
   .then(() => console.log("Connected to MongoDB..."))
