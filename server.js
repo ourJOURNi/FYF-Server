@@ -50,9 +50,6 @@ mongoose
   // 127.0.0.1 is local database
   .connect("mongodb+srv://eddietal2:CORo4rdF2o9w6vYK@fyf-zi8ll.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
 
-  // mongodb://eddietal2:<insertYourPassword>@fyf-app.cluster-cwubsingroad.us-east-1.docdb.amazonaws.com:27017
-  // mongodb://127.0.0.1/United_Way_App"
-
   .then(() => console.log("Connected to MongoDB..."))
 
   .catch(err =>
@@ -87,5 +84,5 @@ app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
 app.use("/api/admin/fairs", adminFairsRoute);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
