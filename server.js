@@ -82,4 +82,7 @@ app.use("/api/admin/students", adminStudentsRoute);
 app.use("/api/admin/mentors", adminMentorsRoute);
 app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
-app.use("/api/admin/fairs", adminFairsRoute)
+app.use("/api/admin/fairs", adminFairsRoute);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}...`));
