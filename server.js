@@ -1,18 +1,19 @@
-const config            = require("config");
-const mongoose          = require("mongoose");
-const express           = require("express");
-const multer            = require("multer");
-const fs                = require("fs");
-const passport 	        = require('passport');
-const app               = express();
-const cors              = require('cors');
+const config                  = require("config");
+const mongoose                = require("mongoose");
+const express                 = require("express");
+const multer                  = require("multer");
+const fs                      = require("fs");
+const passport 	              = require('passport');
+const app                     = express();
+const cors                    = require('cors');
+const dotenv                  = require('dotenv');
 
 // User Routes
 const landingRoute           = require("./routes/landing.route");
 const signupRoute            = require("./routes/signup.route");
 const loginCredentialsRoute  = require("./routes/login-credentials");
 const userRoute              = require("./routes/user.route");
-// const photoRoute             = require("./routes/photo.route");
+const photoRoute             = require("./routes/photo.route");
 const jobRoute               = require("./routes/job.route");
 const eventRoute             = require("./routes/events.route");
 const mentorRoute            = require("./routes/mentors.route");
@@ -27,6 +28,11 @@ const adminMentorsRoute      = require("./routes/admin/mentor.route");
 const adminEventsRoute       = require("./routes/admin/events.route");
 const adminPostsRoute        = require("./routes/admin/posts.route");
 const adminFairsRoute        = require("./routes/admin/fairs.route");
+
+// Configure Environment Variables
+dotenv.config();
+
+console.log(process.env.DB_HOST)
 
 
 // use config module to get the privatekey, if no private key set, end the application
@@ -45,7 +51,7 @@ mongoose
   .set('useCreateIndex', true)
   .set('useFindAndModify', false)
 
-  .connect("mongodb+srv://eddietal2:CORo4rdF2o9w6vYK@fyf-zi8ll.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.DB_HOST_DEV, { useNewUrlParser: true, useUnifiedTopology: true })
 
   .then(() => console.log("Connected to MongoDB..."))
 
@@ -65,7 +71,7 @@ app.use("/api/login-credentials", loginCredentialsRoute);
 app.use("/api/signup", signupRoute);
 app.use("/api/home/user", userRoute);
 // app.use("/api/home/jobs", profileRoute);
-// app.use("/api/photo", photoRoute);
+app.use("/api/photo", photoRoute);
 app.use("/api/job", jobRoute);
 app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
