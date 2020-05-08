@@ -28,7 +28,7 @@ exports.registerAdmin = (req, res) => {
 
 exports.loginAdmin = (req, res) => {
   if (!req.body.username || !req.body.password) {
-    return res.status(400).send({ 'msg': 'You need to send email and password' });
+    return res.status(400).send({ 'msg': 'You need to send username and password' });
 }
 
 Admin.findOne({ username: req.body.username }, (err, admin) => {

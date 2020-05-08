@@ -15,6 +15,8 @@ exports.addJob = (req, res) => {
     return res.status(400).send('Please enter a title, company name, company email, summary, full job description, rate of pay, and date created. You are missing one or more fields.');
   }
 
+  // Add Current Date to Post
+  req.body.dateCreated = Date.now();
   let newJob = Job(req.body);
 
   newJob.save( (err, job) => {

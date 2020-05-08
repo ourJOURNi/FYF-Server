@@ -10,7 +10,7 @@ exports.getEvents = (req, res) => {
 
 exports.getEventsGoing = (req, res) => {
   console.log(req.body);
-  let id = req.body.id;
+  let id = req.body._id;
 
   User.findById(
     id,
@@ -31,8 +31,10 @@ exports.getEventsGoing = (req, res) => {
 
     console.log(finalEventGoing)
 
-    Event.find(
-      user.eventsGoing,
+    Event.find({
+      '_id': { $in: this.eventsGoing
+      }
+    },
       (err, event) => {
 
         if (!event) return res.status(400).json({message: 'There was no event with that id'});

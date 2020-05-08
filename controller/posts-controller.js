@@ -46,7 +46,7 @@ exports.addTextPost = (req, res) => {
 
   newPost.save( (err, post) => {
     if (err) {
-      return res.status(400).json({message: 'There was an error saving the post to the database: \n\n' + err});
+      return res.status(400).json({message: 'There was an error saving the post to the database', error:  err});
     }
 
     console.log('Added Text Post to PostQueue: ' + post);
@@ -98,6 +98,128 @@ exports.addPhotoPosts = (req, res) => {
     console.log('Added Photo Post to PostQueue: ' + post);
     return res.status(200).json(post);
   })
+}
+
+exports.upVotePost = async (req, res) => {
+  console.log(req.body.postID);
+  console.log(req.body.userEmail);
+  console.log('Upvote API...')
+
+   // comment ID
+  if ( !req.body.postID || !req.body.userEmail) return res.status(400).json({message: 'There is no post ID or userEmail in request'})
+
+  let postID = req.body.postID;
+  let userEmail = req.body.userEmail;
+
+  // Check if user has already Upvoted
+  await Post.findOne({
+    _id: postID,
+    'upvoters': userEmail
+  }, (err, data) => {
+    console.log('Checking to see if this user has already Upvoted..');
+    if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+    if (data) {
+      console.log('This User has already Upvoted')
+      return res.status(400).json({message: 'This user has already Upvoted'});
+    }
+    if (!data) console.log(`User with ${userEmail} has never upvoted this post`);
+
+    // Put User is Upvoters Array for Post
+    Post.updateOne(
+      {
+      _id: postID,
+      },
+      {
+        upvoters: userEmail
+      }, (err, data) => {
+        console.log('Adding User to this Post Upvoters Array.');
+        if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+        if (!data) console.log(`There is no User with the email:  ${userEmail}`);
+        if (data) console.log(`User with the email ${userEmail} has been added to the Upvoter Array`);
+
+        // Co
+        Post.updateOne(
+          {
+              _id: postID,
+              'creatorEmail': userEmail,
+          },
+          { $inc: { 'upvotes': 1 } },
+          { $inc: { 'downvotes': -1 } },
+          (err, post) => {
+
+            if (err) return res.status(400).json(err)
+            if (post)return res.status(200).json({ message: 'upvoted post', post});
+        })
+      }
+      )
+  }
+  )
+}
+
+exports.downVotePost = async (req, res) => {
+  console.log(req.body.postID);
+  console.log(req.body.userEmail);
+  console.log('Downvote API...')
+
+  if ( !req.body.postID || !req.body.userEmail) return res.status(400).json({message: 'There is no post ID or userEmail in request'})
+
+  let postID = req.body.postID;
+  let userEmail = req.body.userEmail;
+
+  // 'downvotes': { $gte: 0 }
+
+  // Check if user has already Downvoted
+  await Post.findOne({
+    _id: postID,
+    'downvoters': userEmail
+  }, (err, data) => {
+    console.log('Checking to see if this user has already Downvoted..');
+    if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+    if (data) {
+      console.log('This User has already Downvoted')
+      return res.status(400).json({message: 'This user has already Downvoted'});
+    }
+    if (!data) console.log(`User with ${userEmail} has never Downvoted this post`);
+
+    // Put User is Upvoters Array for Post
+    Post.updateOne(
+      {
+      _id: postID,
+      },
+      {
+        downvoters: userEmail
+      }, (err, data) => {
+        console.log('Adding User to this Post Downvoters Array.');
+        if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+        if (!data) console.log(`There is no User with the email:  ${userEmail}`);
+        if (data) console.log(`User with the email ${userEmail} has been added to the Downvoter Array`);
+
+        // Co
+        Post.updateOne(
+          {
+              _id: postID,
+              'creatorEmail': userEmail,
+          },
+          { $inc: { 'downvotes': 1 } },
+          { $inc: { 'upvotes': -1 } },
+          (err, post) => {
+
+            if (err) return res.status(400).json(err)
+            if (post)return res.status(200).json({ message: 'downvoted post', post});
+        })
+      }
+      )
+  }
+  )
+  
+}
+
+exports.upVoteComment = (req, res) => {
+  console.log('Upvote API...')
+}
+
+exports.downVoteComment = (req, res) => {
+  console.log('Downvote API...')
 }
 
 exports.followPost = (req, res) => {

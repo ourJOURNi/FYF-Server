@@ -14,6 +14,7 @@ const signupRoute            = require("./routes/signup.route");
 const loginCredentialsRoute  = require("./routes/login-credentials");
 const userRoute              = require("./routes/user.route");
 const photoRoute             = require("./routes/photo.route");
+const resumePhoto             = require("./routes/resume.route");
 const jobRoute               = require("./routes/job.route");
 const eventRoute             = require("./routes/events.route");
 const mentorRoute            = require("./routes/mentors.route");
@@ -32,7 +33,7 @@ const adminFairsRoute        = require("./routes/admin/fairs.route");
 // Configure Environment Variables
 dotenv.config();
 
-console.log(process.env.DB_HOST)
+console.log(process.env.DB_HOST_DEV)
 
 
 // use config module to get the privatekey, if no private key set, end the application
@@ -72,6 +73,7 @@ app.use("/api/signup", signupRoute);
 app.use("/api/home/user", userRoute);
 // app.use("/api/home/jobs", profileRoute);
 app.use("/api/photo", photoRoute);
+app.use("/api/resume", resumePhoto);
 app.use("/api/job", jobRoute);
 app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);

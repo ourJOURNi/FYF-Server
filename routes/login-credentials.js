@@ -12,10 +12,10 @@ router.post('/',  (req, res) => {
   console.log(code);
   // Set transport service which will send the emails
   var transporter =  nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
     auth: {
-          user: 'eddielacrosse2@gmail.com',
-          pass: 'taliaferro2'
+          user: 'info@findyourfuturesem.org',
+          pass: 'findyourfuture2*'
       },
       debug: true, // show debug output
       logger: true // log information in console
@@ -23,11 +23,19 @@ router.post('/',  (req, res) => {
 
 //  configuration for email details
  const mailOptions = {
-  from: 'eddielacrosse2@gmail.com', // sender address
+  from: 'info@findyourfuturesem.org', // sender address
   to: `${email}`, // list of receivers
-  subject: 'United Way User Verification',
-  html: `<p>Your 6 digit code is: ${code} </p>`
-};
+  subject: 'Find Your Future User Verification',
+  html:
+  `
+    <img src="cid:logo">
+    <p>Your 6 digit code is: ${code} </p>`,
+  attachments: [{
+    filename: 'fyf-logo-1.svg',
+    path: './assets/fyf-logo-1.svg',
+    cid: 'logo'
+  }]
+  };
 
  transporter.sendMail(mailOptions, function (err, info) {
   if(err)

@@ -37,7 +37,7 @@ const PostQueueSchema = new mongoose.Schema({
 },
   post : {
     type: String,
-    maxlength: 500
+    // maxlength: 500
   }
 })
 

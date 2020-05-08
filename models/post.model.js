@@ -13,7 +13,11 @@ const CommentSchema = new mongoose.Schema({
   comment : {
     type: String
   },
-  likes : {
+  upvotes : {
+    type: Number,
+    default: 0
+  },
+  downvotes : {
     type: Number,
     default: 0
   }
@@ -40,6 +44,22 @@ const PostSchema = new mongoose.Schema({
   post : {
     type: String,
     maxlength: 500
+  },
+  upvotes : {
+    type: Number,
+    default: 0
+  },
+  downvotes : {
+    type: Number,
+    default: 0
+  },
+  upvoters : {
+    type: Array,
+    default: []
+  },
+  downvoters : {
+    type: Array,
+    default: []
   }
 })
 

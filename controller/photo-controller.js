@@ -1,42 +1,38 @@
 const Image      = require('../models/image.model');
 const User       = require('../models/user.model');
+const aws        = require('aws-sdk');
 const multer     = require('multer');
+const multerS3   = require('multer-s3');
 const sharp      = require('sharp');
+const dotenv     = require('dotenv');
 
+dotenv.config();
 
+aws.config.update({
+    secretAccessKey: process.env.secretAccessKey,
+    accessKeyId: process.env.accessKeyId,
+    region: 'us-east-2'
+})
 
+const s3 = new aws.S3();
 
+const storage = multer.diskStorage({
+    destination : 'uploads/',
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
-
-// exports.uploadPhoto = upload.single('picture'), (req, res) => {
-//   if (!req.file) {
-//     console.log("No file received");
-//     return res.send({
-//       success: false
-//     });
-
-//   } else {
-//     console.log('file received');
-//     console.log('Request File: ');
-//     console.log(req.file);
-
-
-    // return res.send({
-    //   success: true
-    // })
-//   }
+// const fileFilter = (req, file, cb) => {
+//     if (
+//         file.mimetype === 'image/jpeg' ||
+//         file.mimetype === 'image/png' ||
+//         file.mimetype === 'image/jpg'
+//         ) {
+//             cb(null, true);
+//         } else {
+//             cb(new Error('Wrong file type, only upload JPEG, JPG, or PNG !'),
+//      false);
+//         }
 // };
-
-// exports.uploadPhoto = (req, res) => {
-//   console.log('request: ' + req)
-//   User.findOneAndUpdate(email = req.email , { profilePicture: newImage}, {returnNewDocument: true}, function( error, result){
-//      if(error) {
-//        res.status(400).send("There was an error updating the image");
-//      }
-
-//      if (!result) {
-//        res.status(400).send('There was no user with that email');
-//      }
-
-//       res.status(200).send('Photo has been updated');
-//   });
