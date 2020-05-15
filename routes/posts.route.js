@@ -24,6 +24,8 @@ router.post('/reply', postController.reportComment)
 
 router.post('/up-vote-post', postController.upVotePost)
 router.post('/down-vote-post', postController.downVotePost)
+router.post('/up-vote-comment', postController.upVoteComment)
+router.post('/down-vote-comment', postController.downVoteComment)
 
 
 

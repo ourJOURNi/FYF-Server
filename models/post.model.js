@@ -1,5 +1,28 @@
 const mongoose = require('mongoose');
 
+const RepliesSchema = new mongoose.Schema({
+  date : {
+    type: Date
+  },
+  userFullName : {
+    type: String
+  },
+  userEmail : {
+    type: String
+  },
+  reply : {
+    type: String
+  },
+  upvotes : {
+    type: Number,
+    default: 0
+  },
+  downvotes : {
+    type: Number,
+    default: 0
+  }
+})
+
 const CommentSchema = new mongoose.Schema({
   date : {
     type: Date
@@ -20,6 +43,18 @@ const CommentSchema = new mongoose.Schema({
   downvotes : {
     type: Number,
     default: 0
+  },
+  upvoters : {
+    type: Array,
+    default: []
+  },
+  downvoters : {
+    type: Array,
+    default: []
+  },
+  replies : {
+    type: Array,
+    default: [RepliesSchema]
   }
 })
 

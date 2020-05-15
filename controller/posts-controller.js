@@ -116,6 +116,7 @@ exports.upVotePost = async (req, res) => {
     _id: postID,
     'upvoters': userEmail
   }, (err, data) => {
+
     // Check if user has already Upvoted
     console.log('Checking to see if this user has already Upvoted..');
     if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
@@ -137,25 +138,14 @@ exports.upVotePost = async (req, res) => {
         'downvoters': userEmail
       },
       (err, data) => {
+
         if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
 
         // User Never Downvoted
         if (!data) {
           console.log(`This user has not already downvoted`);
-
           // inc 1 to UPVOTES
           // Add UserEmail to UPVOTERS
-          Post.updateOne({
-            _id: postID,
-            },
-            { $inc: { 'upvotes': 1 }
-            },
-            (err, data) => {
-              if (err) return res.status(400).json({message: 'err', error: err})
-              if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-              if (data) console.log(data);
-            }
-          )
 
           Post.updateOne({
             _id: postID,
@@ -165,11 +155,42 @@ exports.upVotePost = async (req, res) => {
             (err, data) => {
               if (err) return res.status(400).json({message: 'err', error: err})
               if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-              if (data) console.log(data);
+              if (data) {
+
+                Post.findOneAndUpdate({
+                  _id: postID,
+                  },
+                  { $inc: { 'upvotes': 1 }
+                  },
+                  { new: true },
+                  (err, data) => {
+
+                    let upvotes = data['upvotes'];
+
+                    if (err) return res.status(400).json({message: 'err', error: err})
+                    if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                    if (data) {
+
+                      Post.find({
+                        _id: postID
+                      }, (err, data) => {
+
+                        let downvotes;
+
+                        if (err) return res.status(400).json({message: 'err', error: err})
+                        if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                        if (data) downvotes = data[0].downvotes
+
+                        return res.status(200).json({
+                          upvotes, downvotes
+                        })
+                      })
+                    }
+                  }
+                )
+              };
             }
           )
-          return res.status(200).json({message: 'upvoted'});
-
         }
         // User Downvoted Previously
         if (data) {
@@ -179,17 +200,6 @@ exports.upVotePost = async (req, res) => {
           // pull email from DOWNVOTERS
           // inc 1 to UPVOTES
           // Add UserEmail to UPVOTERS
-          Post.updateOne({
-            _id: postID,
-            },
-            { $inc: { 'downvotes': -1 }
-            },
-            (err, data) => {
-              if (err) return res.status(400).json({message: 'err', error: err})
-              if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-              if (data) console.log(data);
-            }
-          )
 
           Post.updateOne({
             _id: postID,
@@ -206,18 +216,6 @@ exports.upVotePost = async (req, res) => {
           Post.updateOne({
             _id: postID,
             },
-            { $inc: { 'upvotes': 1 }
-            },
-            (err, data) => {
-              if (err) return res.status(400).json({message: 'err', error: err})
-              if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-              if (data) console.log(data);
-            }
-          )
-
-          Post.updateOne({
-            _id: postID,
-            },
             { $push: { 'upvoters': userEmail }
             },
             (err, data) => {
@@ -227,7 +225,42 @@ exports.upVotePost = async (req, res) => {
             }
           )
 
-          return res.status(200).json({message: 'upvoted'});
+          Post.findOneAndUpdate({
+            _id: postID,
+            },
+            { $inc: { 'upvotes': 1 }},
+            { new: true },
+            (err, data) => {
+
+              if (err) return res.status(400).json({message: 'err', error: err})
+              if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+              if (data) {
+
+                let upvotes;
+                let downvotes;
+
+                upvotes = data['upvotes']
+
+                Post.findOneAndUpdate({
+                  _id: postID,
+                  },
+                  { $inc: { 'downvotes': -1 }
+                  },
+                  { new: true },
+                  (err, data) => {
+                    if (err) return res.status(400).json({message: 'err', error: err})
+                    if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                    if (data) downvotes = (data['downvotes'])
+
+                    return res.status(200).json({
+                      upvotes, downvotes
+                    })
+                  }
+                )
+              };
+            }
+          )
+
         }
       })
     }
@@ -243,6 +276,9 @@ exports.downVotePost = async (req, res) => {
 
   let postID = req.body.postID;
   let userEmail = req.body.userEmail;
+
+  let upvotes;
+  let downvotes;
 
   // If User has not downvoted already continue
   await Post.findOne({
@@ -271,19 +307,10 @@ exports.downVotePost = async (req, res) => {
       if (!data) {
         console.log(`This user has not already upvoted`);
 
+        let downvotes;
+
         // inc 1 to DOWNVOTES
         // Add UserEmail to DOWNVOTERS
-        Post.updateOne({
-          _id: postID,
-          },
-          { $inc: { 'downvotes': 1 }
-          },
-          (err, data) => {
-            if (err) return res.status(400).json({message: 'err', error: err})
-            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-            if (data) console.log(data);
-          }
-        )
 
         Post.updateOne({
           _id: postID,
@@ -293,11 +320,41 @@ exports.downVotePost = async (req, res) => {
           (err, data) => {
             if (err) return res.status(400).json({message: 'err', error: err})
             if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-            if (data) console.log(data);
-          }
-        )
-        return res.status(200).json({message: 'downvoted'});
+            if (data){
 
+              Post.findOneAndUpdate({
+                _id: postID,
+                },
+                { $inc: { 'downvotes': 1 }
+                },
+                { new: true },
+                (err, data) => {
+
+                  let downvotes = data['downvotes'];
+
+                  if (err) return res.status(400).json({message: 'err', error: err})
+                  if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                  if (data) {
+
+                    Post.find({
+                      _id: postID
+                    }, (err, data) => {
+
+                      let upvotes;
+
+                      if (err) return res.status(400).json({message: 'err', error: err})
+                      if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                      if (data) upvotes = data[0].upvotes
+
+                      return res.status(200).json({
+                        upvotes, downvotes
+                      })
+                    })
+                  }
+                }
+              )
+            }
+          })
       }
       // User Upvoted Previously
       if (data) {
@@ -307,17 +364,6 @@ exports.downVotePost = async (req, res) => {
         // pull email from DOWNVOTERS
         // inc 1 to UPVOTES
         // Add UserEmail to UPVOTERS
-        Post.updateOne({
-          _id: postID,
-          },
-          { $inc: { 'upvotes': -1 }
-          },
-          (err, data) => {
-            if (err) return res.status(400).json({message: 'err', error: err})
-            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
-            if (data) console.log(data);
-          }
-        )
 
         Post.updateOne({
           _id: postID,
@@ -334,7 +380,223 @@ exports.downVotePost = async (req, res) => {
         Post.updateOne({
           _id: postID,
           },
-          { $inc: { 'downvotes': 1 }
+          { $push: { 'downvoters': userEmail }
+          },
+          (err, data) => {
+            if (err) return res.status(400).json({message: 'err', error: err})
+            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+            if (data) console.log(data);
+          }
+        )
+
+        Post.findOneAndUpdate({
+          _id: postID,
+          },
+          { $inc: { 'downvotes': 1 }},
+          { new: true },
+          (err, data) => {
+            if (err) return res.status(400).json({message: 'err', error: err})
+            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+            if (data) {
+
+            let upvotes;
+            let downvotes;
+
+            downvotes = data['downvotes']
+
+            Post.findOneAndUpdate({
+              _id: postID,
+              },
+              { $inc: { 'upvotes': -1 }
+              },
+              { new: true },
+              (err, data) => {
+                if (err) return res.status(400).json({message: 'err', error: err})
+                if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                if (data) upvotes = data['upvotes']
+
+                return res.status(200).json({
+                  upvotes, downvotes
+                })
+              }
+            )
+          }
+        }
+        )
+      }
+    })
+    }
+  )
+
+}
+
+exports.upVoteComment = async (req, res) => {
+  console.log('Upvote Comments API...')
+  console.log(req.body.postID);
+  console.log(req.body.userEmail);
+  console.log(req.body.commentID);
+
+   // See if Request Body has Post ID and UserEmail
+  if ( !req.body.postID || !req.body.commentID || !req.body.userEmail) return res.status(400).json({message: 'There is no post ID or userEmail in request'})
+
+  let postID = req.body.postID;
+  let userEmail = req.body.userEmail;
+  let commentID = req.body.commentID;
+
+  // If User has not upvoted already continue
+  await Post.findById(
+    postID,
+    (err, data) => {
+
+      if (err) return res.status(400).json({message: err})
+      if (!data) return res.status(400).json({
+        message: `there wasn't any posts with the _id of ${postID}`
+      })
+      if (data) {
+
+        // Find the comment that matches the commentID
+        let comments = data['comments'];
+        let matchedComment;
+        let commentUpvoters;
+        let commentDownvoters;
+
+        console.log(`Amount of Comments: ${comments.length}`)
+        // console.log(comments);
+
+        // Loop through this Post's comments property and find a comment with a matching comment_id
+      commentSearch(commentID, comments);
+
+      function commentSearch(commentID, commentsArray){
+          for (let i=0; i < commentsArray.length; i++) {
+                if (commentsArray[i]._id == commentID) {
+                  matchedComment = commentsArray[i]
+                  ;
+                  commentUpvoters = commentsArray[i].upvoters;
+                  commentDownvoters = commentsArray[i].downvoters;
+                }
+          }
+      }
+
+      console.log(matchedComment.comment)
+      console.log(commentUpvoters)
+      console.log(commentDownvoters)
+
+      // Upvote if user hasn't already downvoted
+      commentDownvoters.find( downvoters => {
+        return downvoters === userEmail;
+      })
+
+
+
+
+      }
+
+  })
+}
+
+exports.downVoteComment = async (req, res) => {
+  console.log('Downvote API...')
+  console.log(req.body.postID);
+  console.log(req.body.userEmail);
+  console.log('Downvote API...')
+
+  if ( !req.body.postID || !req.body.userEmail) return res.status(400).json({message: 'There is no post ID or userEmail in request'})
+
+  let postID = req.body.postID;
+  let userEmail = req.body.userEmail;
+
+  let upvotes;
+  let downvotes;
+
+  // If User has not downvoted already continue
+  await Post.findOne({
+    _id: postID,
+    'downvoters': userEmail
+  }, (err, data) => {
+    if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+
+    if (data) {
+      console.log('This User has already Downvoted')
+      return res.status(400).json({message: 'This user has already Downvoted'});
+    }
+    if (!data) console.log(`User with ${userEmail} has never Downvoted this post`);
+
+    // Check to see if user has Upvoted
+    console.log('Checking to see if this user has already Upvoted this post...');
+
+    Post.findOne({
+      _id: postID,
+      'upvoters': userEmail
+    },
+    (err, data) => {
+      if (err) return res.status(400).json({message: 'There was an error find a user with that email'});
+
+      // User Never Upvoted
+      if (!data) {
+        console.log(`This user has not already upvoted`);
+
+        let downvotes;
+
+        // inc 1 to DOWNVOTES
+        // Add UserEmail to DOWNVOTERS
+
+        Post.updateOne({
+          _id: postID,
+          },
+          { $push: { 'downvoters': userEmail }
+          },
+          (err, data) => {
+            if (err) return res.status(400).json({message: 'err', error: err})
+            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+            if (data){
+
+              Post.findOneAndUpdate({
+                _id: postID,
+                },
+                { $inc: { 'downvotes': 1 }
+                },
+                { new: true },
+                (err, data) => {
+
+                  let downvotes = data['downvotes'];
+
+                  if (err) return res.status(400).json({message: 'err', error: err})
+                  if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                  if (data) {
+
+                    Post.find({
+                      _id: postID
+                    }, (err, data) => {
+
+                      let upvotes;
+
+                      if (err) return res.status(400).json({message: 'err', error: err})
+                      if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                      if (data) upvotes = data[0].upvotes
+
+                      return res.status(200).json({
+                        upvotes, downvotes
+                      })
+                    })
+                  }
+                }
+              )
+            }
+          })
+      }
+      // User Upvoted Previously
+      if (data) {
+        console.log(`This user has already upvoted`);
+
+        // inc -1 from DOWNVOTES
+        // pull email from DOWNVOTERS
+        // inc 1 to UPVOTES
+        // Add UserEmail to UPVOTERS
+
+        Post.updateOne({
+          _id: postID,
+          },
+          { $pull: { 'upvoters': userEmail }
           },
           (err, data) => {
             if (err) return res.status(400).json({message: 'err', error: err})
@@ -355,33 +617,58 @@ exports.downVotePost = async (req, res) => {
           }
         )
 
-        return res.status(200).json({message: 'downvoted'});
+        Post.findOneAndUpdate({
+          _id: postID,
+          },
+          { $inc: { 'downvotes': 1 }},
+          { new: true },
+          (err, data) => {
+            if (err) return res.status(400).json({message: 'err', error: err})
+            if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+            if (data) {
+
+            let upvotes;
+            let downvotes;
+
+            downvotes = data['downvotes']
+
+            Post.findOneAndUpdate({
+              _id: postID,
+              },
+              { $inc: { 'upvotes': -1 }
+              },
+              { new: true },
+              (err, data) => {
+                if (err) return res.status(400).json({message: 'err', error: err})
+                if (!data) return res.status(400).json({message: 'There was no post with that ID'});
+                if (data) upvotes = data['upvotes']
+
+                return res.status(200).json({
+                  upvotes, downvotes
+                })
+              }
+            )
+          }
+        }
+        )
       }
     })
-
     }
   )
 
 }
 
-exports.upVoteComment = (req, res) => {
-  console.log('Upvote API...')
-}
-
-exports.downVoteComment = (req, res) => {
-  console.log('Downvote API...')
-}
-
 exports.followPost = (req, res) => {
-  console.log('Attemping to follow post from API')
-
-  if (!req.body._id || !req.body.email) {
-    return res.status(400).json({message: 'Call needs a Post _id and an email to identify user'});
-  }
 
   // Get this Post's ID
   let id = req.body._id;
   let email = req.body.email;
+
+  console.log(req.body)
+
+  if (!req.body._id || !req.body.email) {
+    return res.status(400).json({message: 'Call needs a Post _id and an email to identify user'});
+  }
 
   Post.findByIdAndUpdate(
     id,
@@ -394,7 +681,7 @@ exports.followPost = (req, res) => {
     // Add this Posts's ID to this User's followedPost property
     User.findOneAndUpdate(
       email,
-      { $push: { followedPost: { postID: id} } },
+      { $push: { followedPost: post } },
       (err, user) => {
 
       if (err) return res.status(400).json(err);
@@ -424,7 +711,7 @@ exports.unFollowPost = (req, res) => {
     // Delete Post from User's followedPost property
     User.findOneAndUpdate(
       { email },
-      { $pull: { followedPost: { postID: id } } },
+      { $pull: { followedPost: id } },
        (err, user) => {
 
       if (err) return res.status(400).json(err);
@@ -434,36 +721,23 @@ exports.unFollowPost = (req, res) => {
 }
 
 exports.getFollowedPosts = (req, res) => {
-  console.log(req.body)
   let userId = req.body._id;
 
   User.findById(
     userId,
     (err, user) => {
 
-    if (err) return res.status(400).json({ message: 'Error finding User'});
-    if (!user) return res.status(400).json({ message: 'There are no Users with that ID'});
-
-    this.followedPost = Object.values(user.followedPost);
-    let finalFollowedPost = []
-    for (let i = 0; i < this.followedPost.length; i++) {
-      finalFollowedPost.push(this.followedPost[i].postID)
+    if (err ) return res.status(400).json({ message: 'Error finding User'});
+    if (!user ) return res.status(400).json({ message: 'There are no Users with that ID'});
+    if ( user ) {
+      console.log(user.followedPost)
+      return res.status(200).json(user.followedPost)
     }
-
-    console.log(finalFollowedPost)
-
-    Post.find({
-      _id : { $in: finalFollowedPost}},
-      (err, posts) => {
-
-        if (err) return res.status(400).json(err);
-        if (!posts) return res.status(400).json({ message: 'There are no Posts with those IDs'});
-
-        return res.status(200).send(posts);
-
-      }
-    )
   })
+}
+
+exports.editPost = (req, res) => {
+  
 }
 
 exports.comment = (req, res) => {
@@ -541,44 +815,6 @@ exports.reportComment = (req, res) => {
   });
 }
 
-exports.likeComment = (req, res) => {
-  // comment ID
-  if ( !req.body.postID || !req.body.commentID) return res.status(400).json({message: 'There is no comment ID or Post ID in request'})
+exports.editCommment = (req, res) => {
 
-  let postID = req.body.postID;
-  let commentID = req.body.commentID;
-
-  Post.updateOne(
-    {
-        _id: postID,
-        'comments._id': commentID
-    },
-    { $inc: { 'comments.$.likes': 1 } },
-     (err, post) => {
-
-       if (err) return res.status(400).json(err)
-       if (!post) return res.status(400).json({message: 'There were no posts with that'})
-       res.status(200).json({ message: 'liked comment', post});
-  })
-}
-
-exports.unLikeComment = (req, res) => {
-  // comment ID
-  if ( !req.body.postID || !req.body.commentID) return res.status(400).json({message: 'There is no comment ID or Post ID in request'})
-
-  let postID = req.body.postID;
-  let commentID = req.body.commentID;
-
-  Post.updateOne(
-    {
-        _id: postID,
-        'comments._id': commentID
-    },
-    { $inc: { 'comments.$.likes': -1 } },
-     (err, post) => {
-
-       if (err) return res.status(400).json(err)
-       if (!post) return res.status(400).json({message: 'There were no posts with that'})
-  res.status(200).json({ message: 'unliked comment', post});
-  })
 }

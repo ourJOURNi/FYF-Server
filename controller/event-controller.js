@@ -51,8 +51,6 @@ exports.getEventsGoing = (req, res) => {
 
 exports.goingToEvent = (req, res) => {
 
-  console.log(req.body);
-
   let eventID = req.body.eventID;
   let id = req.body.id;
   let userEmail = req.body.userEmail;
