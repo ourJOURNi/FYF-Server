@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
 const ReportedCommentSchema = new mongoose.Schema({
-  date : {
+  commentDate : {
     type: String
   },
   commentID : {
     type: String
   },
-  comment : {
+  commentContents : {
     type: String
   },
   postID : {
@@ -26,6 +26,9 @@ const ReportedCommentSchema = new mongoose.Schema({
     type: String
   },
   reportedUserName : {
+    type: String
+  },
+  reportedReason : {
     type: String
   }
 })

@@ -2,6 +2,7 @@ const Post = require('../models/post.model');
 const PostQueue = require('../models/postqueue.model');
 const User = require('../models/user.model');
 const Comment = require('../models/comment.model');
+const Reply = require('../models/reply.model');
 const ReportedComment = require('../models/reported-comment.model');
 
 
@@ -749,10 +750,10 @@ exports.comment = (req, res) => {
   let comment = req.body.comment;
   let date = req.body.date;
 
-  // if (!postID || !userEmail || !userFullName ||  !comment || !date  ) {
-  //   console.log('figure it out');
-  //   return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
-  // }
+  if (!postID || !userEmail || !userFullName ||  !comment || !date  ) {
+    console.log('figure it out');
+    return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
+  }
 
   // get post ID
   let commentDetails = {
@@ -762,6 +763,7 @@ exports.comment = (req, res) => {
     userFullName,
     userEmail
   }
+
   let newComment = Comment(commentDetails);
 
   Post.findByIdAndUpdate(
@@ -788,33 +790,161 @@ exports.deleteComment = (req, res) => {
   let id = req.body._id;
   let cid = req.body.cid;
 
-  Post.findByIdAndUpdate( id, { $pull: { comments: { _id: cid } } }  ,(err, post) => {
+  Post.findByIdAndUpdate(
+    id,
+    { $pull: { comments: { _id: cid } } },
+    { new: true },
+    (err, post) => {
 
-    if ( err ) return res.status(400).send(err);
+    if ( err ) return res.status(400).json(err);
     if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
-
-    return res.status(200).json(post);
+    if (post) {
+      console.log(`Deleting comment ${cid} on post ${id}`)
+      return res.status(200).json(
+    post);
+    }
   })
 }
 
 exports.reportComment = (req, res) => {
+  console.log(req.body)
 
-  if ( !req.body.commentID || !req.body.comment || !req.body.postID || !req.body.post || !req.body.userEmail || !req.body.userFullname || !req.body.reportedUserEmail|| !req.body.reportedUserName ) {
-    return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
-  }
+  // if ( !req.body.commentID || !req.body.commentContents || !req.body.postID || !req.body.post || !req.body.userEmail || !req.body.userFullname || !req.body.reportedUserEmail || !req.body.reportedUserName || !req.body.reportReason || req.body.commentDate  ) {
+  //   return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
+  // }
 
   // Add Current Date to Post
-  req.body.date = Date.now()
 
   let reportedComment = ReportedComment(req.body);
   reportedComment.save( (err, comment ) => {
 
-    if ( err ) return res.status(400).json({message: 'There was an error saving reported comment to database', error: err})
-
-    return res.status(200).json(comment);
+    if ( err ) return res.status(400).json(err)
+    if ( !comment ) return res.status(400).json({message: 'There were no comments to save'})
+    if ( comment ) {
+      return res.status(200).json({message: 'comment report made!'});
+    }
   });
 }
 
-exports.editCommment = (req, res) => {
+exports.replyComment = (req, res) => {
 
+  // Check to see if request has all the correct data
+  if (
+      !req.body.commentID ||
+      !req.body.comment ||
+      !req.body.postID ||
+      !req.body.userEmail ||
+      !req.body.userFullname ||
+      !req.body.repliyingToUserEmail ||
+      !req.body.repliyingToUserName ) {
+
+      return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
+  }
+
+  let commentID = req.body.commentID;
+  let comment = req.body.comment;
+  let postID = req.body.postID;
+  let post = req.body.post;
+  let userEmail = req.body.userEmail;
+  let userFullName = req.body.userFullName;
+  let userPhoto = req.body.userPhoto;
+  let reply = req.body.reply;
+  let repliyingToUserEmail = req.body.repliyingToUserEmail;
+  let repliyingToUserName = req.body.repliyingToUserName;
+  let date = Date.now();
+
+  // Find Post
+  Post.findById(
+    postID,
+    (err, post) => {
+      if(err) {
+        return res.status(200).json({
+          message: 'There was a an error finding the post id',
+        err})
+      }
+      if(!post) {
+        return res.status(200).json({
+          message: 'There was no post with that id'})
+      }
+      if(post) {
+        // Find Comment
+
+        let comments = post.comments;
+        let index;
+
+        let replyDetails = {
+          date,
+          reply,
+          userEmail,
+          userFullName,
+          userPhoto,
+        }
+
+        let newReply = Reply(replyDetails);
+
+        console.log('This Posts ID: ' + post._id);
+
+        // Find a Comment _id that matches the commentID of the incoming request
+        commentSearch(commentID, comments);
+
+        function commentSearch(commentID, commentsArray){
+          for (let i=0; i < commentsArray.length; i++) {
+                if (commentsArray[i]._id == commentID) {
+                  console.log('Attempting to Add Reply to Comment..');
+                  Post.findByIdAndUpdate(
+                    postID,
+                    { $push:
+                      { 'comments.0.replies': newReply  } },
+                      (err, post) => {
+
+                    if ( err ) return res.status(400).send(err);
+                    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+                    if (post) return res.status(200).json({
+                      message: 'Reply has been added',
+                      post: postID,
+                      comment: commentID,
+                      comment: comment,
+                      newReply
+                    });
+
+                  })
+                }
+          }
+
+        }
+      }
+    }
+  )
+
+}
+
+exports.editCommment = (req, res) => {
+  console.log(req.body)
+
+  postID = req.body.postID;
+  commentID = req.body.commentID;
+  newComment = req.body.newComment;
+
+
+  if( !postID || !commentID || !newComment ) {
+    return res.status(400).json({
+      message: 'There was no postID, commentID, or newComment',
+      newComment});
+  }
+
+  Post.updateOne(
+    { _id: postID, 'comments._id': commentID },
+    { $set: {'comments.$.comment': newComment }},
+    { new: true },
+    (err, data ) => {
+
+      if(err) return res.status(400).json(err);
+      if(!data) return res.status(400).json({message: 'There was no post with that ID'});
+      if (data) {
+        console.log(data);
+        return res.status(200).json({message: 'comment edit sucessful'});
+      }
+
+    }
+  )
 }

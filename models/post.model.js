@@ -10,6 +10,12 @@ const RepliesSchema = new mongoose.Schema({
   userEmail : {
     type: String
   },
+  repliyingToUserEmail : {
+    type: String
+  },
+  repliyingToUserName : {
+    type: String
+  },
   reply : {
     type: String
   },

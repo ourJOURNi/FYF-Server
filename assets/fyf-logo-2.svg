@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120px" height="37px" viewBox="0 0 120 37" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>Logo 2.0</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#F7B500" offset="0%"></stop>
+            <stop stop-color="#FFA76C" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Logo-2.0" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="120" height="37"></rect>
+        <g id="Group" fill="url(#linearGradient-1)">
+            <polygon id="Path-2" points="0 11.9395513 12 0 12 8.23327595 0 20"></polygon>
+            <polygon id="Path-2-Copy-2" transform="translate(18.000000, 10.000000) scale(-1, 1) translate(-18.000000, -10.000000) " points="12 11.9395513 24 0 24 8.23327595 12 20"></polygon>
+            <polygon id="Path-2-Copy-3" transform="translate(18.000000, 27.000000) scale(-1, 1) translate(-18.000000, -27.000000) " points="12 28.9395513 24 17 24 25.2332759 12 37"></polygon>
+            <polygon id="Path-2-Copy" points="0 28.9395513 12 17 12 25.2332759 0 37"></polygon>
+        </g>
+        <text id="FIND-YOUR" font-family="Arial-BoldMT, Arial" font-size="10" font-weight="bold" letter-spacing="3" fill="#005191">
+            <tspan x="28" y="10">FIND YOUR </tspan>
+        </text>
+        <text id="FUTURE" font-family="Arial-BoldMT, Arial" font-size="20" font-weight="bold" fill="#005191">
+            <tspan x="27" y="35">FUTURE</tspan>
+        </text>
+        <path d="M29,15.5 L106,15.5" id="Line" stroke="#005191" stroke-linecap="square"></path>
+    </g>
+</svg>
