@@ -829,28 +829,28 @@ exports.reportComment = (req, res) => {
 exports.replyComment = (req, res) => {
 
   // Check to see if request has all the correct data
-  if (
-      !req.body.commentID ||
-      !req.body.comment ||
-      !req.body.postID ||
-      !req.body.userEmail ||
-      !req.body.userFullname ||
-      !req.body.repliyingToUserEmail ||
-      !req.body.repliyingToUserName ) {
+  // if (
+  //     !req.body.commentID ||
+  //     !req.body.postID ||
+  //     !req.body.reply ||
+  //     !req.body.commentUserEmail ||
+  //     !req.body.commentUserFullName ||
+  //     !req.body.userEmail ||
+  //     !req.body.userFullName ||
+  //     !req.body.userProfilePicture
+  //     ) {
 
-      return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
-  }
+  //     // Dont forgot to check 
+  //     return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
+  // }
 
   let commentID = req.body.commentID;
-  let comment = req.body.comment;
   let postID = req.body.postID;
-  let post = req.body.post;
-  let userEmail = req.body.userEmail;
-  let userFullName = req.body.userFullName;
-  let userPhoto = req.body.userPhoto;
   let reply = req.body.reply;
-  let repliyingToUserEmail = req.body.repliyingToUserEmail;
-  let repliyingToUserName = req.body.repliyingToUserName;
+  let userFullName = req.body.userFullName;
+  let userProfilePicture = req.body.userProfilePicture;
+  let commentUserEmail = req.body.commentUserEmail;
+  let commentUserName = req.body.commentUserName;
   let date = Date.now();
 
   // Find Post
@@ -875,14 +875,16 @@ exports.replyComment = (req, res) => {
         let replyDetails = {
           date,
           reply,
-          userEmail,
           userFullName,
-          userPhoto,
+          userProfilePicture,
         }
 
         let newReply = Reply(replyDetails);
 
-        console.log('This Posts ID: ' + post._id);
+        // console.log('This Posts ID: ' + newReply);
+        // postID,
+        // { $push:
+        //   { comments: newComment  } },
 
         // Find a Comment _id that matches the commentID of the incoming request
         commentSearch(commentID, comments);
@@ -891,10 +893,11 @@ exports.replyComment = (req, res) => {
           for (let i=0; i < commentsArray.length; i++) {
                 if (commentsArray[i]._id == commentID) {
                   console.log('Attempting to Add Reply to Comment..');
-                  Post.findByIdAndUpdate(
-                    postID,
-                    { $push:
-                      { 'comments.0.replies': newReply  } },
+
+                  //
+                  Post.updateOne(
+                    { _id: postID, 'comments._id': commentID },
+                    { $push: {'comments.$.replies': newReply }},
                       (err, post) => {
 
                     if ( err ) return res.status(400).send(err);
@@ -903,7 +906,6 @@ exports.replyComment = (req, res) => {
                       message: 'Reply has been added',
                       post: postID,
                       comment: commentID,
-                      comment: comment,
                       newReply
                     });
 
