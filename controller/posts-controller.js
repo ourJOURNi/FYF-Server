@@ -741,6 +741,30 @@ exports.editPost = (req, res) => {
   
 }
 
+exports.deletePost = (req, res) => {
+
+  if (!postID) {
+    return res.status(400).json({message: 'Call needs a Post ID'});
+  }
+
+  // get post ID
+  let id = req.body._id;
+
+  Post.findByIdAndDelete(
+    id,
+    { new: true },
+    (err, post) => {
+
+    if ( err ) return res.status(400).json(err);
+    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+    if (post) {
+      console.log(`Deleting Post ${cid} on post ${id}`)
+      return res.status(200).json(
+    post);
+    }
+  })
+}
+
 exports.comment = (req, res) => {
 
   console.log(req.body);
@@ -847,10 +871,9 @@ exports.replyComment = (req, res) => {
   let commentID = req.body.commentID;
   let postID = req.body.postID;
   let reply = req.body.reply;
+  let userEmail = req.body.userEmail;
   let userFullName = req.body.userFullName;
   let userProfilePicture = req.body.userProfilePicture;
-  let commentUserEmail = req.body.commentUserEmail;
-  let commentUserName = req.body.commentUserName;
   let date = Date.now();
 
   // Find Post
@@ -870,13 +893,13 @@ exports.replyComment = (req, res) => {
         // Find Comment
 
         let comments = post.comments;
-        let index;
 
         let replyDetails = {
           date,
           reply,
           userFullName,
           userProfilePicture,
+          userEmail
         }
 
         let newReply = Reply(replyDetails);
