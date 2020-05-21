@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Job = require('../models/job.model');
 const nodemailer = require('nodemailer');
 
   exports.getJobs = (req, res) => {
@@ -14,14 +15,31 @@ const nodemailer = require('nodemailer');
 exports.getFavorites = (req, res) => {
   console.log('Getting all favorited Jobs');
 
-  userId = req.body.email;
+  email = req.body.email;
 
   User.findOne(
-    email,
-    (err, favs) => {
-      if (err) return res.status(400).send('Error finding jobs');
-      console.log(favs);
-      return res.send(favs);
+    {email : email},
+    async (err, favs) => {
+      if (err) return res.status(400).json({ msg : 'Error finding user' });
+      if (!favs) return res.status(400).json({ msg : 'User wasn\'t found' }); 
+      if (favs) {
+        let favoriteJobs = [];
+        for (i = 0; i < favs.favoriteJobs.length; i++) {
+          await Job.findById(
+            favs.favoriteJobs[i],
+            (err, jobs) => {
+              if (err) return res.status(400).json({ msg : 'Error finding favorite job' });
+              if (!jobs) return res.status(400).json({ msg : 'Favorite job wasn\'t found' });
+              if (jobs) {
+                favoriteJobs.push(jobs);
+              }
+            }
+          )
+        }
+        console.log("Final result");
+        console.log(favoriteJobs);
+        return res.send(favoriteJobs);
+      }
     }
   )
 }
