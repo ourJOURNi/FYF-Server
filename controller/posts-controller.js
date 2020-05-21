@@ -743,24 +743,20 @@ exports.editPost = (req, res) => {
 
 exports.deletePost = (req, res) => {
 
-  if (!postID) {
+  let postID = req.body._id;
+  console.log(req.body)
+  if (!req.body._id) {
     return res.status(400).json({message: 'Call needs a Post ID'});
   }
 
-  // get post ID
-  let id = req.body._id;
-
   Post.findByIdAndDelete(
-    id,
-    { new: true },
+    {_id: postID},
     (err, post) => {
-
     if ( err ) return res.status(400).json(err);
     if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
     if (post) {
-      console.log(`Deleting Post ${cid} on post ${id}`)
-      return res.status(200).json(
-    post);
+      console.log(`Deleting Post ${postID}`)
+      return res.status(200).json(post);
     }
   })
 }

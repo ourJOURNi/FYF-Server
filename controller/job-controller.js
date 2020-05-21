@@ -20,6 +20,7 @@ exports.getFavorites = (req, res) => {
     email,
     (err, favs) => {
       if (err) return res.status(400).send('Error finding jobs');
+      console.log(favs);
       return res.send(favs);
     }
   )
