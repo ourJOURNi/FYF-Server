@@ -756,7 +756,18 @@ exports.deletePost = (req, res) => {
     if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
     if (post) {
       console.log(`Deleting Post ${postID}`)
-      return res.status(200).json(post);
+
+      Post.find((err, remainingPosts) => {
+        if(err) return res.status(400).json(err);
+        if(!remainingPosts) return res.status(400).json({message: 'There were no Posts returned'});
+        if(remainingPosts) {
+          console.log(remainingPosts);
+          return res.status(200).json(remainingPosts);
+        }
+      })
+
+
+      // return res.status(200).json(post);
     }
   })
 }
@@ -790,6 +801,7 @@ exports.comment = (req, res) => {
     postID,
     { $push:
       { comments: newComment  } },
+      { new: true},
       (err, comment) => {
 
     if ( err ) return res.status(400).send(err);
