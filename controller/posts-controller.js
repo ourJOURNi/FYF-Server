@@ -688,7 +688,7 @@ exports.followPost = (req, res) => {
       if (err) return res.status(400).json(err);
       console.log('Updating Users Followed Posts');
       console.log(user.followedPost);
-      res.status(200).json(user);
+      return res.status(200).json(user);
     })
   })
 }
@@ -705,18 +705,19 @@ exports.unFollowPost = (req, res) => {
 
   Post.findByIdAndUpdate(
     id,
-    { $pull: { followers: email } }, (err, post) => {
+    { $pull: { followers: email } },
+    (err, post) => {
 
     if (err) return res.status(400).json(err);
 
     // Delete Post from User's followedPost property
     User.findOneAndUpdate(
-      { email },
-      { $pull: { followedPost: id } },
-       (err, user) => {
+      email,
+      { $pull: { followedPost: post } },
+      (err, user) => {
 
       if (err) return res.status(400).json(err);
-      res.status(200).json(user);
+      return res.status(200).json(user);
     })
   })
 }

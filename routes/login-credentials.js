@@ -14,8 +14,8 @@ router.post('/',  (req, res) => {
   var transporter =  nodemailer.createTransport({
     host: 'smtp.gmail.com',
     auth: {
-          user: 'info@findyourfuturesem.org',
-          pass: 'findyourfuture2*'
+          user: 'aaron@journi.org',
+          pass: 'Q9&Rji^5ft'
       },
       debug: true, // show debug output
       logger: true // log information in console
@@ -23,17 +23,18 @@ router.post('/',  (req, res) => {
 
 //  configuration for email details
  const mailOptions = {
-  from: 'info@findyourfuturesem.org', // sender address
+  from: 'aaron@journi.org', // sender address
   to: `${email}`, // list of receivers
   subject: 'Find Your Future User Verification',
   html:
   `
-    <img src="cid:logo">
-    <p>Your 6 digit code is: ${code} </p>`,
+    <img style="width: 100px; margin: 35px 0 20px" src="cid:unique@logo.ee" />
+    <h3>Here is your 6 digit code:</h3>
+    <p>${code}</p>`,
   attachments: [{
-    filename: 'fyf-logo-1.svg',
-    path: './assets/fyf-logo-1.svg',
-    cid: 'logo'
+    filename: 'fyf-logo-2.png',
+    path: './assets/fyf-logo-2.png',
+    cid: 'unique@logo.ee'
   }]
   };
 
@@ -70,7 +71,16 @@ router.post('/forgot-password-email-code', (req, res) => {
     from: 'eddielacrosse2@gmail.com', // sender address
     to: `${email}`, // list of receivers
     subject: 'United Way User - Forgot Password',
-    html: `<p>Your 6 digit code is: ${code}. \n Please use this code  in the app to reset your password. </p>`
+    html: `
+      <img style="width: 100px; margin: 35px 0 20px" src="cid:unique@logo.ee" />
+      <h3>Here is your 6 digit code:</h3>
+      <p>${code}.<br>Please use this code in the app to reset your password. </p>
+    `,
+    attachments: [{
+      filename: 'fyf-logo-2.png',
+      path: './assets/fyf-logo-2.png',
+      cid: 'unique@logo.ee'
+    }]
   };
 
   transporter.sendMail(mailOptions, function (err, info) {

@@ -20,69 +20,67 @@ exports.getFavorites = (req, res) => {
   User.findOne(
     {email : email},
     async (err, favs) => {
-      if (err) return res.status(400).json({ msg : 'Error finding user' });
-      if (!favs) return res.status(400).json({ msg : 'User wasn\'t found' }); 
-      if (favs) {
-        let favoriteJobs = [];
-        for (i = 0; i < favs.favoriteJobs.length; i++) {
-          await Job.findById(
-            favs.favoriteJobs[i],
-            (err, jobs) => {
-              if (err) return res.status(400).json({ msg : 'Error finding favorite job' });
-              if (!jobs) return res.status(400).json({ msg : 'Favorite job wasn\'t found' });
-              if (jobs) {
-                favoriteJobs.push(jobs);
-              }
+      if (err) console.error("Error finding user");
+      if (!favs) console.error("User wasn\'t found");
+      
+      let favoriteJobs = [];
+      for (i = 0; i < favs.favoriteJobs.length; i++) {
+        await Job.findById(
+          favs.favoriteJobs[i],
+          (err, jobs) => {
+            if (err) console.error("Error finding favorite job");
+            if (!jobs) console.error("Favorite job wasn\'t found");
+            if (jobs) {
+              favoriteJobs.push(jobs);
             }
-          )
-        }
-        console.log("Final result");
-        console.log(favoriteJobs);
-        return res.send(favoriteJobs);
+          }
+        )
       }
+      console.log(`Favorite jobs result:\n${favoriteJobs}`);
+      return res.send(favoriteJobs);
     }
   )
 }
 
 exports.favoriteJob = (req, res) => {
+
+  email = req.body.email;
+  console.log(`Favorite Request Object Id: ${req.body._id}`);
+
   // post it to users favoriteJobs array in User Model
   User.findOneAndUpdate(
-    { email: req.body.userEmail },
+    { email: email },
     { $push: { favoriteJobs: req.body._id }},
+    { new : true },
     (err, user) => {
-
-    if (err) {
-      console.log('Error finding user in database');
-    }
-    if (!user) {
-      console.log('This user does not exist');
-    }
-    console.log('Favoriting Jobs');
-    res.status(200).send(user);
+      
+      if (err) return res.status(400).json({ msg : 'Error finding user' });
+      if (!user) return res.status(400).json({ msg : 'User wasn\'t found' });
+      
+      console.log('Favoriting Jobs');
+      return res.status(200).send(user.favoriteJobs);
   })
 
 }
 
 exports.unFavoriteJob = (req, res) => {
 
-  console.log('Unfavorite Request Object Id');
-  console.log(req.body._id);
+  email = req.body.email
+  console.log(`Unfavorite Request Object Id: ${req.body._id}`);
 
   // find user
   // pull from favoriteJobs if the requested job's _id matches an _id from the favoriteJobs array.
    User.findOneAndUpdate(
-     { email: req.body.userEmail },
+     { email: email },
      { $pull: { favoriteJobs: req.body._id }  },
+     { new : true },
      (err, user) => {
-
-      if (err) {
-        console.log('Error finding user in database');
-      }
-      if (!user) {
-        console.log('This user does not exist');
-      }
+       
+      if (err) return res.status(400).json({ msg : 'Error finding user' });
+      if (!user) return res.status(400).json({ msg : 'User wasn\'t found' });
+      
       console.log('Unfavoriting Jobs');
-      res.status(200).send(user.favoriteJobs);
+      return res.status(200).send(user.favoriteJobs);
      }
    )
 }
@@ -107,6 +105,7 @@ exports.sendEmailApplication = (req, res) => {
   to: `${user.jobCompanyEmail}`, // list of receivers
   subject: `United Way User ${user.fullName} Has Applied for your Position of ${user.jobTitle}`,
   html: `
+  <img style="width: 100px; margin: 35px 0 20px" src="cid:unique@logo.ee" />
   <p>${user.fullName} has applied for the job of ${user.jobTitle} </p>
   <p>Age ${user.dob}</p>
   <p>Gender ${user.gender}</p>
