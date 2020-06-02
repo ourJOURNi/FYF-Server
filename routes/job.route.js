@@ -3,8 +3,8 @@ const router = express.Router();
 
 var jobController  = require('../controller/job-controller');
 
-// Change to /apply route after favorites are done
-router.post('/', jobController.sendEmailApplication );
+router.get('/', jobController.getJobs );
+router.post('/send-application', jobController.sendEmailApplication );
 router.post('/get-favorites', jobController.getFavorites)
 router.post('/favorite', jobController.favoriteJob );
 router.post('/unfavorite', jobController.unFavoriteJob );

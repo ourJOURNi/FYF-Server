@@ -18,7 +18,7 @@ router.post('/unfollow', postController.unFollowPost)
 router.post('/get-followed-posts', postController.getFollowedPosts)
 
 router.post('/comment', postController.comment)
-router.delete('/delete-comment', postController.deleteComment)
+router.post('/delete-comment', postController.deleteComment)
 router.post('/edit-comment', postController.editCommment)
 
 router.post('/report', postController.reportComment)
@@ -29,8 +29,5 @@ router.post('/up-vote-post', postController.upVotePost)
 router.post('/down-vote-post', postController.downVotePost)
 router.post('/up-vote-comment', postController.upVoteComment)
 router.post('/down-vote-comment', postController.downVoteComment)
-
-
-
 
 module.exports = router;
