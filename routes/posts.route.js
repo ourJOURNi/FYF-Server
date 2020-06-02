@@ -18,7 +18,7 @@ router.post('/unfollow', postController.unFollowPost)
 router.post('/get-followed-posts', postController.getFollowedPosts)
 
 router.post('/comment', postController.comment)
-router.delete('/delete-comment', postController.deleteComment)
+router.post('/delete-comment', postController.deleteComment)
 router.post('/edit-comment', postController.editCommment)
 
 router.post('/report', postController.reportComment)
