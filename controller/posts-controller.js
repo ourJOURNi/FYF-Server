@@ -998,17 +998,20 @@ exports.comment = (req, res) => {
 
 exports.deleteComment = (req, res) => {
 
-  if (!req.body._id || !req.body.cid) {
+  if (!req.body._id || !req.body._cid) {
     return res.status(400).json({message: 'Call needs a Post _id and a comments _id , cid'});
   }
 
   // get post ID
   let id = req.body._id;
-  let cid = req.body.cid;
+  let cid = req.body._cid;
+
+  console.log(id)
+  console.log(cid)
 
   Post.findByIdAndUpdate(
-    id,
-    { $pull: { comments: { _id: cid } } },
+    {_id: id},
+    { $pull: { 'comments': { '_id': cid }  } },
     { new: true },
     (err, post) => {
 
@@ -1109,20 +1112,25 @@ exports.replyComment = (req, res) => {
                 if (commentsArray[i]._id == commentID) {
                   console.log('Attempting to Add Reply to Comment..');
 
-                  //
-                  Post.updateOne(
+                  Post.findOneAndUpdate(
                     { _id: postID, 'comments._id': commentID },
                     { $push: {'comments.$.replies': newReply }},
-                      (err, post) => {
+                    { new: true },
+                    (err, post) => {
 
-                    if ( err ) return res.status(400).send(err);
-                    if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
-                    if (post) return res.status(200).json({
-                      message: 'Reply has been added',
-                      post: postID,
-                      comment: commentID,
-                      newReply
-                    });
+                     if ( err ) return res.status(400).send(err);
+                     if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
+                     if (post) {
+                        console.log(post)
+                        return res.status(200).json({
+                        message: 'Reply has been added',
+                        post: postID,
+                        comment: commentID,
+                        userEmail: post.comments[i].userEmail,
+                        comments: post.comments,
+                        replies: post.comments[i].replies
+                     });
+                   }
 
                   })
                 }

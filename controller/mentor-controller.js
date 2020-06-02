@@ -1,8 +1,8 @@
-const Event = require('../models/mentor.model');
+const Mentor = require('../models/mentor.model');
 const nodemailer = require('nodemailer');
 
 exports.getMentors = (req, res) => {
-  Event.find( (err, mentors) => {
+  Mentor.find( (err, mentors) => {
     if (err) {
       return res.status(400).send('Error finding mentors')
     };

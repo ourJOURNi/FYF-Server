@@ -106,7 +106,8 @@ function retrieveFile(filename,res){
 
 const getParams = {
   Bucket: process.env.S3_BUCKET_NAME + '/profile-pictures',
-  Key: filename
+  Key: filename,
+  Body: file,
 };
 }
 

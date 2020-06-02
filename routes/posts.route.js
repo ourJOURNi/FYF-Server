@@ -30,7 +30,4 @@ router.post('/down-vote-post', postController.downVotePost)
 router.post('/up-vote-comment', postController.upVoteComment)
 router.post('/down-vote-comment', postController.downVoteComment)
 
-
-
-
 module.exports = router;

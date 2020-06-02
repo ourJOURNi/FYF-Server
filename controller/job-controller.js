@@ -2,15 +2,14 @@ const User = require('../models/user.model');
 const Job = require('../models/job.model');
 const nodemailer = require('nodemailer');
 
-  exports.getJobs = (req, res) => {
+exports.getJobs = (req, res) => {
     console.log('Getting all Jobs');
 
     Job.find((err, jobs) => {
       if (err) return res.status(400).send('Error finding jobs');
       return res.send(jobs);
     });
-  }
-
+}
 
 exports.getFavorites = (req, res) => {
   console.log('Getting all favorited Jobs');

@@ -10,7 +10,6 @@
   "author": "Eddie Taliaferro II",
   "license": "ISC",
   "dependencies": {
-    "aws-cloudfront-sign": "^2.2.0",
     "aws-sdk": "^2.658.0",
     "bcrypt": "^3.0.7",
     "config": "^3.3.1",
