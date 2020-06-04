@@ -279,9 +279,6 @@ exports.downVotePost = async (req, res) => {
   let postID = req.body.postID;
   let userEmail = req.body.userEmail;
 
-  let upvotes;
-  let downvotes;
-
   // If User has not downvoted already continue
   await Post.findOne({
     _id: postID,
@@ -343,6 +340,7 @@ exports.downVotePost = async (req, res) => {
                     }, (err, data) => {
 
                       let upvotes;
+                      let downvotes;
 
                       if (err) return res.status(400).json({message: 'err', error: err})
                       if (!data) return res.status(400).json({message: 'There was no post with that ID'});
@@ -550,11 +548,17 @@ exports.upVoteComment = (req, res) => {
                       },
                       { new: true },
                       (err, data) => {
+                        let downvotes = data.comments[0].downvotes;
+                        let upvotes = data.comments[0].upvotes;
+
                         if (err) return res.status(400).json({message: 'err', error: err})
                         if (!data) return res.status(400).json({message: 'There was no post with that ID'});
                         if (data) {
-                          return res.status(200).json({data})
+                          return res.status(200).json({
+                            upvotes, downvotes
+                            })
                         }
+
                       }
                     )
                   };
@@ -684,10 +688,15 @@ exports.downVoteComment = async (req, res) => {
                       },
                       { new: true },
                       (err, data) => {
+                        let downvotes = data.comments[0].downvotes;
+                        let upvotes = data.comments[0].upvotes;
+
                         if (err) return res.status(400).json({message: 'err', error: err})
                         if (!data) return res.status(400).json({message: 'There was no post with that ID'});
                         if (data) {
-                          return res.status(200).json({data})
+                          return res.status(200).json({
+                            upvotes, downvotes
+                            })
                         }
                       }
                     )
