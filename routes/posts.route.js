@@ -6,7 +6,7 @@ var postController  = require('../controller/posts-controller');
 
 router.get('/', postController.getPosts)
 router.post('/post-info', postController.getPostInfo)
-// router.post('/edit-post', postController.editPost);
+router.post('/edit-post', postController.editPost);
 router.post('/delete-post', postController.deletePost)
 
 router.post('/add-text-post', postController.addTextPost)

@@ -87,13 +87,30 @@ uploadProfilePicture = ( source, targetName, res ) => {
           console.log('Data from uploading to S3 Bucket: ');
           console.log(data);
 
+          const getParams = {
+            Bucket: process.env.S3_BUCKET_NAME + '/profile-pictures',
+            Key: targetName
+          };
+
+          s3.getObject(getParams, (data, err) => {
+            if(err) {
+              console.log('error');
+              return res.status(400).json({err: err})
+            }
+            console.log('Data:')
+            console.log(data)
+            return res.send({success:true});
+          });
+
           // Remove file from profile-picture-uploads directory
           fs.unlink(source, () => {
             console.log('Successfully uploaded the file. ' + source + ' was deleted from server directory');
           });
-          return res.send({success:true});
         }
-      });
+      })
+
+
+      
     }
     else{
       console.log({'err':err});
@@ -104,11 +121,7 @@ uploadProfilePicture = ( source, targetName, res ) => {
 //The retrieveFile function
 function retrieveFile(filename,res){
 
-const getParams = {
-  Bucket: process.env.S3_BUCKET_NAME + '/profile-pictures',
-  Key: filename,
-  Body: file,
-};
+
 }
 
 router.post('/upload-profile-picture', upload.single('profile-picture'), (req, res) => {
@@ -117,6 +130,7 @@ router.post('/upload-profile-picture', upload.single('profile-picture'), (req, r
 
   // uploadProfilePicture(source, targetName, res)
   uploadProfilePicture(req.file.path, req.file.filename ,res);
+  retrieveFile(req.file.filename, res)
 })
 
 module.exports = router;

@@ -868,7 +868,32 @@ exports.getFollowedPosts = (req, res) => {
 }
 
 exports.editPost = (req, res) => {
-  
+  console.log(req.body)
+
+  postID = req.body.postID;
+  newPost = req.body.newPost;
+
+
+  if( !postID || !newPost ) {
+    return res.status(400).json({
+      message: 'There was no postID, or newPost',
+      newPost});
+  }
+
+  Post.findOneAndUpdate(
+    { _id: postID },
+    { $set: {'post': newPost }},
+    { new: true },
+    (err, data ) => {
+
+      if(err) return res.status(400).json(err);
+      if(!data) return res.status(400).json({message: 'There was no post with that ID'});
+      if (data) {
+        console.log(data);
+        return res.status(200).json({message: 'post edit sucessful',post: data});
+      }
+
+    })
 }
 
 exports.deletePost = (req, res) => {
@@ -895,9 +920,6 @@ exports.deletePost = (req, res) => {
           return res.status(200).json(remainingPosts);
         }
       })
-
-
-      // return res.status(200).json(post);
     }
   })
 }
@@ -1090,6 +1112,7 @@ exports.replyComment = (req, res) => {
 }
 
 exports.editCommment = (req, res) => {
+
   console.log(req.body)
 
   postID = req.body.postID;
@@ -1103,17 +1126,19 @@ exports.editCommment = (req, res) => {
       newComment});
   }
 
-  Post.updateOne(
+  Post.findOneAndUpdate(
     { _id: postID, 'comments._id': commentID },
     { $set: {'comments.$.comment': newComment }},
     { new: true },
     (err, data ) => {
+      console.log(data);
 
       if(err) return res.status(400).json(err);
       if(!data) return res.status(400).json({message: 'There was no post with that ID'});
       if (data) {
-        console.log(data);
-        return res.status(200).json({message: 'comment edit sucessful'});
+        console.log('post:' + data.comments);
+        return res.status(200).json({message: 'comment edit sucessful',
+      newComment: data.comments});
       }
 
     }
