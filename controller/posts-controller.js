@@ -804,8 +804,9 @@ exports.followPost = (req, res) => {
 
     // Add this Posts's ID to this User's followedPost property
     User.findOneAndUpdate(
-      email,
+      { email: email },
       { $push: { followedPost: post } },
+      { new : true },
       (err, user) => {
 
       if (err) return res.status(400).json(err);

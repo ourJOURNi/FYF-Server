@@ -85,8 +85,15 @@ exports.unFavoriteJob = (req, res) => {
 }
 
 exports.sendEmailApplication = (req, res) => {
-  var user = req.body
+  var user = req.body.user;
+  var age = req.body.age;
+  var phoneNumber = req.body.phoneNumber;
+  var reason = req.body.reason;
+  var jobTitle = req.body.jobTitle;
+  var jobCompanyEmail = req.body.jobCompanyEmail;
+
   console.log(user);
+  console.log(jobCompanyEmail);
   // Set transport service which will send the emails
   var transporter =  nodemailer.createTransport({
     service: 'gmail',
@@ -101,20 +108,27 @@ exports.sendEmailApplication = (req, res) => {
 //  configuration for email details
  const mailOptions = {
   from: 'eddielacrosse2@gmail.com', // sender address
-  to: `${user.jobCompanyEmail}`, // list of receivers
-  subject: `United Way User ${user.fullName} Has Applied for your Position of ${user.jobTitle}`,
+  to: `${jobCompanyEmail}`, // list of receivers
+  subject: `Find Your Future User ${user.fullName} Has Applied for your Position of ${jobTitle}`,
   html: `
   <img style="width: 100px; margin: 35px 0 20px" src="cid:unique@logo.ee" />
-  <p>${user.fullName} has applied for the job of ${user.jobTitle} </p>
-  <p>Age ${user.dob}</p>
-  <p>Gender ${user.gender}</p>
-  <p>Address ${user.addressOne}, ${user.addressOne},${user.city}, ${user.state}, ${user.zip}</p>
-  <p>School ${user.school}</p>
-  <p>Grade ${user.grade}</p>
-  <p>Email ${user.email}</p>
-  <p>Profile Picture: ${user.profilePicture}</p>
-  <p>Resume ${user.resume}</p>
-  `
+  <p style="font-size: 1.2em"><b>${user.fullName} has applied for the job of ${jobTitle}.</b></p>
+  <p>Age: ${age}</p>
+  <p>Gender: <span style="text-transform: capitalize;">${user.gender}</span></p>
+  <p>Address: ${user.addressOne}, ${user.addressTwo}, ${user.city}, ${user.state}, ${user.zip}</p>
+  <p>School: ${user.school}</p>
+  <p>Grade: ${user.grade}</p>
+  <p>Email: ${user.email}</p>
+  <p>Phone Number: ${phoneNumber}</p>
+  <p>Profile Picture: ${user.profilePicture}</p><br/>
+  <p>Reason:<br/><span style="white-space: pre-wrap">${reason}</span></p>
+  <p>Resume: ${user.resume}</p>
+  `,
+  attachments: [{
+    filename: 'fyf-logo-2.png',
+    path: './assets/fyf-logo-2.png',
+    cid: 'unique@logo.ee'
+  }]
 };
 
  transporter.sendMail(mailOptions, function (err, info) {
