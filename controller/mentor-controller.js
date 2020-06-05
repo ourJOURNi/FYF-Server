@@ -44,7 +44,7 @@ exports.mentorMessage = (req, res) => {
   <p>Pro Pic: ${mentorMessage.studentProfilePic}</p>
   <br>
   <h3>Message:</h3>
-  <p>${mentorMessage.message.message}</p>
+  <p style="white-space: pre-wrap">${mentorMessage.message.message}</p>
   `,
   attachments: [{
     filename: 'fyf-logo-2.png',
