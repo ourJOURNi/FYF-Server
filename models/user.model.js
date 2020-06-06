@@ -50,12 +50,10 @@ const UserSchema = new mongoose.Schema(
       maxlength: 50
     },
     profilePicture: {
-      data: Buffer,
       type: String,
     },
     resume: {
       type: String,
-      maxlength: 50
     },
     email: {
       type: String,

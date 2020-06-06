@@ -71,6 +71,9 @@ const PostSchema = new mongoose.Schema({
   creatorEmail : {
     type: String
   },
+  creatorProfilePicture : {
+    type: String
+  },
   date : {
     type: Date
   },

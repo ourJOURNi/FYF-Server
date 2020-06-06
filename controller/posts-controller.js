@@ -37,9 +37,9 @@ exports.getPostInfo = (req, res) => {
 // Admin sends verified posts to Post collection.
 exports.addTextPost = (req, res) => {
 
-  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.post) {
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.creatorProfilePicture || !req.body.post) {
     console.log('Please enter a creator name, creator email, and a post');
-    return res.status(200).json({message: 'Please enter a creator name, creator email, and a post'});
+    return res.status(200).json({message: 'Please enter a creator name, creator email, creator profile picture and a post'});
   }
 
   // Add Current Date to Post

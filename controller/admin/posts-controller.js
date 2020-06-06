@@ -44,6 +44,7 @@ exports.verify = (req, res) => {
     let postInfo = {
       creatorName: post.creatorName,
       creatorEmail: post.creatorEmail,
+      creatorProfilePicture: post.creatorProfilePicture,
       post: post.post,
       date: post.date
     }
