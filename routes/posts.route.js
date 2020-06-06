@@ -23,6 +23,7 @@ router.post('/edit-comment', postController.editCommment)
 
 router.post('/report', postController.reportComment)
 router.post('/reply-comment', postController.replyComment)
+router.post('/delete-reply', postController.deleteReplyComment)
 // router.post('/reply-reply', postController.replyReply)
 
 router.post('/up-vote-post', postController.upVotePost)
