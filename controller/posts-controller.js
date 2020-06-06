@@ -906,7 +906,7 @@ exports.deletePost = (req, res) => {
   }
 
   Post.findByIdAndDelete(
-    {_id: postID},
+    {_id: ObjectId(postID)},
     (err, post) => {
     if ( err ) return res.status(400).json(err);
     if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
@@ -980,7 +980,7 @@ exports.deleteComment = (req, res) => {
 
   Post.findByIdAndUpdate(
     {_id: id},
-    { $pull: { 'comments': { '_id': cid }  } },
+    { $pull: { 'comments': { '_id': ObjectId(cid) }  } },
     { new: true },
     (err, post) => {
 
@@ -1045,12 +1045,12 @@ exports.replyComment = (req, res) => {
     postID,
     (err, post) => {
       if(err) {
-        return res.status(200).json({
+        return res.status(400).json({
           message: 'There was a an error finding the post id',
         err})
       }
       if(!post) {
-        return res.status(200).json({
+        return res.status(400).json({
           message: 'There was no post with that id'})
       }
       if(post) {
@@ -1065,6 +1065,8 @@ exports.replyComment = (req, res) => {
           userProfilePicture,
           userEmail
         }
+        
+        console.log('Details: ', req.body)
 
         let newReply = Reply(replyDetails);
 
@@ -1110,6 +1112,63 @@ exports.replyComment = (req, res) => {
     }
   )
 
+}
+
+exports.deleteReplyComment = (req, res) => {
+
+  if (!req.body._rid || !req.body._cid || !req.body._pid) {
+    return res.status(400).json({ message : 'Call needs a post ID, comments ID, and reply ID.' });
+  }
+
+  // get ID's
+  let rid = req.body._rid;
+  let cid = req.body._cid;
+  let pid = req.body._pid;
+
+  console.log('Reply ID: ', rid);
+  console.log('Comment ID: ', cid);
+  console.log('Post ID: ', pid);
+  
+  Post.findById(
+    pid,
+    (err, post) => {
+      if (err) return res.status(400).json({ message : 'There was an error finding the post' });
+      if (!post) return res.status(400).json({ message : 'Couldn\'t find post' });
+
+      let comments = post.comments;
+
+      // Find a Comment _id that matches the commentID of the incoming request
+      commentSearch(cid, comments);
+
+      function commentSearch(commentID, commentsArray){
+        for (let i=0; i < commentsArray.length; i++) {
+          if (commentsArray[i]._id == commentID) {
+            console.log('Attempting to delete reply from comment..');
+
+            Post.findOneAndUpdate(
+              { _id: pid, 'comments._id': commentID },
+              { $pull: {'comments.$.replies': { '_id': ObjectId(rid) } } },
+              { new: true },
+              (err, post) => {
+
+                if ( err ) return res.status(400).send(err);
+                if ( !post ) return res.status(400).json({ message: `Couldn\'t find either post with ID ${pid}, comment with ID ${cid}, or reply with ID ${rid}` });
+
+                console.log(post)
+                return res.status(200).json({
+                  message: `Reply with id ${rid} has been deleted`,
+                  post: pid,
+                  comment: commentID,
+                  userEmail: post.comments[i].userEmail,
+                  comments: post.comments,
+                  replies: post.comments[i].replies
+                });
+            });
+          }
+        }
+      }
+    }
+  )
 }
 
 exports.editCommment = (req, res) => {
