@@ -927,10 +927,11 @@ exports.deletePost = (req, res) => {
 
 exports.comment = (req, res) => {
 
-  console.log(req.body);
+  console.log('Request received:\n', req.body);
   let postID = req.body.postID;
   let userEmail = req.body.userEmail;
   let userFullName = req.body.userFullName;
+  let userProfilePicture = req.body.userProfilePicture;
   let comment = req.body.comment;
   let date = req.body.date;
 
@@ -942,26 +943,27 @@ exports.comment = (req, res) => {
   // get post ID
   let commentDetails = {
     date,
-    userEmail,
-    comment,
     userFullName,
-    userEmail
+    userEmail,
+    userProfilePicture,
+    comment
   }
 
   let newComment = Comment(commentDetails);
+  console.log('Comment:\n', newComment)
 
   Post.findByIdAndUpdate(
     postID,
-    { $push:
-      { comments: newComment  } },
-      { new: true},
-      (err, comment) => {
+    { $push: { comments: newComment } },
+    { new: true },
+    (err, comment) => {
 
-    if ( err ) return res.status(400).send(err);
-    if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });
+      if ( err ) return res.status(400).send(err);
+      if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });
+      console.log('Post:\n', comment);
 
-    // insert comment inside Post
-    return res.status(200).json(comment);
+      // insert comment inside Post
+      return res.status(200).json(comment);
   })
 }
 
@@ -1060,10 +1062,10 @@ exports.replyComment = (req, res) => {
 
         let replyDetails = {
           date,
-          reply,
           userFullName,
+          userEmail,
           userProfilePicture,
-          userEmail
+          reply
         }
         
         console.log('Details: ', req.body)
@@ -1092,12 +1094,17 @@ exports.replyComment = (req, res) => {
                      if ( err ) return res.status(400).send(err);
                      if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
                      if (post) {
-                        console.log(post)
+                        console.log(post);
+                        // for (comment of post['comments']) {
+                        //   console.log('Replies for this comment:\n', comment['replies'])
+                        // }
                         return res.status(200).json({
                         message: 'Reply has been added',
                         post: postID,
                         comment: commentID,
                         userEmail: post.comments[i].userEmail,
+                        userFullName: userFullName,
+                        userProfilePicture: userProfilePicture,
                         comments: post.comments,
                         replies: post.comments[i].replies
                      });

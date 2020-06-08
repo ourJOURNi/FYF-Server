@@ -10,6 +10,9 @@ const CommentSchema = new mongoose.Schema({
   userEmail : {
     type: String
   },
+  userProfilePicture : {
+    type: String
+  },
   comment : {
     type: String
   },
