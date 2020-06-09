@@ -190,7 +190,7 @@ changeResume = (oldResumeKey, res) => {
       return res.send({success:false});
     } else {
 
-      console.log('Deleting photo from  S3 Bucket: ');
+      console.log('Deleting Resume from  S3 Bucket: ');
       console.log(data);
     }
 

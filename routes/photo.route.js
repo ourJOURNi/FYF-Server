@@ -40,6 +40,7 @@ const upload = multer({
   // Filters what the files that are uploaded
   fileFilter: ( req, file, callback ) => {
     console.log('This is the file');
+    console.log(file);
 
     // captures to extension of the file e.i .png
     var ext = path.extname(file.originalname)
@@ -197,7 +198,7 @@ changeProfilePicture = (oldPhotoKey, res) => {
 
 router.post('/upload-profile-picture', upload.single('profile-picture'), (req, res) => {
   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
-  console.log(req.file);
+  console.log('file: ' + req.file);
 
   // uploadProfilePicture(source, targetName, res)
   uploadProfilePicture(req.file.path, req.file.filename ,res);
@@ -205,9 +206,6 @@ router.post('/upload-profile-picture', upload.single('profile-picture'), (req, r
 
 router.post('/change-profile-picture', upload.single('profile-picture-update'), (req, res) => {
   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
-
-  console.log(req.body.oldPhotoKey);
-  console.log(req.body.email);
 
   changeProfilePicture(req.body.oldPhotoKey)
   uploadChangedProfilePicture(req.file.path, req.file.filename, req.body.email , res);
