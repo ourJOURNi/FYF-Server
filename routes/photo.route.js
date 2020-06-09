@@ -198,7 +198,11 @@ changeProfilePicture = (oldPhotoKey, res) => {
 
 router.post('/upload-profile-picture', upload.single('profile-picture'), (req, res) => {
   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+<<<<<<< HEAD
   console.log('file: ' + req.file);
+=======
+  console.log('File: ', req.file);
+>>>>>>> 6c6e9b5ada8d9a7e5bfea3dacc92a3da51b6b4d7
 
   // uploadProfilePicture(source, targetName, res)
   uploadProfilePicture(req.file.path, req.file.filename ,res);
