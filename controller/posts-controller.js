@@ -927,17 +927,17 @@ exports.deletePost = (req, res) => {
 
 exports.comment = (req, res) => {
 
-  console.log('Request received:\n', req.body);
+  // console.log('Request received:\n', req.body);
   let postID = req.body.postID;
   let userFullName = req.body.userFullName;
   let userEmail = req.body.userEmail;
   let userProfilePicture = req.body.userProfilePicture;
   let comment = req.body.comment;
 
-  if (!postID || !userFullName || !userEmail ||  !userProfilePicture ||  !comment  ) {
-    console.log('figure it out');
-    return res.status(400).json({message: 'Call needs a Post _id, a comment, profile picture, and an email to identify user'});
-  }
+  // if (!postID || !userFullName || !userEmail ||  !userProfilePicture ||  !comment  ) {
+  //   console.log('figure it out');
+  //   return res.status(400).json({message: 'Call needs a Post _id, a comment, profile picture, and an email to identify user'});
+  // }
 
   let date = Date.now();
 
