@@ -929,16 +929,17 @@ exports.comment = (req, res) => {
 
   console.log('Request received:\n', req.body);
   let postID = req.body.postID;
-  let userEmail = req.body.userEmail;
   let userFullName = req.body.userFullName;
+  let userEmail = req.body.userEmail;
   let userProfilePicture = req.body.userProfilePicture;
-  let comment = req.body.comment;
-  let date = req.body.date;
+  let comment = req.body.comment.comment;
 
-  if (!postID || !userEmail || !userFullName ||  !comment || !date  ) {
+  if (!postID || !userFullName || !userEmail ||  !userProfilePicture ||  !comment  ) {
     console.log('figure it out');
-    return res.status(400).json({message: 'Call needs a Post _id, a comment, and an email to identify user'});
+    return res.status(400).json({message: 'Call needs a Post _id, a comment, profile picture, and an email to identify user'});
   }
+
+  let date = Date.now();
 
   // get post ID
   let commentDetails = {
