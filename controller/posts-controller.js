@@ -932,7 +932,7 @@ exports.comment = (req, res) => {
   let userFullName = req.body.userFullName;
   let userEmail = req.body.userEmail;
   let userProfilePicture = req.body.userProfilePicture;
-  let comment = req.body.comment.comment;
+  let comment = req.body.comment;
 
   if (!postID || !userFullName || !userEmail ||  !userProfilePicture ||  !comment  ) {
     console.log('figure it out');
