@@ -32,17 +32,17 @@ exports.registerUser = (req, res) => {
     });
 };
 
-exports.savePicture = (req, res) => {
+exports.doesUserExist = (req, res) => {
 
-    if (!req.body) {
-        console.log('No response body');
-        return res.send('Not fournd')
+    if (!req.body.email ) {
+        console.log('No r');
+        return res.status(400).json('Request needs an email in the request')
       }
 
-    if (req.body) {
-        console.log(req.body)
-    }
+    
 }
+
+
 
 
 exports.loginUser = (req, res) => {

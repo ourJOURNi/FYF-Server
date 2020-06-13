@@ -2,6 +2,20 @@ const User = require('../models/user.model');
 const express = require("express");
 const router = express.Router();
 
+
+router.post('/does-user-exist', async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (user) return res.status(400).json({
+    msg: "User already registered with that email address.",
+    exists: true
+  });
+  if (!user) return res.status(200).json({
+    exists: false,
+    email: req.body.email,
+    password: req.body.password
+  });
+})
+
 router.get('/', async (req, res) => {
   res.send('Made it to sign-up page');
 })

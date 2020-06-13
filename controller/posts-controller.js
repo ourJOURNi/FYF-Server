@@ -938,6 +938,7 @@ exports.comment = (req, res) => {
   //   console.log('figure it out');
   //   return res.status(400).json({message: 'Call needs a Post _id, a comment, profile picture, and an email to identify user'});
   // }
+  // Why isn't this working?
 
   let date = Date.now();
 

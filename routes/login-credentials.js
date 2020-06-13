@@ -4,7 +4,6 @@ const router = express.Router();
 const User = require('../models/user.model');
 const bcrypt = require("bcrypt");
 
-
 router.post('/',  (req, res) => {
   var code = req.body.code
   var email = req.body.email
