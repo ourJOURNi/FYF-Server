@@ -3,7 +3,7 @@ const multer     = require('multer');
 const dotenv     = require('dotenv');
 const express    = require("express");
 const router     = express.Router();
-const fs         =require('fs');
+const fs         = require('fs');
 const path       = require('path');
 const User       = require('../models/user.model');
 
@@ -31,7 +31,7 @@ const profilePictureStorage = multer.diskStorage({
 
     filename: function (req, file, cb) {
       // Adding the a counter and current date to each filename so that each file is unique
-      cb(null, '00' + counter + '00' + Date.now() + '_profile-picture');
+      cb(null, '00' + counter + '00' + Date.now() + '_profile-picture' + path.extname(file.originalname));
     }
 });
 
@@ -201,7 +201,7 @@ router.post('/upload-profile-picture', upload.single('profile-picture'), (req, r
   console.log('File: ', req.file);
 
   // uploadProfilePicture(source, targetName, res)
-  uploadProfilePicture(req.file.path, req.file.filename ,res);
+  uploadProfilePicture(req.file.path, req.file.filename, res);
 })
 
 router.post('/change-profile-picture', upload.single('profile-picture-update'), (req, res) => {

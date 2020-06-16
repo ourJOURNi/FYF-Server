@@ -15,11 +15,15 @@ exports.getMentors = (req, res) => {
 
 exports.addMentor = (req, res) => {
 
-  if ( !req.body.name || !req.body.email || !req.body.address || !req.body.city || !req.body.state || !req.body.zip || !req.body.phone || !req.body.description || !req.body.photo   ) {
+  let mentor = req.body.mentor;
+  let photoURL = req.body.photoURL;
+
+  if ( !mentor.name || !mentor.email || !mentor.address || !mentor.city || !mentor.state || !mentor.zip || !mentor.phone || !mentor.description || !mentor.photo   ) {
     return res.status(400).send('Please enter a name, email, address, city, state, description, and photo. You are missing one or more fields.');
   }
 
-  let newMentor = Mentor(req.body);
+  let newMentor = Mentor(mentor);
+  newMentor.photo = photoURL;
 
   newMentor.save( (err, mentor) => {
     if ( err ) {
