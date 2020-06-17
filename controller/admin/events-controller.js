@@ -16,22 +16,24 @@ exports.getEvents = (req, res) => {
 
 exports.addEvent = (req, res) => {
 
+  let eventDetails = req.body.event;
+  let photoURL = req.body.photoURL;
+
   let event = {
-    title: req.body.title,
-    organizer: req.body.organizer,
-    addressOne: req.body.addressOne,
-    addressTwo: req.body.addressTwo,
-    city: req.body.city,
-    state: req.body.state,
-    zip: req.body.zip,
+    title: eventDetails.title,
+    organizer: eventDetails.organizer,
+    addressOne: eventDetails.addressOne,
+    addressTwo: eventDetails.addressTwo,
+    city: eventDetails.city,
+    state: eventDetails.state,
+    zip: eventDetails.zip,
     // Date of the event
-    date: req.body.date,
-    time: req.body.time,
+    date: eventDetails.date,
+    time: eventDetails.time,
     // Date the event was created
     dateCreated: Date.now(),
-    description: req.body.description,
-    photo: req.body.photo,
-
+    description: eventDetails.description,
+    photo: photoURL
   }
 
   let newEvent = Event(event);
