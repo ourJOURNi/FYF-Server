@@ -11,13 +11,18 @@ exports.getJobs = (req, res) => {
 
 exports.addJob = (req, res) => {
 
-  if ( !req.body.title || !req.body.companyName || !req.body.companyEmail || !req.body.summary || !req.body.fullJobDescription || !req.body.rateOfPay ) {
+  let job = req.body.job;
+  let logoURL = req.body.logoURL;
+
+  if ( !job.title || !job.companyName || !job.companyEmail || !job.summary || !job.fullJobDescription || !job.rateOfPay ) {
     return res.status(400).send('Please enter a title, company name, company email, summary, full job description, rate of pay, and date created. You are missing one or more fields.');
   }
 
   // Add Current Date to Post
-  req.body.dateCreated = Date.now();
-  let newJob = Job(req.body);
+  job.dateCreated = Date.now();
+  let newJob = Job(job);
+  newJob.companyLogo = logoURL;
+  
 
   newJob.save( (err, job) => {
     if ( err ) {

@@ -13,6 +13,9 @@ let JobSchema = new mongoose.Schema({
     type: String,
     maxlength: 80
   },
+  companyLogo: {
+    type: String
+  },
   summary: {
     type: String,
     maxlength: 100

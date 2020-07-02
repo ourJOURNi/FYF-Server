@@ -23,6 +23,7 @@ const fairsRoute             = require("./routes/fairs.route");
 
 // Admin Routes
 const adminLoginRoute        = require("./routes/admin/login.route");
+const adminPhotoRoute        = require("./routes/admin/photo.route");
 const adminJobsRoute         = require("./routes/admin/jobs.route");
 const adminStudentsRoute     = require("./routes/admin/students.route");
 const adminMentorsRoute      = require("./routes/admin/mentor.route");
@@ -82,6 +83,7 @@ app.use("/api/fairs", fairsRoute);
 
 // Admin
 app.use("/api/admin/", adminLoginRoute);
+app.use("/api/admin/photo", adminPhotoRoute);
 app.use("/api/admin/jobs", adminJobsRoute);
 app.use("/api/admin/students", adminStudentsRoute);
 app.use("/api/admin/mentors", adminMentorsRoute);
