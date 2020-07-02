@@ -29,7 +29,46 @@ exports.getUserDetails = (req, res) => {
   })
 }
 
+exports.changeAbout = (req, res) => {
+  console.log(req.body)
+
+
+    let password = req.body.password;
+    let filter = {email: req.body.email};
+    let update = {about: req.body.newAbout};
+
+    User.findOne(
+      {email: req.body.email},
+      (err, user) => {
+        if (err) return res.status(400).json({msg: 'there was an err', err})
+
+        if (!user) return res.status(400).json({msg: 'there was no user with that email'})
+
+        user.comparePassword(password, (err, isMatch) => {
+          if (isMatch && !err) {
+            console.log('Passwords matched!');
+
+            User.updateOne(filter, update)
+            .then( data => {
+              console.log('Updated About:' + JSON.stringify(data));
+              return res.status(200).send(isMatch);
+            })
+            .catch( err => {
+              console.log(err);
+              return res.status(400).send('Someone already has that email address');
+            })
+          } else {
+            console.log('Wrong Password');
+            return res.status(400).json({ msg: 'Wrong Password' });
+          }
+        })
+      }
+    )
+}
+
+
 exports.changeEmail = (req, res) => {
+  console.log(req.body)
     if (!req.body.email || !req.body.password) {
       res.status(400).send('Please enter an email and password')
     } else {
@@ -141,53 +180,6 @@ exports.changePassword = (req, res) => {
   }
 }
 
-exports.changePhone = (req, res) => {
-  console.log(req.body);
-  // Find user, compare password, then update email.
-  if ( !req.body.newNumber || !req.body.password || !req.body.email) {
-    res.status(400).end('Please enter an new phone number, your password, and your email')
-  } else {
-
-      let email = req.body.email;
-      let newNumber = req.body.newNumber;
-      let password = req.body.password;
-      let filter = { email };
-      let update = { phone: newNumber};
-
-      User.findOne({ email }, (err, user) => {
-        if (err) {
-          return res.status(400).send({ 'msg': err });
-        }
-
-        if (!user) {
-          return res.status(400).json({ 'msg': 'The user does not exist' });
-        }
-
-        user.comparePassword(password, (err, isMatch) => {
-          if (isMatch && !err) {
-            console.log('Passwords matched!');
-
-            User.updateOne(filter, update)
-            .then( data => {
-              console.log('Changed Phone Number to: ' + newNumber);
-              console.log('Updated Phone:' + JSON.stringify(data));
-              // console.log('isMatch: ' + isMatch);
-              res.status(200).send(isMatch);
-            })
-            .catch( err => {
-              console.log(err);
-              res.status(400).send('There was an error');
-            })
-          } else {
-            console.log('Wrong Password');
-            res.status(400).json({'msg' : 'Wrong Password'})
-          }
-        })
-      })
-  }
-
-}
-
 exports.changeAddress = (req, res) => {
   // Find user
   // compare password
@@ -294,12 +286,3 @@ exports.changeSchool = (req, res) => {
       })
   }
 }
-
-exports.changeProfilePicture = (req, res) => {
-  res.status(200).send('Changed Profile Picture');
-}
-
-exports.changeResume = (req, res) => {
-  res.status(200).send('Changed Resume');
-}
-

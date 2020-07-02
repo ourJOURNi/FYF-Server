@@ -18,6 +18,9 @@ const CommentSchema = new mongoose.Schema({
 
 
 const PostQueueSchema = new mongoose.Schema({
+  title : {
+    type: String
+  },
   creatorName : {
     type: String
   },

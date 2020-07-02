@@ -18,6 +18,22 @@ exports.getPosts = (req, res) => {
   })
 }
 
+exports.getMyPosts = (req, res) => {
+  const email = req.body.email;
+  console.log(req.body)
+  User.find(
+    { email: email },
+    (err, user) => {
+      if (err) return res.status(400).json(err)
+      if (!user) return res.status(400).json({msg: 'there were no posts with that email address'})
+
+      let myPosts = user[0].posts;
+      return res.status(200).json(myPosts)
+
+    }
+  )
+}
+
 exports.getPostInfo = (req, res) => {
 
   let id = req.body._id;
@@ -36,8 +52,9 @@ exports.getPostInfo = (req, res) => {
 // Admin has access to PostQueue for verification
 // Admin sends verified posts to Post collection.
 exports.addTextPost = (req, res) => {
+  console.log(req.body);
 
-  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.creatorProfilePicture || !req.body.post) {
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.creatorProfilePicture || !req.body.post || !req.body.title) {
     console.log('Please enter a creator name, creator email, and a post');
     return res.status(200).json({message: 'Please enter a creator name, creator email, creator profile picture and a post'});
   }

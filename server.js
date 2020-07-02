@@ -43,7 +43,7 @@ if (!config.get("jwtSecret")) {
 }
 
 // config and connect to mongodb
-console.log('Attempting connection to Mongo Atlas...');
+// console.log('Attempting connection to Mongo Atlas...');
 console.log('Connecting via Mongoose to host: ');
 
 mongoose

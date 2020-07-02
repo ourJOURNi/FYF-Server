@@ -46,6 +46,7 @@ exports.verify = (req, res) => {
       creatorEmail: post.creatorEmail,
       creatorProfilePicture: post.creatorProfilePicture,
       post: post.post,
+      title: post.title,
       date: post.date
     }
 
@@ -56,7 +57,20 @@ exports.verify = (req, res) => {
     if (err)  {
       return res.status(400).json(err)
     };
-    return res.status(200).json({message: 'Post has been verified and added to Post Collection' , post});
+
+    // add to users own posts propety
+    User.updateOne(
+      { email: post.creatorEmail },
+      { $push: { posts: post}},
+      (err, post) => {
+        if (err) return res.status(400).json(err)
+        console.log(post)
+      }
+    )
+
+    PostQueue.find((err, posts) => {
+      return res.status(200).json(posts);
+    })
   })
   })
 }
@@ -88,6 +102,7 @@ exports.deny = (req, res) => {
       creatorName: post.creatorName,
       creatorEmail: post.creatorEmail,
       post: post.post,
+      title: post.title,
       date: post.date
     }
 
@@ -98,7 +113,10 @@ exports.deny = (req, res) => {
     if (err)  {
       return res.status(400).json(err)
     };
-    return res.status(200).json({message: 'Post has not been verified and will be added to Unverified Post Collection' , post});
+
+    PostQueue.find((err, posts) => {
+      return res.status(200).json(posts);
+    })
   })
   })
 }
@@ -164,7 +182,7 @@ exports.getReportedComments = (req, res) => {
       if ( err ) return res.status(400).json(err);
 
       console.log(`Reported Comments: \n` + reportedComments);
-      return res.status(200).json({message: `Reported Comments` ,reportedComments});
+      return res.status(200).json(reportedComments);
     }
   )
 }

@@ -32,9 +32,7 @@ router.post("/", async (req, res) => {
 
   user = new User({
     fullName: req.body.fullName,
-    addressOne: req.body.addressOne,
-    addressTwo: req.body.addressTwo,
-    phone: req.body.phone,
+    about: req.body.about,
     city: req.body.city,
     state: req.body.state,
     zip: req.body.zip,

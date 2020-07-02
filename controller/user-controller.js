@@ -38,8 +38,6 @@ exports.doesUserExist = (req, res) => {
         console.log('No r');
         return res.status(400).json('Request needs an email in the request')
       }
-
-    
 }
 
 

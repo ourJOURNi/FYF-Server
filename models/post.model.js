@@ -71,6 +71,9 @@ const PostSchema = new mongoose.Schema({
   creatorName : {
     type: String
   },
+  title : {
+    type: String
+  },
   creatorEmail : {
     type: String
   },
@@ -90,7 +93,6 @@ const PostSchema = new mongoose.Schema({
 },
   post : {
     type: String,
-    maxlength: 500
   },
   upvotes : {
     type: Number,

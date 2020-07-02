@@ -10,18 +10,9 @@ const UserSchema = new mongoose.Schema(
       type: String,
       maxlength: 50
     },
-    addressOne: {
+    about: {
       type: String,
-      maxlength: 50
-    },
-    addressTwo: {
-      type: String,
-      maxlength: 50
-    },
-    phone: {
-      type: String,
-      minlength: 10,
-      maxlength: 10
+      maxlength: 500
     },
     city: {
       type: String,
@@ -30,11 +21,6 @@ const UserSchema = new mongoose.Schema(
     state: {
       type: String,
       maxlength: 50
-    },
-    zip: {
-      type: String,
-      minlength: 5,
-      maxlength: 5
     },
     gender: {
       type: String,
@@ -70,7 +56,11 @@ const UserSchema = new mongoose.Schema(
     followedPost: {
     type: Array,
     default: []
-  },
+    },
+    posts: {
+    type: Array,
+    default: []
+    },
     eventsGoing: {
     type: Array,
     default: []
