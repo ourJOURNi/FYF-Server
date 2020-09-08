@@ -40,9 +40,6 @@ exports.doesUserExist = (req, res) => {
       }
 }
 
-
-
-
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
         return res.status(400).send({ 'msg': 'You need to send email and password' });
@@ -56,6 +53,7 @@ exports.loginUser = (req, res) => {
         if (!user) {
             return res.status(400).json({ 'msg': 'The user does not exist' });
         }
+
         user.comparePassword(req.body.password, (err, isMatch) => {
             if (isMatch && !err) {
                 console.log('Logged in as: ' + user.email);

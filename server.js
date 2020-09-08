@@ -20,6 +20,7 @@ const eventRoute             = require("./routes/events.route");
 const mentorRoute            = require("./routes/mentors.route");
 const postRoute              = require("./routes/posts.route");
 const fairsRoute             = require("./routes/fairs.route");
+const notificationsRoute     = require("./routes/notifications.route");
 
 // Admin Routes
 const adminLoginRoute        = require("./routes/admin/login.route");
@@ -80,6 +81,7 @@ app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/fairs", fairsRoute);
+app.use("/api/notifications", notificationsRoute);
 
 // Admin
 app.use("/api/admin/", adminLoginRoute);

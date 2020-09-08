@@ -20,13 +20,30 @@ exports.getUserDetails = (req, res) => {
     }
     if (!user) {
       console.log('There was no User')
-      return res.status(400).send({ 'msg': 'No user with that email' });
+      return res.status(400).json({msg: 'No user with that email' });
     } else
     {
       // console.log('This users details: ' + user)
       return res.status(200).send(user);
     }
   })
+}
+
+exports.getTheirDetails = (req, res) => {
+  console.log('Searching Database for Their Details');
+  let email = req.body.email;
+  if (!email) return res.status(400).json({msg: 'there was no email in the request'});
+
+  User.findOne(
+    { email },
+    (err, user) => {
+      if (err)return res.status(400).json(err);
+      if (!user)return res.status(400).json({msg: 'No user with that email' });
+
+      const details = user;
+      return res.status(200).json(details);
+    }
+  )
 }
 
 exports.changeAbout = (req, res) => {

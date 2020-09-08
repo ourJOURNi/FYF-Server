@@ -64,7 +64,11 @@ const UserSchema = new mongoose.Schema(
     eventsGoing: {
     type: Array,
     default: []
-}
+    },
+    notifications: {
+    type: Array,
+    default: []
+    },
 })
 
 // Called before save method on the model
