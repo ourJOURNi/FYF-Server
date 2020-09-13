@@ -11,7 +11,7 @@ function createToken(user) {
 }
 
 exports.getUserDetails = (req, res) => {
-  console.log('Searching Database for User Details');
+  // console.log('Searching Database for User Details');
   let email = req.body.email;
   User.findOne({ email }, (err, user) => {
     if (err) {
@@ -82,7 +82,6 @@ exports.changeAbout = (req, res) => {
       }
     )
 }
-
 
 exports.changeEmail = (req, res) => {
   console.log(req.body)

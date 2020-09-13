@@ -3,6 +3,45 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 
+let MessageSchema = new mongoose.Schema({
+  text: {
+    type: String,
+  },
+  date: {
+    type: Date
+  },
+  requestingUser: {
+    type: String
+  },
+  respondingUser: {
+    type: String
+  }
+});
+
+let StudentChatSchema = new mongoose.Schema({
+  chatId: {
+    type: String,
+    maxlength: 80
+  },
+  dateCreated: {
+    type: Date
+  },
+  from: {
+    type: String
+  },
+  messages: {
+    type: [MessageSchema]
+  },
+  requestingUserName: {
+    type: String
+  },
+  requestingUserEmail: {
+    type: String
+  },
+  respondingUserName: {
+    type: String
+  }
+});
 
 const UserSchema = new mongoose.Schema(
   {
@@ -62,6 +101,14 @@ const UserSchema = new mongoose.Schema(
     default: []
     },
     eventsGoing: {
+    type: Array,
+    default: []
+    },
+    studentChat: {
+    type: Array,
+    default: [StudentChatSchema]
+    },
+    mentorChat: {
     type: Array,
     default: []
     },

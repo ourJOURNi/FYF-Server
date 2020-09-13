@@ -13,7 +13,7 @@ exports.getPosts = (req, res) => {
 
     if (err) return res.status(400).json({ message: 'Error finding Posts'});
     if (!posts) return res.status(400).json({ message: 'There are no posts with that ID'});
-    console.log('Getting all Posts');
+    // console.log('Getting all Posts');
     return res.status(200).json(posts);
   })
 }
@@ -43,7 +43,7 @@ exports.getPostInfo = (req, res) => {
 
     if (err) return res.status(400).json({ message: 'Error finding Post'});
     if (!post) return res.status(400).json({ message: 'There are no posts with that ID'});
-    console.log('Getting all Posts');
+    // console.log('Getting all Posts');
     return res.status(200).json(post);
   })
 }

@@ -22,7 +22,7 @@ exports.addJob = (req, res) => {
   job.dateCreated = Date.now();
   let newJob = Job(job);
   newJob.companyLogo = logoURL;
-  
+
 
   newJob.save( (err, job) => {
     if ( err ) {
