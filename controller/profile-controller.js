@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require('../models/user.model');
 const bcrypt = require("bcrypt");
+const { object } = require("joi");
 const router = express.Router();
 
 function createToken(user) {
@@ -9,6 +10,22 @@ function createToken(user) {
       expiresIn: 200 // 86400 expires in 24 hours
     });
 }
+
+exports.getAllUsers = (req, res) => {
+
+  // Returns an Array of Objects that holds each user's name and email
+  User.find((err, users) => {
+    if(err) return res.status(400).json(err);
+    return res.status(200).json(users.map( users => {
+      let rObj = {};
+      rObj.name = users.fullName;
+      rObj.email = users.email;
+      rObj.profilePicture = users.profilePicture;
+      return rObj;
+    }))
+  })
+}
+
 
 exports.getUserDetails = (req, res) => {
   // console.log('Searching Database for User Details');

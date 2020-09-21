@@ -1,3 +1,4 @@
+
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -7,13 +8,19 @@ let MessageSchema = new mongoose.Schema({
   text: {
     type: String,
   },
+  chatId: {
+    type: String,
+  },
   date: {
     type: Date
   },
-  requestingUser: {
+  userFullName: {
     type: String
   },
-  respondingUser: {
+  userEmail: {
+    type: String
+  },
+  profilePicture: {
     type: String
   }
 });
@@ -32,14 +39,27 @@ let StudentChatSchema = new mongoose.Schema({
   messages: {
     type: [MessageSchema]
   },
-  requestingUserName: {
+  requestingUserFullname: {
     type: String
   },
   requestingUserEmail: {
     type: String
   },
-  respondingUserName: {
+  requestingUserPhoto: {
     type: String
+  },
+  respondingUserFullname: {
+    type: String
+  },
+  respondingUserEmail: {
+    type: String
+  },
+  respondingUserPhoto: {
+    type: String
+  },
+  isUser: {
+    type: Boolean,
+    default: false
   }
 });
 
