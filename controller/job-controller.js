@@ -96,7 +96,7 @@ exports.sendEmailApplication = (req, res) => {
   console.log(jobCompanyEmail);
   // Set transport service which will send the emails
   var transporter =  nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Gmail',
     auth: {
           user: 'eddielacrosse2@gmail.com',
           pass: 'taliaferro2'

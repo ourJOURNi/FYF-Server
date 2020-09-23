@@ -1,4 +1,3 @@
-
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -73,14 +72,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       maxlength: 500
     },
-    city: {
-      type: String,
-      maxlength: 50
-    },
-    state: {
-      type: String,
-      maxlength: 50
-    },
     gender: {
       type: String,
     },
@@ -126,7 +117,7 @@ const UserSchema = new mongoose.Schema(
     },
     studentChat: {
     type: Array,
-    default: [StudentChatSchema]
+    default: []
     },
     mentorChat: {
     type: Array,
@@ -150,15 +141,16 @@ UserSchema.pre('save', function(next){
 
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) return next(err);
-
-      user.password = hash;
-      this.password = user.password;
-      console.log('Password Hashed');
-      console.log(user.password);
-      next();
+      if(hash) {
+        user.password = hash;
+        this.password = user.password;
+        console.log('Password Hashed');
+        console.log(user.password);
+        return next();
+      }
     })
   })
-})
+  })
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {

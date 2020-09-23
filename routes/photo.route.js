@@ -52,8 +52,7 @@ const upload = multer({
       return callback(new Error('Only jpg, jpeg, or png image files are allowed.'))
     }
   callback(null, true)
-  },
-  limits: 1024 * 1024 });
+  },});
 
 uploadProfilePicture = ( source, targetName, res ) => {
 

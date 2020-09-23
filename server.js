@@ -145,7 +145,7 @@ function addChatRoomEvent(namespace, socket) {
       messages: []
     }
 
-    // update users student chat array
+    // Update Requesting Users' conversations
     User.findOneAndUpdate(
       { email: chatroom.requestingUserEmail},
       { $push: { studentChat:  newConvo} },
@@ -164,21 +164,21 @@ function addChatRoomEvent(namespace, socket) {
         console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
         socket.emit('newChatRoom', user.studentChat)
       });
-
-      User.findOneAndUpdate(
+    // Update Responding Users' conversations
+    User.findOneAndUpdate(
         { email: chatroom.respondingUserEmail},
         { $push: { studentChat:  newConvo} },
         { new: true },
         (err, user) => {
           if(err) { return console.log(err) }
-  
+
           // join a chat room with the conversations chatId.
           socket.join(chatroom.chatId, () => {
             let rooms = socket.rooms;
             console.log('Rooms in '.cyan + namespace.cyan + ' namespace'.cyan);
             console.log(rooms);
           });
-  
+
           // console.log(user.studentChat);
           console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
           socket.emit('newChatRoom', user.studentChat)
@@ -216,7 +216,7 @@ function getChatRoomEvent(namespace, socket) {
           if(room.chatId === chatroom.chatId) {
             console.log(room);
 
-        console.log('Updating messages from getChat');
+            console.log('Updating messages from getChat');
 
             socket.emit('messages', room)
           }
@@ -234,13 +234,14 @@ function addMessageEvent(namespace, socket) {
       text: message.message,
       chatId: message.chatId,
       date: Date.now(),
-      userFullName: message.userFullName,
+      userFullName: message.fullName,
       userEmail: message.email,
       profilePicture: message.profilePicture
     }
 
+    // Update Requesting Users' messages
     User.findOneAndUpdate(
-      { email: message.userEmail, "studentChat.$.chatId": message.chatID},
+      { email: message.requestingUserEmail, "studentChat.$.chatId": message.chatID},
       { $push: { 'studentChat.$.messages' : newMessage } },
       { new: true },
       (err, user) => {
@@ -251,7 +252,22 @@ function addMessageEvent(namespace, socket) {
         console.log('Updating messages from addMessage');
 
         socket.in(message.chatId).emit('messages', messages)
-      })
+      });
+
+      // Update Responding Users' messages
+      User.findOneAndUpdate(
+        { email: message.respondingUserEmail, "studentChat.$.chatId": message.chatID},
+        { $push: { 'studentChat.$.messages' : newMessage } },
+        { new: true },
+        (err, user) => {
+          if (err) return err;
+          messages = user.studentChat[0];
+          console.log('Created new message');
+          console.log(messages);
+          console.log('Updating messages from addMessage');
+
+          socket.in(message.chatId).emit('messages', messages)
+        });
 
   })
 }
