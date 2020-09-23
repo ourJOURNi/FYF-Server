@@ -175,7 +175,7 @@ uploadChangedProfilePicture = ( source, targetName, email, res ) => {
 }
 
 changeProfilePicture = (oldPhotoKey, res) => {
-
+  console.log('Attemping to delete old photo');
   //  Creates Object to be stored in S3
   const deleteParams = {
     Bucket      : process.env.S3_BUCKET_NAME,
