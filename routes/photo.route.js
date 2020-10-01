@@ -6,7 +6,7 @@ const router     = express.Router();
 const fs         = require('fs');
 const path       = require('path');
 const User       = require('../models/user.model');
-
+const Post      = require('../models/post.model');
 
 // Allows for us to use Environment Files
 dotenv.config();
@@ -148,7 +148,7 @@ uploadChangedProfilePicture = ( source, targetName, email, res ) => {
           console.log(email)
 
           User.updateOne(
-            {email: email},
+            { email: email},
             { $set: { 'profilePicture': objectUrl }},
             (err, data) => {
               if (err) return res.status(400).json({message: 'err', error: err})
@@ -159,8 +159,41 @@ uploadChangedProfilePicture = ( source, targetName, email, res ) => {
                 // Remove file from profile-picture-uploads directory
                 fs.unlink(source, () => {
                   console.log('Successfully uploaded the file. ' + source + ' was deleted from server directory');
-                  console.log(objectUrl)
-                  return res.status(200).json({objectUrl});
+                  console.log(' \n');
+
+                  // Update each Posts Profile Picture
+                  Post.updateMany(
+                    { creatorEmail: email },
+                    { creatorProfilePicture: objectUrl },
+                    { new: true },
+                    (err, posts) => {
+                      if (err) return res.status(400).json(err)
+                      console.log('Updated Post Profile Picture');
+                      console.log(posts);
+                      console.log(' \n');
+
+                      // Update all Comments profile pictures
+                      Post.updateMany(
+                        {"comments.$[].userProfilePicture": objectUrl },
+                        (err, posts) => {
+                          if (err) return res.status(400).json(err)
+
+                          console.log('updating comment profile picture');
+                          console.log(posts);
+                          console.log(' \n');
+                          // Update all Replies profile pictures
+                          Post.updateMany(
+                            { "comments.$[].replies.$[].userProfilePicture": objectUrl },
+                            (err, posts) => {
+                              if (err) return res.status(400).json(err)
+
+                              console.log('updating replies profile pictures');
+                              console.log(posts);
+                              console.log(' \n');
+                              return res.status(200).json({objectUrl});
+                            });
+                        });
+                    });
                 });
               }
             }
@@ -208,6 +241,8 @@ router.post('/change-profile-picture', upload.single('profile-picture-update'), 
 
   changeProfilePicture(req.body.oldPhotoKey)
   uploadChangedProfilePicture(req.file.path, req.file.filename, req.body.email , res);
-})
+});
+
+
 
 module.exports = router;

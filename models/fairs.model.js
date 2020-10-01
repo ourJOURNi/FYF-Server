@@ -30,14 +30,18 @@ let FairSchema = new mongoose.Schema({
     type: String,
     maxlength: 250
   },
-  description: {
-    type: String,
-  },
   students: {
     type: [],
     default: []
   },
-  partners: {
+  studentDescription: {
+    type: String,
+  },
+  studentAgenda: {
+    type: Array,
+    default: []
+  },
+  studentFAQ: {
     type: Array,
     default: []
   },
@@ -45,31 +49,44 @@ let FairSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  volunteers: {
-    type: Array,
-    default: []
-  },
-  studentAgenda: {
-    type: Array,
-    default: []
+  chaperoneDescription: {
+    type: String,
   },
   chaperoneAgenda: {
     type: Array,
     default: []
   },
+  chaperoneFAQ: {
+    type: Array,
+    default: []
+  },
+  volunteers: {
+    type: Array,
+    default: []
+  },
+  volunteerDescription: {
+    type: String,
+  },
   volunteerAgenda: {
     type: Array,
     default: []
+  },
+  volunteerFAQ: {
+    type: Array,
+    default: []
+  },
+  partners: {
+    type: Array,
+    default: []
+  },
+  partnerDescription: {
+    type: String,
   },
   partnerAgenda: {
     type: Array,
     default: []
   },
   partnerFAQ: {
-    type: Array,
-    default: []
-  },
-  volunteerFAQ: {
     type: Array,
     default: []
   }

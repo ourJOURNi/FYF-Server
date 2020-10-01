@@ -9,6 +9,6 @@ router.get('/', eventController.getEvents );
 router.post('/events-going', eventController.getEventsGoing );
 router.post('/go-to-event', eventController.goingToEvent );
 router.post('/dont-go-to-event', eventController.notGoingToEvent );
-router.post('/events-google-maps', eventController.eventGoogleMaps );
+router.post('/delete-event', eventController.deleteEvent );
 
 module.exports = router;

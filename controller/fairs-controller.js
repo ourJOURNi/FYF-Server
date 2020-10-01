@@ -61,20 +61,20 @@ exports.getFairs = (req, res) => {
 
 exports.getFair = (req, res) => {
 
-  let id = req.body.id;
+  let name = req.body.name;
   console.log('Fairs Controller: ')
-  console.log(id);
+  console.log(name);
 
-  Fair.findById(
-    id,
+  Fair.findOne(
+    {title: name},
     (err, fair) => {
-    if (err) return res.status(400).send('Error finding fair');
-    return res.status(200).send(fair);
+    if (err) return res.status(400).json('Error finding fair');
+    if (!fair) return res.status(400).json({msg: 'There were no fairs with that name'})
+    return res.status(200).json(fair);
   })
 }
 
 exports.registerStudent = (req, res) => {
-
   id = req.body.id
   name = req.body.name
   email = req.body.email,
@@ -84,11 +84,11 @@ exports.registerStudent = (req, res) => {
   gender = req.body.gender,
   lunch = req.body.lunch,
   interests = req.body.interests,
-  questionOne = req.body.questionOne,
-  questionTwo = req.body.questionTwo,
-  questionThree = req.body.questionThree,
-  questionFour = req.body.questionFour,
-  questionFive = req.body.questionFive
+  questionOne = req.body.question1,
+  questionTwo = req.body.question2,
+  questionThree = req.body.question3,
+  questionFour = req.body.question4,
+  questionFive = req.body.question5
 
   let student = {
     name,
@@ -98,11 +98,12 @@ exports.registerStudent = (req, res) => {
     phone,
     gender,
     lunch,
-    questionOne,
-    questionTwo,
-    questionThree,
-    questionFour,
-    questionFive,
+    interests,
+    question1: questionOne,
+    question2: questionTwo,
+    question3: questionThree,
+    question4: questionFour,
+    question5: questionFive,
     dateRegistered: format(Date.now(), 'MMMM dd, yyyy'),
     timeRegistered: format(Date.now(), 'hh:mm a')
   }
@@ -127,7 +128,7 @@ exports.registerStudent = (req, res) => {
         if ( fairStudents[i].email === student.email) {
           console.log('A Student already has that email address')
           // An Error Validation Message would go nice here. Toast? Alert?
-          return res.status(400).json('A Student already has that email address');
+          return res.status(401).json('A Student already has that email address');
         }
     }
 

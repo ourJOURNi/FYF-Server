@@ -109,6 +109,16 @@ exports.notGoingToEvent = (req, res) => {
 
 }
 
-exports.eventGoogleMaps = (res, req) => {
+exports.deleteEvent = (req, res) => {
+  const eventId = req.body._id;
+  if (!eventId) return res.status(400).json({msg: 'There was no Event with that ID'})
 
+  Event.findByIdAndDelete(
+    eventId,
+    (err, user) => {
+      if (err) return res.status(400).json(err)
+      if (!user) return res.status(400).json({msg: 'There is no event with that _id'});
+
+      return res.status(200).json(user)
+    });
 }

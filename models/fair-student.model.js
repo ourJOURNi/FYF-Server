@@ -18,27 +18,30 @@ FairStudentSchema = new mongoose.Schema({
   gender: {
     type: String,
   },
+  grade: {
+    type: String,
+  },
   lunch: {
     type: String,
   },
   interests: {
     type: String,
   },
-  questionOne: {
-    type: String,
+  question1: {
+    type: Object,
   },
-  questionTwo: {
-    type: String,
+  question2: {
+    type: Object,
   },
-  questionThree: {
-    type: String,
+  question3: {
+    type: Object,
   },
-  questionFour: {
-    type: String,
+  question4: {
+    type: Object,
   },
-  questionFive: {
-    type: String,
-  },
+  question5: {
+    type: Object,
+  }
 })
 
 module.exports = FairStudent = mongoose.model('FairStudent', FairStudentSchema);
