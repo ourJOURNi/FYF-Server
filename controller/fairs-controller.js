@@ -197,16 +197,22 @@ exports.registerStudent = (req, res) => {
 }
 
 exports.registerChaperone = (req, res) => {
+  id = req.body.id
+  name = req.body.name
+  email = req.body.email,
+  school = req.body.school,
+  phone = req.body.phone,
+  gender = req.body.gender,
+  lunch = req.body.lunch,
   console.log(req.body);
 
-  let id = req.body.id
-
   let chaperone = {
-    name: req.body.name,
-    email: req.body.email,
-    school: req.body.school,
-    phone: req.body.phone,
-    lunch: req.body.lunch,
+    name,
+    email,
+    school,
+    phone,
+    gender,
+    lunch,
     dateRegistered: format(Date.now(), 'MMMM dd, yyyy'),
     timeRegistered: format(Date.now(), 'hh:mm a')
   }
