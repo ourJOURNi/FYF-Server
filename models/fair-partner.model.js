@@ -5,6 +5,13 @@ FairPartnerSchema = new mongoose.Schema({
     type: String,
     maxlength: 100
   },
+  logo: {
+    type: String,
+  },
+  gender: {
+    type: String,
+    maxlength: 100
+  },
   email: {
     type: String,
     maxlength: 100
@@ -12,14 +19,21 @@ FairPartnerSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
-  company: {
+  organization: {
     type: String,
+  },
+  description: {
+    type: String,
+    maxlength: 600
   },
   lunch: {
     type: String,
   },
   colleagues: {
     type: String,
+  },
+  verified: {
+    type: Boolean,
   }
 })
 

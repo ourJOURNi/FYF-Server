@@ -5,6 +5,10 @@ FairStudentSchema = new mongoose.Schema({
     type: String,
     maxlength: 100
   },
+  waitlisted: {
+    type: Boolean,
+    default: false
+  },
   email: {
     type: String,
     maxlength: 100
