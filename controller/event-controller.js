@@ -93,6 +93,7 @@ exports.notGoingToEvent = (req, res) => {
       User.findByIdAndUpdate(
         id,
         { $pull: { eventsGoing: eventID }},
+        { new: true },
         ( err, user) => {
 
           if (!user) return res.status(400).json({message: 'There was no user with that id'});

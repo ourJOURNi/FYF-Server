@@ -120,19 +120,18 @@ exports.registerStudent = (req, res) => {
 
     console.log('student email');
     console.log(student.email);
-    let studentFound = false;
 
     // Search for any matching email addresses for students that have already resigtered for the fair.
 
-    // for(let i = 0; i < fairStudents.length; i++) {
+    for(let i = 0; i < fairStudents.length; i++) {
 
-    //     // If User enters an email that has already been registered.
-    //     if ( fairStudents[i].email === student.email) {
-    //       console.log('A Student already has that email address')
-    //       // An Error Validation Message would go nice here. Toast? Alert?
-    //       return res.status(401).json('A Student already has that email address');
-    //     }
-    // }
+        // If User enters an email that has already been registered.
+        if ( fairStudents[i].email === student.email) {
+          console.log('A Student already has that email address')
+          // An Error Validation Message would go nice here. Toast? Alert?
+          return res.status(401).json('A Student already has that email address');
+        }
+    }
 
     // Divide students into seperate arrays based on their school
     let studentsInSchool = []
@@ -142,8 +141,7 @@ exports.registerStudent = (req, res) => {
       }
     }
 
-    console.log(studentsInSchool.length);
-    console.log(studentsInSchool);
+    console.log('students at ' + student.school + ': ' + studentsInSchool.length);
 
     if (studentsInSchool.length >= 30) {
       console.log('There are more than 30 students registered at this high school');
@@ -264,11 +262,17 @@ exports.registerStudent = (req, res) => {
           <p>Gender: ${student.gender}</p>
           <p>Lunch: ${student.lunch}</p>
 
-          <p>Email: ${student.email}</p>
-          <p>School: ${student.school}</p>
-          <p>Phone: ${student.phone}</p>
-          <p>Gender: ${student.gender}</p>
-          <p>Lunch: ${student.lunch}</p>
+          <p>Interests: ${student.interests}</p>
+          <p>Question 1: ${student.question1.question}</p>
+          <p>Answer: ${student.question1.answer}</p>
+          <p>Question 2: ${student.question2.question}</p>
+          <p>Answer: ${student.question2.answer}</p>
+          <p>Question 3: ${student.question3.question}</p>
+          <p>Answer: ${student.question3.answer}</p>
+          <p>Question 4: ${student.question4.question}</p>
+          <p>Answer: ${student.question4.answer}</p>
+          <p>Question 5: ${student.question5.question}</p>
+          <p>Answer: ${student.question5.answer}</p>
 
           <hr>
           <p>If you need to change any of this information, please send an email to [enter email here] </p>
