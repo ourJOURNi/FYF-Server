@@ -10,12 +10,12 @@ exports.getNotifications = (req, res) => {
     return res.status(400).json({msg: 'No User email in request.'})
   }
 
-  User.find(
+  User.findOne(
     {email: email},
     (err, user) => {
       if(err) return res.status(400).json({msg: err})
       if(!user) return res.status(400).json({msg: 'there was no user with that email'})
-      return res.status(200).json(user[0]['notifications'])
+      return res.status(200).json(user['notifications'])
     }
   )
 }
@@ -23,6 +23,8 @@ exports.getNotifications = (req, res) => {
 exports.clearNotifications = (req, res) => {
   console.log('Clearing Notifications');
   email = req.body.email;
+  console.log(req.body);
+  
 
   if (!email) return res.status(400).json({msg: 'there is no email in the request'});
 
@@ -45,6 +47,11 @@ exports.commentedOnPostNotification = (req, res) => {
   let recievingUser = req.body.recievingUser;
   let postID = req.body.postID;
   let commentID = req.body.commentID;
+
+  if (instigatingUser === recievingUser) {
+    console.log('User commented on their own post, so they will not be notified');
+    return res.status(403).json({msg: 'User commented on their own post, so they will not be notified'})
+  }
 
   if (!instigatingUser || !recievingUser || !postID || !commentID) {
     return res.status(400).json({msg: 'No instigatingUser, recievingUser, postID, or commentID in request.'})
@@ -87,6 +94,7 @@ exports.commentedOnPostNotification = (req, res) => {
 }
 
 exports.replyToCommentNotification = (req, res) => {
+
   console.log('User has replied to Comment Notification');
 
   let instigatingUser = req.body.instigatingUser;
@@ -94,6 +102,11 @@ exports.replyToCommentNotification = (req, res) => {
   let postID = req.body.postID;
   let commentID = req.body.commentID;
   let replyID = req.body.replyID;
+
+  if (instigatingUser === recievingUser) {
+    console.log('User commented on their own post, so they will not be notified');
+    return res.status(403).json({msg: 'User commented on their own post, so they will not be notified'})
+  }
 
   if (!instigatingUser || !recievingUser || !postID || !commentID || !replyID) {
     return res.status(400).json({msg: 'No instigatingUser, recievingUser, postID, or commentID, replyID in request.'})

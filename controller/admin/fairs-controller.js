@@ -4,8 +4,73 @@ exports.getFairs = (req, res) => {
   Fair.find( (err, fairs) => {
     if (err) return res.status(400).send('Error finding fairs');
     console.log('Getting Fairs...');
-    console.log(fairs);
     return res.status(200).send(fairs);
+  })
+}
+
+exports.getFair = (req, res) => {
+
+  Fair.find( (err, fair) => {
+    if (err) return res.status(400).send('Error finding fairs');
+    // console.log(fair);
+    let students = fair[0].students;
+    let partners = fair[0].partners;
+    let chaperones = fair[0].chaperones;
+    let volunteers = fair[0].volunteers;
+
+    const schools = [
+      'Martin Luther King High School',
+      'Cass Technical High School',
+      'Renaissance High School'
+    ];
+    studentsBySchool = [];
+    chaperonesBySchool = [];
+
+    // Create a new array for each school. Each school is an array of student objects.
+    for (const school of schools) {
+      let schoolArray = new Array();
+      schoolArray.push({name: school})
+
+      for (const student of students) {
+        if (student.school === school) {
+          // console.log(student);
+          schoolArray.push(student)
+        }
+      }
+      studentsBySchool.push(schoolArray);
+    }
+    
+    // Chaperones by School
+    for (const school of schools) {
+      let chaperoneArray = new Array();
+      chaperoneArray.push({name: school})
+
+      for (const chaperone of chaperones) {
+        if (chaperone.school === school) {
+          // console.log(student);
+          chaperoneArray.push(chaperone)
+        }
+      }
+      chaperonesBySchool.push(chaperoneArray);
+    }
+
+    console.log('High schools & Number of students\n');
+    for (const schools of studentsBySchool) {
+
+      console.log(schools[0].name);
+      console.log(schools.length - 1);
+      console.log('\n');
+    }
+
+    // Push each array into studentsBySchool
+
+    console.log('# of Students Total: ' + students.length + '\n');
+    // console.log(studentsBySchool);
+    return res.status(200).json({
+      fair: fair,
+      studentsBySchool: studentsBySchool,
+      chaperonesBySchool: chaperonesBySchool
+    });
   })
 }
 

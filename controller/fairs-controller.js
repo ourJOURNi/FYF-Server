@@ -62,12 +62,12 @@ exports.getFairs = (req, res) => {
 
 exports.getFair = (req, res) => {
 
-  let name = req.body.name;
+  let id = req.body.id;
   console.log('Fairs Controller: ')
-  console.log(name);
+  console.log(id);
 
-  Fair.findOne(
-    {title: name},
+  Fair.findById(
+    id,
     (err, fair) => {
     if (err) return res.status(400).json('Error finding fair');
     if (!fair) return res.status(400).json({msg: 'There were no fairs with that name'})

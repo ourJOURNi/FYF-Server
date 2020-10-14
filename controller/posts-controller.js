@@ -979,10 +979,10 @@ exports.comment = (req, res) => {
 
       if ( err ) return res.status(400).send(err);
       if ( !comment ) return res.status(400).json({ message: 'there were no posts with this ID' });
-      console.log('Post:\n', comment);
+      console.log('newComment._id: \n', newComment._id);
 
       // insert comment inside Post
-      return res.status(200).json(comment);
+      return res.status(200).json(newComment._id);
   })
 }
 
@@ -1113,7 +1113,6 @@ exports.replyComment = (req, res) => {
                      if ( err ) return res.status(400).send(err);
                      if ( !post ) return res.status(400).json({ message: 'there were no posts with this ID' });
                      if (post) {
-                        console.log(post);
                         // for (comment of post['comments']) {
                         //   console.log('Replies for this comment:\n', comment['replies'])
                         // }
@@ -1125,7 +1124,8 @@ exports.replyComment = (req, res) => {
                         userFullName: userFullName,
                         userProfilePicture: userProfilePicture,
                         comments: post.comments,
-                        replies: post.comments[i].replies
+                        replies: post.comments[i].replies,
+                        newReply: newReply._id
                      });
                    }
 

@@ -5,7 +5,7 @@ const router = express.Router();
 var fairsController  = require('../../controller/admin/fairs-controller');
 
 router.get('/', fairsController.getFairs );
-
+router.post('/fair', fairsController.getFair );
 router.post('/add-fair', fairsController.addFair );
 router.delete('/delete-fair/:_id', fairsController.deleteFair );
 router.put('/update-fair', fairsController.updateFair );

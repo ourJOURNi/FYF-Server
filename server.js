@@ -97,6 +97,11 @@ app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
 app.use("/api/admin/fairs", adminFairsRoute);
 
+// User.watch().on(
+//   'change', data => { console.log(data);
+//   }
+// )
+
 const port = process.env.PORT || 3000;
 server = app.listen(port, () => console.log(`Listening on port ${port}...`));
 
