@@ -1,5 +1,6 @@
 const Fair = require('../../models/fairs.model');
 
+
 exports.getFairs = (req, res) => {
   Fair.find( (err, fairs) => {
     if (err) return res.status(400).send('Error finding fairs');
@@ -9,15 +10,21 @@ exports.getFairs = (req, res) => {
 }
 
 exports.getFair = (req, res) => {
-
-  Fair.find( (err, fair) => {
+  // console.log(req.body);
+  id = req.body._id;
+  console.log('Getting fair info...');
+  
+  Fair.findById(
+    id,
+    (err, fair) => {
     if (err) return res.status(400).send('Error finding fairs');
-    // console.log(fair);
-    let students = fair[0].students;
-    let partners = fair[0].partners;
-    let chaperones = fair[0].chaperones;
-    let volunteers = fair[0].volunteers;
+    let students = fair.students;
+    let partners = fair.partners;
+    let chaperones = fair.chaperones;
+    let volunteers = fair.volunteers;
 
+    // List of Schools
+    // Will need to be updated manually to add a school to the
     const schools = [
       'Martin Luther King High School',
       'Cass Technical High School',
@@ -39,7 +46,7 @@ exports.getFair = (req, res) => {
       }
       studentsBySchool.push(schoolArray);
     }
-    
+
     // Chaperones by School
     for (const school of schools) {
       let chaperoneArray = new Array();
@@ -115,7 +122,62 @@ exports.deleteFair = (req, res) => {
   res.status(200).json(req.params._id + ' Fair deleted');
 }
 
+exports.deleteStudentAgendaItem = (req, res) => {
+  console.log('Deleting Student Agenda Item... \n');
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.updateOne(
+    {_id: id},
+    {$unset: {['studentAgenda.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.updateOne(
+        {_id: id},
+        {$pull: {'studentAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair)
+          }
+        })
+    })
+  }
+
+exports.deleteChaperoneAgendaItem = (req, res) => {
+  console.log('Deleting Chaperone Agenda Item... \n');
+  console.log(req.body);
+
+}
+
+exports.deleteVolunteerAgendaItem = (req, res) => {
+  console.log('Deleting Volunteer Agenda Item... \n');
+  console.log(req.body);
+
+}
+
+exports.deletePartnerAgendaItem = (req, res) => {
+  console.log('Deleting Partner Agenda Item... \n');
+  console.log(req.body);
+
+}
+
 exports.updateFair = (req, res) => {
+  let date = req.body.date;
+  let time = req.body.time;
+  let isoDate = new Date(date + " " + time);
+
+  delete req.body.time;
+  req.body.date = isoDate;
+
+  console.log(req.body);
+  console.log(date);
+  console.log(time);
+  console.log(isoDate);
 
   if (!req.body._id  ) {
     return res.status(400).send('There was no _id in the request body');
@@ -136,4 +198,8 @@ exports.updateFair = (req, res) => {
     return res.status(200).send(fair);
     }
   )
+}
+
+exports.printStudents = (req, res) => {
+
 }
