@@ -163,7 +163,6 @@ exports.deleteVolunteerAgendaItem = (req, res) => {
 exports.deletePartnerAgendaItem = (req, res) => {
   console.log('Deleting Partner Agenda Item... \n');
   console.log(req.body);
-
 }
 
 exports.updateFair = (req, res) => {
