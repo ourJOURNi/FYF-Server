@@ -1,3 +1,4 @@
+const { json } = require('express');
 const Fair = require('../../models/fairs.model');
 
 
@@ -122,49 +123,6 @@ exports.deleteFair = (req, res) => {
   res.status(200).json(req.params._id + ' Fair deleted');
 }
 
-exports.deleteStudentAgendaItem = (req, res) => {
-  console.log('Deleting Student Agenda Item... \n');
-  let id = req.body.fairId;
-  let itemIndex = req.body.index;
-
-  Fair.updateOne(
-    {_id: id},
-    {$unset: {['studentAgenda.' + itemIndex]: 1}},
-    (err, fair) => {
-      Fair.updateOne(
-        {_id: id},
-        {$pull: {'studentAgenda': null}},
-        {new: true},
-        (err, fair) => {
-          if (err) return err;
-          if (!fair) {
-            return res.status(400).json({msg: 'No Fair with that ID'})
-          }
-          if (fair) {
-            console.log(fair);
-            return res.status(200).json(fair)
-          }
-        })
-    })
-  }
-
-exports.deleteChaperoneAgendaItem = (req, res) => {
-  console.log('Deleting Chaperone Agenda Item... \n');
-  console.log(req.body);
-
-}
-
-exports.deleteVolunteerAgendaItem = (req, res) => {
-  console.log('Deleting Volunteer Agenda Item... \n');
-  console.log(req.body);
-
-}
-
-exports.deletePartnerAgendaItem = (req, res) => {
-  console.log('Deleting Partner Agenda Item... \n');
-  console.log(req.body);
-}
-
 exports.updateFair = (req, res) => {
   let date = req.body.date;
   let time = req.body.time;
@@ -202,3 +160,552 @@ exports.updateFair = (req, res) => {
 exports.printStudents = (req, res) => {
 
 }
+
+
+exports.addStudentAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  console.log('Attempting to add Student Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'studentAgenda': { title: title, time: time } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.studentAgenda);
+    });
+}
+
+exports.deleteStudentAgendaItem = (req, res) => {
+  console.log('Deleting Student Agenda Item... \n');
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['studentAgenda.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'studentAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair.volunteers);
+            return res.status(200).json(fair.volunteers)
+          }
+        })
+    })
+}
+
+exports.editStudentAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  let itemIndex = req.body.index;
+  console.log('Attempting to edit Student Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  console.log(itemIndex);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['studentAgenda.' + itemIndex]: { title: title, time: time }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'studentAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.studentAgenda)
+          }
+        })
+    })
+}
+
+
+exports.addChaperoneAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  console.log('Attempting to add Chaperone Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'chaperoneAgenda': { title: title, time: time } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.chaperoneAgenda);
+    });
+}
+
+exports.deleteChaperoneAgendaItem = (req, res) => {
+  console.log('Deleting Chaperone Agenda Item... \n');
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['chaperoneAgenda.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'chaperoneAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.studentAgenda)
+          }
+        })
+    })
+
+}
+
+exports.editChaperoneAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  let itemIndex = req.body.index;
+  console.log('Attempting to edit Chaperone Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  console.log(itemIndex);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['chaperoneAgenda.' + itemIndex]: { title: title, time: time }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'chaperoneAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.chaperoneAgenda)
+          }
+        })
+    })
+}
+
+exports.addVolunteer = (req, res) => {
+  console.log('Attempting to ADD a volunteer');
+  let id = req.body.id;
+  let name = req.body.name;
+  let email = req.body.email;
+  let phone = req.body.phone;
+
+  Fair.findByIdAndUpdate(
+    id,
+    { $push: { 'volunteers': {
+      name: name,
+      email: email,
+      phone: phone
+    }}},
+    { new: true},
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return res.status(200).json({msg: 'there were no fairs with that id'});
+      if (fair) return res.status(200).json(fair['volunteers']);
+    }
+  )
+}
+
+exports.editVolunteer = (req, res) => {
+  console.log('Attempting to EDIT a volunteer');
+  let id = req.body.id;
+  let index = req.body.index;
+  let name = req.body.name;
+  let email = req.body.email;
+  let phone = req.body.phone;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['volunteers.' + index]: {
+      name: name,
+      email: email,
+      phone: phone }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteers': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            return res.status(200).json(fair.volunteers)
+          }
+        })
+    })
+}
+
+exports.deleteVolunteer = (req, res) => {
+  console.log('Attempting to DELETE a volunteer');
+  console.log(req.body);
+  
+  let id = req.body.id;
+  let index = req.body.index;
+
+  Fair.findByIdAndUpdate(
+    id,
+    { $unset: {['volunteers.' + index]: 1}},
+    { new: true},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteers': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            return res.status(200).json(fair.volunteers)
+          }
+        })
+    }
+  )
+}
+
+exports.addVolunteerAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  console.log('Attempting to add Volunteer Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'volunteerAgenda': { title: title, time: time } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.volunteerAgenda);
+    });
+}
+
+exports.deleteVolunteerAgendaItem = (req, res) => {
+  console.log('Deleting Volunteer Agenda Item... \n');
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['volunteerAgenda.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteerAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.volunteerAgenda)
+          }
+        })
+    })
+
+}
+
+exports.editVolunteerAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  let itemIndex = req.body.index;
+  console.log('Attempting to edit Volunteer Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  console.log(itemIndex);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['volunteerAgenda.' + itemIndex]: { title: title, time: time }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteerAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.volunteerAgenda)
+          }
+        })
+    })
+}
+
+exports.deleteVolunteerFAQ = (req, res) => {
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['volunteerFAQ.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteerFAQ': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.volunteerFAQ)
+          }
+        })
+    })
+}
+
+exports.editVolunteerFAQ = (req, res) => {
+  let id = req.body.id;
+  let index = req.body.index;
+  let question = req.body.question;
+  let answer = req.body.answer;
+  console.log('Attempting to edit Volunteer FAQ ...\n');
+  console.log(id);
+  console.log(index);
+  console.log(question);
+  console.log(answer);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['volunteerFAQ.' + index]: { question: question, answer: answer }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'volunteerFAQ': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.volunteerFAQ)
+          }
+        })
+    })
+}
+
+exports.addVolunteerFAQ = (req, res) => {
+  let id = req.body.id;
+  let question = req.body.question;
+  let answer = req.body.answer;
+  console.log('Attempting to add Volunteer Agenda Item ...\n');
+  console.log(id);
+  console.log(question);
+  console.log(answer);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'volunteerFAQ': { question: question, answer: answer } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.volunteerFAQ);
+    });
+}
+
+
+exports.addPartnerAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  console.log('Attempting to add Partner Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'partnerAgenda': { title: title, time: time } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.partnerAgenda);
+    });
+}
+
+exports.deletePartnerAgendaItem = (req, res) => {
+  console.log('Deleting Partner Agenda Item... \n');
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['partnerAgenda.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'partnerAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.partnerAgenda)
+          }
+        })
+    })
+}
+
+exports.editPartnerAgendaItem = (req, res) => {
+  let id = req.body.id;
+  let title = req.body.title;
+  let time = req.body.time;
+  let itemIndex = req.body.index;
+  console.log('Attempting to edit Partner Agenda Item ...\n');
+  console.log(id);
+  console.log(title);
+  console.log(time);
+  console.log(itemIndex);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['partnerAgenda.' + itemIndex]: { title: title, time: time }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'partnerAgenda': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.partnerAgenda)
+          }
+        })
+    })
+}
+
+exports.deletePartnerFAQ = (req, res) => {
+  let id = req.body.fairId;
+  let itemIndex = req.body.index;
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$unset: {['partnerFAQ.' + itemIndex]: 1}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'partnerFAQ': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.partnerFAQ)
+          }
+        })
+    })
+}
+
+exports.editPartnerFAQ = (req, res) => {
+  let id = req.body.id;
+  let index = req.body.index;
+  let question = req.body.question;
+  let answer = req.body.answer;
+  console.log('Attempting to edit Partner FAQ ...\n');
+  console.log(id);
+  console.log(index);
+  console.log(question);
+  console.log(answer);
+
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['partnerFAQ.' + index]: { question: question, answer: answer }}},
+    (err, fair) => {
+      Fair.findByIdAndUpdate(
+        {_id: id},
+        {$pull: {'partnerFAQ': null}},
+        {new: true},
+        (err, fair) => {
+          if (err) return err;
+          if (!fair) {
+            return res.status(400).json({msg: 'No Fair with that ID'})
+          }
+          if (fair) {
+            console.log(fair);
+            return res.status(200).json(fair.partnerFAQ)
+          }
+        })
+    })
+}
+
+exports.addPartnerFAQ = (req, res) => {
+  let id = req.body.id;
+  let question = req.body.question;
+  let answer = req.body.answer;
+  console.log('Attempting to add Partner Agenda Item ...\n');
+  console.log(id);
+  console.log(question);
+  console.log(answer);
+  Fair.findOneAndUpdate(
+    { _id: id },
+    { $push: { 'partnerFAQ': { question: question, answer: answer } } },
+    { new: true },
+    (err, fair) => {
+      if (err) return err;
+      if (!fair) return json({ msg: 'No fair with that ID' });
+      if (fair) return res.status(200).json(fair.partnerFAQ);
+    });
+}
+
