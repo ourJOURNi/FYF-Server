@@ -709,3 +709,39 @@ exports.addPartnerFAQ = (req, res) => {
     });
 }
 
+exports.verifyPartner = (req, res) => {
+  console.log('Attempting to VERIFY Partner \n');
+  console.log(req.body);
+  let id = req.body.id
+  let i = req.body.index
+  console.log('partners.'+i+'.verified');
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['partners.'+i+'.verified'] : true}},
+    {new: true},
+    (err, fair) => {
+      if (err) return res.status(400).json(err)
+      if (!fair) return res.status(400).json({msg: 'there was no fair with that id'})
+      if (fair) return res.status(200).json(fair['partners'])
+    }
+  )
+}
+
+exports.unverifyPartner = (req, res) => {
+  console.log('Attempting to UNVERIFY Partner \n');
+  console.log(req.body);
+  let id = req.body.id
+  let i = req.body.index
+  console.log('partners.'+i+'.verified');
+  Fair.findOneAndUpdate(
+    {_id: id},
+    {$set: {['partners.'+i+'.verified'] : false}},
+    {new: true},
+    (err, fair) => {
+      if (err) return res.status(400).json(err)
+      if (!fair) return res.status(400).json({msg: 'there was no fair with that id'})
+      if (fair) return res.status(200).json('good job')
+    }
+  )
+}
+

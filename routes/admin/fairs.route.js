@@ -25,6 +25,8 @@ router.post('/edit-partner-agenda-item', fairsController.editPartnerAgendaItem )
 router.post('/delete-partner-faq', fairsController.deletePartnerFAQ );
 router.post('/add-partner-faq', fairsController.addPartnerFAQ );
 router.post('/edit-partner-faq', fairsController.editPartnerFAQ );
+router.post('/verify-partner', fairsController.verifyPartner );
+router.post('/unverify-partner', fairsController.unverifyPartner );
 
 router.post('/add-volunteer', fairsController.addVolunteer );
 router.post('/edit-volunteer', fairsController.editVolunteer );
