@@ -32,13 +32,6 @@ exports.registerUser = (req, res) => {
     });
 };
 
-exports.doesUserExist = (req, res) => {
-
-    if (!req.body.email ) {
-        console.log('No r');
-        return res.status(400).json('Request needs an email in the request')
-      }
-}
 
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
@@ -66,12 +59,3 @@ exports.loginUser = (req, res) => {
         });
     });
 };
-
-exports.forgotPassword = (req, res) => {
-    console.log('request');
-    console.log(req.body);
-
-    if ( !req.body.password || !req.body.newPassword) {
-        res.status(400).send('Please enter an old password and a new password')
-      }
-}

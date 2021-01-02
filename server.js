@@ -5,9 +5,6 @@ const mongoose                = require("mongoose");
 const passport 	              = require('passport');
 const cors                    = require('cors');
 const dotenv                  = require('dotenv');
-const colors                  = require('colors');
-const User                    = require('../Express/models/user.model')
-
 
 // User Routes
 const landingRoute           = require("./routes/landing.route");
@@ -20,7 +17,6 @@ const jobRoute               = require("./routes/job.route");
 const eventRoute             = require("./routes/events.route");
 const mentorRoute            = require("./routes/mentors.route");
 const postRoute              = require("./routes/posts.route");
-const fairsRoute             = require("./routes/fairs.route");
 const notificationsRoute     = require("./routes/notifications.route");
 
 
@@ -32,7 +28,6 @@ const adminStudentsRoute     = require("./routes/admin/students.route");
 const adminMentorsRoute      = require("./routes/admin/mentor.route");
 const adminEventsRoute       = require("./routes/admin/events.route");
 const adminPostsRoute        = require("./routes/admin/posts.route");
-const adminFairsRoute        = require("./routes/admin/fairs.route");
 
 // Configure Environment Variables
 dotenv.config();
@@ -84,7 +79,6 @@ app.use("/api/jobs", jobRoute);
 app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
 app.use("/api/posts", postRoute);
-app.use("/api/fairs", fairsRoute);
 app.use("/api/notifications", notificationsRoute);
 
 // Admin
@@ -95,208 +89,199 @@ app.use("/api/admin/students", adminStudentsRoute);
 app.use("/api/admin/mentors", adminMentorsRoute);
 app.use("/api/admin/events", adminEventsRoute);
 app.use("/api/admin/posts", adminPostsRoute);
-app.use("/api/admin/fairs", adminFairsRoute);
 
-// User.watch().on(
-//   'change', data => { console.log(data);
-//   }
-// )
 
 const port = process.env.PORT || 3000;
-server = app.listen(port, () => console.log(`Listening on port ${port}...`));
-
-io = require('socket.io')(server);
-
-const studentNamespace = io.of('/student-chat')
-const mentorNamespace = io.of('/mentor-chat')
-
-studentNamespace.on('connection', socket => {
-    let namespace = 'student-chat';
-    getNameSpaceInfo(namespace, socket);
-    addChatRoomEvent(namespace, socket);
-    getChatRoomEvent(namespace, socket);
-    addMessageEvent(namespace, socket)
-    deleteMessagesEvent(namespace, socket)
-}
-)
+server = app.listen(port, () => {
+  console.log('Starting FYF Server\n');
+  console.log(`Listening on port ${port}...`)
+});
 
 
 
-function getNameSpaceInfo(namespace,socket) {
-  console.log(`${socket.id} connected to ${namespace} namespace. `.bgGrey.yellow)
-  console.log('\n');
-  console.log(`Active connections to ${namespace} namespace`.brightBlue);
-  console.log(Object.keys(socket.nsp.connected))
-  console.log('\n');
-}
+// io = require('socket.io')(server);
 
-function addChatRoomEvent(namespace, socket) {
-  socket.on('addChatroom', chatroom => {
-    // TODO: add chat to Database
-    console.log('new chat room added'.brightMagenta);
-    // console.log(chatroom)
+// const studentNamespace = io.of('/student-chat')
+// const mentorNamespace = io.of('/mentor-chat')
 
-    // create a new convo between two users
-    let newConvo = {
-      chatId: chatroom.chatId,
-      dateCreated: Date.now(),
-      requestingUserFullname: chatroom.requestingUserFullname,
-      requestingUserEmail: chatroom.requestingUserEmail,
-      requestingUserPhoto: chatroom.requestingUserPhoto,
-      respondingUserFullname: chatroom.respondingUserFullname,
-      respondingUserEmail: chatroom.respondingUserEmail,
-      respondingUserPhoto: chatroom.respondingUserPhoto,
-      isUser: false,
-      messages: []
-    }
+// studentNamespace.on('connection', socket => {
+//     let namespace = 'student-chat';
+//     getNameSpaceInfo(namespace, socket);
+//     addChatRoomEvent(namespace, socket);
+//     getChatRoomEvent(namespace, socket);
+//     addMessageEvent(namespace, socket)
+//     deleteMessagesEvent(namespace, socket)
+// }
+// )
+// function getNameSpaceInfo(namespace,socket) {
+//   console.log(`${socket.id} connected to ${namespace} namespace. `.bgGrey.yellow)
+//   console.log('\n');
+//   console.log(`Active connections to ${namespace} namespace`.brightBlue);
+//   console.log(Object.keys(socket.nsp.connected))
+//   console.log('\n');
+// }
+// function addChatRoomEvent(namespace, socket) {
+//   socket.on('addChatroom', chatroom => {
+//     // TODO: add chat to Database
+//     console.log('new chat room added'.brightMagenta);
+//     // console.log(chatroom)
 
-    // Update Requesting Users' conversations
-    User.findOneAndUpdate(
-      { email: chatroom.requestingUserEmail},
-      { $push: { studentChat:  newConvo} },
-      { new: true },
-      (err, user) => {
-        if(err) { return console.log(err) }
+//     // create a new convo between two users
+//     let newConvo = {
+//       chatId: chatroom.chatId,
+//       dateCreated: Date.now(),
+//       requestingUserFullname: chatroom.requestingUserFullname,
+//       requestingUserEmail: chatroom.requestingUserEmail,
+//       requestingUserPhoto: chatroom.requestingUserPhoto,
+//       respondingUserFullname: chatroom.respondingUserFullname,
+//       respondingUserEmail: chatroom.respondingUserEmail,
+//       respondingUserPhoto: chatroom.respondingUserPhoto,
+//       isUser: false,
+//       messages: []
+//     }
 
-        // join a chat room with the conversations chatId.
-        socket.join(chatroom.chatId, () => {
-          let rooms = socket.rooms;
-          console.log('Rooms in '.cyan + namespace.cyan + ' namespace'.cyan);
-          console.log(rooms);
-        });
+//     // Update Requesting Users' conversations
+//     User.findOneAndUpdate(
+//       { email: chatroom.requestingUserEmail},
+//       { $push: { studentChat:  newConvo} },
+//       { new: true },
+//       (err, user) => {
+//         if(err) { return console.log(err) }
 
-        // console.log(user.studentChat);
-        console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
-        socket.emit('newChatRoom', user.studentChat)
-      });
-    // Update Responding Users' conversations
-    User.findOneAndUpdate(
-        { email: chatroom.respondingUserEmail},
-        { $push: { studentChat:  newConvo} },
-        { new: true },
-        (err, user) => {
-          if(err) { return console.log(err) }
+//         // join a chat room with the conversations chatId.
+//         socket.join(chatroom.chatId, () => {
+//           let rooms = socket.rooms;
+//           console.log('Rooms in '.cyan + namespace.cyan + ' namespace'.cyan);
+//           console.log(rooms);
+//         });
 
-          // join a chat room with the conversations chatId.
-          socket.join(chatroom.chatId, () => {
-            let rooms = socket.rooms;
-            console.log('Rooms in '.cyan + namespace.cyan + ' namespace'.cyan);
-            console.log(rooms);
-          });
+//         // console.log(user.studentChat);
+//         console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
+//         socket.emit('newChatRoom', user.studentChat)
+//       });
+//     // Update Responding Users' conversations
+//     User.findOneAndUpdate(
+//         { email: chatroom.respondingUserEmail},
+//         { $push: { studentChat:  newConvo} },
+//         { new: true },
+//         (err, user) => {
+//           if(err) { return console.log(err) }
 
-          // console.log(user.studentChat);
-          console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
-          socket.emit('newChatRoom', user.studentChat)
-        });
-    });
-}
+//           // join a chat room with the conversations chatId.
+//           socket.join(chatroom.chatId, () => {
+//             let rooms = socket.rooms;
+//             console.log('Rooms in '.cyan + namespace.cyan + ' namespace'.cyan);
+//             console.log(rooms);
+//           });
 
-function getChatRoomEvent(namespace, socket) {
+//           // console.log(user.studentChat);
+//           console.log(`Creating a new chat room between ${chatroom.requestingUserFullname} and ${chatroom.respondingUserFullname}`);
+//           socket.emit('newChatRoom', user.studentChat)
+//         });
+//     });
+// }
+// function getChatRoomEvent(namespace, socket) {
+// function safeJoin(currentId) {
+//     let previousId;
+//     socket.leave(previousId);
+//     socket.join(currentId, () => {
+//       let rooms = socket.rooms;
+//       console.log(rooms)
+//     console.log('Joined room: ' + currentId);
+//     previousId = currentId;
+//     });
+// }
+// socket.on('getChat', chatroom => {
+//     // console.log(Object.values(socket));
+//     // console.log(chatroom);
+//     console.log('getChat() - server.js');
+//     safeJoin(chatroom.chatId);
+//     // This will be read as an Observerable on the Client side because of the 'fromEvent' method of the socket class.
+//     // currentChatRoom
 
-  function safeJoin(currentId) {
-    let previousId;
-    socket.leave(previousId);
-    socket.join(currentId, () => {
-      let rooms = socket.rooms;
-      console.log(rooms)
-    console.log('Joined room: ' + currentId);
-    previousId = currentId;
-    });
-   }
+//     User.findOne(
+//       { email: chatroom.email},
+//       (err, user) => {
+//         if(err) return err;
 
-  socket.on('getChat', chatroom => {
-    // console.log(Object.values(socket));
-    // console.log(chatroom);
-    console.log('getChat() - server.js');
-    safeJoin(chatroom.chatId);
-    // This will be read as an Observerable on the Client side because of the 'fromEvent' method of the socket class.
-    // currentChatRoom
+//         for(let room of user.studentChat) {
+//           if(room.chatId === chatroom.chatId) {
+//             console.log(room);
 
-    User.findOne(
-      { email: chatroom.email},
-      (err, user) => {
-        if(err) return err;
+//             console.log('Updating messages from getChat');
 
-        for(let room of user.studentChat) {
-          if(room.chatId === chatroom.chatId) {
-            console.log(room);
+//             socket.emit('messages', room)
+//           }
+//         }
+//       })
+// })
+// }
+// function addMessageEvent(namespace, socket) {
 
-            console.log('Updating messages from getChat');
+//   socket.on('addMessage', message => {
+//     console.log(message);
 
-            socket.emit('messages', room)
-          }
-        }
-      })
-  })
-}
+//     let newMessage = {
+//       text: message.message,
+//       chatId: message.chatId,
+//       date: Date.now(),
+//       userFullName: message.fullName,
+//       userEmail: message.email,
+//       profilePicture: message.profilePicture
+//     }
 
-function addMessageEvent(namespace, socket) {
+//     // Update Requesting Users' messages
+//     User.findOneAndUpdate(
+//       { email: message.requestingUserEmail, "studentChat.$.chatId": message.chatID},
+//       { $push: { 'studentChat.$.messages' : newMessage } },
+//       { new: true },
+//       (err, user) => {
+//         if (err) return err;
+//         messages = user.studentChat[0];
+//         console.log('Created new message');
+//         console.log(messages);
+//         console.log('Updating messages from addMessage');
 
-  socket.on('addMessage', message => {
-    console.log(message);
+//         socket.in(message.chatId).emit('messages', messages)
+//       });
 
-    let newMessage = {
-      text: message.message,
-      chatId: message.chatId,
-      date: Date.now(),
-      userFullName: message.fullName,
-      userEmail: message.email,
-      profilePicture: message.profilePicture
-    }
+//       // Update Responding Users' messages
+//       User.findOneAndUpdate(
+//         { email: message.respondingUserEmail, "studentChat.$.chatId": message.chatID},
+//         { $push: { 'studentChat.$.messages' : newMessage } },
+//         { new: true },
+//         (err, user) => {
+//           if (err) return err;
+//           messages = user.studentChat[0];
+//           console.log('Created new message');
+//           console.log(messages);
+//           console.log('Updating messages from addMessage');
 
-    // Update Requesting Users' messages
-    User.findOneAndUpdate(
-      { email: message.requestingUserEmail, "studentChat.$.chatId": message.chatID},
-      { $push: { 'studentChat.$.messages' : newMessage } },
-      { new: true },
-      (err, user) => {
-        if (err) return err;
-        messages = user.studentChat[0];
-        console.log('Created new message');
-        console.log(messages);
-        console.log('Updating messages from addMessage');
+//           socket.in(message.chatId).emit('messages', messages)
+//         });
 
-        socket.in(message.chatId).emit('messages', messages)
-      });
-
-      // Update Responding Users' messages
-      User.findOneAndUpdate(
-        { email: message.respondingUserEmail, "studentChat.$.chatId": message.chatID},
-        { $push: { 'studentChat.$.messages' : newMessage } },
-        { new: true },
-        (err, user) => {
-          if (err) return err;
-          messages = user.studentChat[0];
-          console.log('Created new message');
-          console.log(messages);
-          console.log('Updating messages from addMessage');
-
-          socket.in(message.chatId).emit('messages', messages)
-        });
-
-  })
-}
-
+//   })
+// }
 // Refactor for Production later
 // Just here to delete messages after a certain number of messages sent for development purposes
-function deleteMessagesEvent(namespace, socket) {
+// function deleteMessagesEvent(namespace, socket) {
 
-  socket.on('deleteMessages', message => {
-    console.log(message.chatId);
+//   socket.on('deleteMessages', message => {
+//     console.log(message.chatId);
 
-    User.findOneAndUpdate(
-      { email: message.userEmail, "studentChat.$.chatId": message.chatID},
-      { $set:  { 'studentChat.$.messages': [] } },
-      { new: true },
-      (err, user) => {
-        if (err) return err;
-        messages = user.studentChat[0];
-        console.log('deleted all messages');
-        console.log(messages);
-        console.log('Updating messages from deleteMessages');
+//     User.findOneAndUpdate(
+//       { email: message.userEmail, "studentChat.$.chatId": message.chatID},
+//       { $set:  { 'studentChat.$.messages': [] } },
+//       { new: true },
+//       (err, user) => {
+//         if (err) return err;
+//         messages = user.studentChat[0];
+//         console.log('deleted all messages');
+//         console.log(messages);
+//         console.log('Updating messages from deleteMessages');
 
-        socket.in(message.chatId).emit('messages', messages)
-      })
+//         socket.in(message.chatId).emit('messages', messages)
+//       })
 
-  })
-}
+//   })
+// }

@@ -2,7 +2,7 @@ node_modules/
 keys/*
 .env
 package-lock.json
-fyf-server.pem
+fyf-server-final.pem
 rsa-APKAJZTTVLROZX5KZIAA.pem
 pk-APKAJZTTVLROZX5KZIAA.pem
 
