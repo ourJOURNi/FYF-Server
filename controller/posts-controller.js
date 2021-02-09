@@ -52,9 +52,10 @@ exports.getPostInfo = (req, res) => {
 // Admin has access to PostQueue for verification
 // Admin sends verified posts to Post collection.
 exports.addTextPost = (req, res) => {
+  console.log('Adding Text Posts');
   console.log(req.body);
 
-  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.creatorProfilePicture || !req.body.post || !req.body.title) {
+  if (!req.body.creatorName || !req.body.creatorEmail || !req.body.creatorProfilePicture || !req.body.hashtags || !req.body.post || !req.body.title) {
     console.log('Please enter a creator name, creator email, and a post');
     return res.status(200).json({message: 'Please enter a creator name, creator email, creator profile picture and a post'});
   }

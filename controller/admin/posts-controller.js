@@ -45,6 +45,7 @@ exports.verify = (req, res) => {
       creatorName: post.creatorName,
       creatorEmail: post.creatorEmail,
       creatorProfilePicture: post.creatorProfilePicture,
+      hashtags: post.hashtags,
       post: post.post,
       title: post.title,
       date: post.date

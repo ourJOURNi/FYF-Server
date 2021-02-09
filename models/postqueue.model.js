@@ -21,6 +21,10 @@ const PostQueueSchema = new mongoose.Schema({
   title : {
     type: String
   },
+  hashtags : {
+    type: Array,
+    default: []
+  },
   creatorName : {
     type: String
   },

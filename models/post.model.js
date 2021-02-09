@@ -74,6 +74,10 @@ const PostSchema = new mongoose.Schema({
   title : {
     type: String
   },
+  hashtags : {
+    type: Array,
+    default: []
+  },
   creatorEmail : {
     type: String
   },
