@@ -79,7 +79,7 @@ app.use("/api/posts", postRoute);
 app.use("/api/notifications", notificationsRoute);
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 server = app.listen(port, () => {
   console.log('Starting FYF Server\n');
   console.log(`Listening on port ${port}...`)
