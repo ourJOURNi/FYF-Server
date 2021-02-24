@@ -1,4 +1,4 @@
 {
   "jwtSecret": "secret",
-  "db" : "mongodb://127.0.0.1/United_Way_App"
+  "db" : "mongodb://127.0.0.1/UW_SEM_FAIRS"
  }
