@@ -20,14 +20,6 @@ const postRoute              = require("./routes/posts.route");
 const notificationsRoute     = require("./routes/notifications.route");
 
 
-// Admin Routes
-const adminLoginRoute        = require("./routes/admin/login.route");
-const adminPhotoRoute        = require("./routes/admin/photo.route");
-const adminJobsRoute         = require("./routes/admin/jobs.route");
-const adminStudentsRoute     = require("./routes/admin/students.route");
-const adminMentorsRoute      = require("./routes/admin/mentor.route");
-const adminEventsRoute       = require("./routes/admin/events.route");
-const adminPostsRoute        = require("./routes/admin/posts.route");
 
 // Configure Environment Variables
 dotenv.config();
@@ -80,15 +72,6 @@ app.use("/api/mentors", mentorRoute);
 app.use("/api/events", eventRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/notifications", notificationsRoute);
-
-// Admin
-app.use("/api/admin/", adminLoginRoute);
-app.use("/api/admin/photo", adminPhotoRoute);
-app.use("/api/admin/jobs", adminJobsRoute);
-app.use("/api/admin/students", adminStudentsRoute);
-app.use("/api/admin/mentors", adminMentorsRoute);
-app.use("/api/admin/events", adminEventsRoute);
-app.use("/api/admin/posts", adminPostsRoute);
 
 
 const port = process.env.PORT || 3000;
