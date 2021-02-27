@@ -64,7 +64,7 @@ passport.use(passportMiddleware);
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/", landingRoute);
+app.use("/api", landingRoute);
 // Signup
 app.use("/api/login-credentials", loginCredentialsRoute);
 app.use("/api/signup", signupRoute);
