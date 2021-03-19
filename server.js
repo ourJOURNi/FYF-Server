@@ -38,7 +38,7 @@ mongoose
   // For DeprecationWarning:  collection.ensureIndex is deprecated.  Use createIndexes instead.
   .set('useCreateIndex', true)
   .set('useFindAndModify', false)
-  .connect(process.env.DB_HOST_FYF, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.DB_HOST_DEV, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB...\n"))
   .catch(err =>
     console.error(err));
