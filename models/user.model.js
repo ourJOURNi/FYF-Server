@@ -95,6 +95,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       maxlength: 50
     },
+    phone: {
+      type: String,
+      maxlength: 10
+    },
     password: {
       type: String,
       minlength: 6
