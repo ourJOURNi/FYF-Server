@@ -10,7 +10,6 @@ function createToken(user) {
       expiresIn: 200 // 86400 expires in 24 hours
     });
 }
-
 exports.getAllUsers = (req, res) => {
 
   // Returns an Array of Objects that holds each user's name and email
@@ -25,8 +24,6 @@ exports.getAllUsers = (req, res) => {
     }))
   })
 }
-
-
 exports.getUserDetails = (req, res) => {
   // console.log('Searching Database for User Details');
   let email = req.body.email;
@@ -45,7 +42,6 @@ exports.getUserDetails = (req, res) => {
     }
   })
 }
-
 exports.getTheirDetails = (req, res) => {
   console.log('Searching Database for Their Details');
   let email = req.body.email;
@@ -62,7 +58,6 @@ exports.getTheirDetails = (req, res) => {
     }
   )
 }
-
 exports.changeAbout = (req, res) => {
   console.log(req.body)
 
@@ -99,7 +94,55 @@ exports.changeAbout = (req, res) => {
       }
     )
 }
+exports.changePhone = (req, res) => {
+  console.log('Attempting to change phone number...')
+  console.log(req.body)
+    if (!req.body.newPhone || !req.body.password) {
+      res.status(400).send('Please enter an phone and password')
+    } else {
 
+      let newPhone = req.body.newPhone;
+      let email = req.body.email;
+      let password = req.body.password;
+      let filter = email;
+      let update = { phone: newPhone};
+
+      console.log('Finding user ...')
+      // Find user, compare password, then update email.
+      User.findOne({ email: email}, (err, user) => {
+        if (err) {
+          return res.status(400).send({ 'msg': err });
+        }
+
+        if (!user) {
+          return res.status(400).json({ 'msg': 'The user does not exist' });
+        }
+
+        if (user.phone === newPhone) {
+          return res.status(400).send('Please enter an email address that is different than your current one.');
+        }
+
+        console.log('Comparing passwords ...')
+        user.comparePassword(password, (err, isMatch) => {
+          if (isMatch && !err) {
+            console.log('Passwords matched!');
+            User.updateOne(filter, update)
+            .then( data => {
+              console.log('Updated Phone:' + JSON.stringify(data));
+              return res.status(200).send(isMatch);
+            })
+            .catch( err => {
+              console.log(err);
+              return res.status(400).send('Someone already has that phone address');
+            })
+          } else {
+            console.log('Wrong Password');
+            return res.status(400).json({ msg: 'Wrong Password' });
+          }
+        })
+      })
+    }
+}
 exports.changeEmail = (req, res) => {
   console.log(req.body)
     if (!req.body.email || !req.body.password) {
@@ -150,7 +193,6 @@ exports.changeEmail = (req, res) => {
       })
     }
 }
-
 exports.changePassword = (req, res) => {
   console.log('request');
   console.log(req.body);
@@ -212,7 +254,6 @@ exports.changePassword = (req, res) => {
     })
   }
 }
-
 exports.changeAddress = (req, res) => {
   // Find user
   // compare password
@@ -271,7 +312,6 @@ exports.changeAddress = (req, res) => {
     })
   }
 }
-
 exports.changeSchool = (req, res) => {
   console.log(req.body);
   // Find user, compare password, then update email.
