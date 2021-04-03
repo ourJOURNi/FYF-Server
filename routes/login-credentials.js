@@ -11,10 +11,12 @@ router.post('/',  (req, res) => {
   console.log(code);
   // Set transport service which will send the emails
   var transporter =  nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
     auth: {
-      user: 'eddielacrosse2@gmail.com',
-      pass: 'taliaferro2'
+          user: 'info@findyourfuturesem.org',
+          type: 'OAuth2',
+          serviceClient: '114638852401053554429',
+          privateKey: privateKey
       },
       debug: true, // show debug output
       logger: true // log information in console
@@ -22,7 +24,7 @@ router.post('/',  (req, res) => {
 
 //  configuration for email details
  const mailOptions = {
-  from: 'eddielacrosse2@gmail.com', // sender address
+  from: 'info@findyourfuturesem.org', // sender address
   to: `${email}`, // list of receivers
   subject: 'Find Your Future User Verification',
   html:
@@ -53,33 +55,31 @@ router.post('/forgot-password-email-code', (req, res) => {
 
   let email = req.body.email;
   let code = req.body.code;
+  let fyfLogo = "https://find-your-future.s3.us-east-2.amazonaws.com/app-logo/fyf-logo-2.png";
 
    // Set transport service which will send the emails
    var transporter =  nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
     auth: {
-          user: 'eddielacrosse2@gmail.com',
-          pass: 'taliaferro2'
+          user: 'info@findyourfuturesem.org',
+          type: 'OAuth2',
+          serviceClient: '114638852401053554429',
+          privateKey: privateKey
       },
-      // debug: true, // show debug output
-      // logger: true // log information in console
+      debug: true, // show debug output
+      logger: true // log information in console
   });
 
   //  configuration for email details
   const mailOptions = {
-    from: 'eddielacrosse2@gmail.com', // sender address
+    from: 'info@findyourfuturesem.org', // sender address
     to: `${email}`, // list of receivers
     subject: 'United Way User - Forgot Password',
     html: `
-      <img style="width: 100px; margin: 35px 0 20px" src="cid:unique@logo.ee" />
+      <img style="width: 200px; margin: 20px 0 20px" src="${fyfLogo}" /><br/>
       <h3>Here is your 6 digit code:</h3>
       <p>${code}.<br>Please use this code in the app to reset your password. </p>
     `,
-    attachments: [{
-      filename: 'fyf-logo-2.png',
-      path: './assets/fyf-logo-2.png',
-      cid: 'unique@logo.ee'
-    }]
   };
 
   transporter.sendMail(mailOptions, function (err, info) {

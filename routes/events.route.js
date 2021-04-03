@@ -1,5 +1,4 @@
 const express = require("express");
-const nodemailer = require('nodemailer');
 const router = express.Router();
 
 var eventController  = require('../controller/event-controller');
