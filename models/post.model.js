@@ -114,8 +114,6 @@ const PostSchema = new mongoose.Schema({
     type: Array,
     default: []
   }
-})
-
-
+});
 
 module.exports = Post = mongoose.model('Post', PostSchema);

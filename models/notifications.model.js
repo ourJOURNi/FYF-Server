@@ -12,8 +12,13 @@ const NotificationsSchema = new mongoose.Schema(
     instigatingUser: {
       type: String,
     },
+    instigatingUserProfilePicture: {
+      type: String,
+    },
     recievingUser: {
       type: String,
     },
   }
-)
+);
+
+

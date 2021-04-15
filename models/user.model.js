@@ -173,5 +173,12 @@ UserSchema.methods.generateAuthToken = function() {
   return token;
 }
 
-module.exports = User = mongoose.model('User', UserSchema);
 // exports.validate = validateUser;
+
+const User = mongoose.model('User', UserSchema);
+module.exports = User;
+
+// User.watch().on('change', data  =>  {
+//   console.log('YO!')
+//   console.log(data)
+// });
