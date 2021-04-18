@@ -10,6 +10,7 @@ const dotenv                  = require('dotenv');
 // User Routes
 const landingRoute           = require("./routes/landing.route");
 const signupRoute            = require("./routes/signup.route");
+const forgotPasswordRoute            = require("./routes/forgot-password.route");
 const loginCredentialsRoute  = require("./routes/login-credentials");
 const userRoute              = require("./routes/user.route");
 const photoRoute             = require("./routes/photo.route");
@@ -54,6 +55,7 @@ app.use("/api", landingRoute);
 // Signup
 app.use("/api/login-credentials", loginCredentialsRoute);
 app.use("/api/signup", signupRoute);
+app.use("/api/forgot-password", forgotPasswordRoute);
 app.use("/api/home/user", userRoute);
 // app.use("/api/home/jobs", profileRoute);
 app.use("/api/photo", photoRoute);
