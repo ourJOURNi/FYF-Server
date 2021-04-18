@@ -39,26 +39,27 @@ const upload = multer({
   storage: resumeStorage,
   // Filters what the files that are uploaded
   fileFilter: ( req, file, callback ) => {
-    console.log('This is the file');
-
-    // captures to extension of the file e.i .png
-    var ext = path.extname(file.originalname)
-
-    // Makes sure that the image file is either a .jpg, .jpeg, or .png file.
-    if( ext === '.pdf') {
-       console.log('The file extention is correct. Good Job!')
-    } else {
-      return callback(new Error('Only pdf files are allowed.'))
-    }
   callback(null, true)
   },
   limits: 1024 * 1024 });
 
-uploadResume = ( source, targetName, res ) => {
+uploadResume = ( file, source, targetName, res ) => {
 
   // source = full path of uploaded file
   // example : profile-picture-uploads/1588052734468_profile-picture
-  // targetName = filename of uploaded file
+  // targetName = filename of uploaded fileconsole.log('This is the file');
+  console.log(file)
+
+    // captures to extension of the file e.i .png
+    var ext = path.extname(file.originalname)
+
+    // Makes sure that the resume is a PDF file
+    if( ext === '.pdf') {
+       console.log('The file extention is correct. Good Job!')
+    } else {
+      console.error('File needs to be .pdf')
+       return res.status(400).json({msg: 'File needs to be a .pdf file'})
+    }
 
   console.log('preparing resume upload...');
 
@@ -200,10 +201,9 @@ changeResume = (oldResumeKey, res) => {
 
 router.post('/upload-resume', upload.single('resume'), (req, res) => {
   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
-  console.log(req.file);
 
   // uploadProfilePicture(source, targetName, res)
-  uploadResume(req.file.path, req.file.filename ,res);
+  uploadResume(req.file, req.file.path, req.file.filename ,res);
 })
 
 router.post('/change-resume', upload.single('resume-update'), (req, res) => {

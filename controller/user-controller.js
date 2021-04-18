@@ -7,7 +7,6 @@ function createToken(user) {
         expiresIn: 200 // 86400 expires in 24 hours
       });
 }
-
 exports.registerUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
         return res.status(400).json({ 'msg': 'You need to send email and password' });
@@ -31,8 +30,6 @@ exports.registerUser = (req, res) => {
         });
     });
 };
-
-
 exports.loginUser = (req, res) => {
     if (!req.body.email || !req.body.password) {
         return res.status(400).send({ 'msg': 'You need to send email and password' });
