@@ -43,7 +43,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB...\n"))
   .catch(err =>
     console.error(err));
-    
+
 app.use(passport.initialize());
 var passportMiddleware = require('./middleware/passport');
 passport.use(passportMiddleware);

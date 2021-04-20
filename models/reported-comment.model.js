@@ -4,6 +4,9 @@ const ReportedCommentSchema = new mongoose.Schema({
   commentDate : {
     type: String
   },
+  reportedUID : {
+    type: String
+  },
   commentID : {
     type: String
   },
@@ -25,10 +28,13 @@ const ReportedCommentSchema = new mongoose.Schema({
   reportedUserEmail : {
     type: String
   },
+  reportedUserProfilePicture : {
+    type: String
+  },
   reportedUserName : {
     type: String
   },
-  reportedReason : {
+  reportReason : {
     type: String
   }
 })

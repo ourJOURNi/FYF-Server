@@ -1017,20 +1017,52 @@ exports.deleteComment = (req, res) => {
 }
 
 exports.reportComment = (req, res) => {
+  console.log('Reporting comment...')
   console.log(req.body)
+  let reportedUID;
+  let postID = req.body.postID;
+  let commentID = req.body.commentID;
+  let commentContents = req.body.commentContents;
+  let reportedUserEmail = req.body.reportedUserEmail;
+  let reportedUserName = req.body.reportedUserName;
+  let reportedUserProfilePicture = req.body.reportedUserProfilePicture;
+  let reportReason = req.body.reportReason;
+  let userEmail = req.body.userEmail;
+  let userFullname = req.body.userFullname;
+  generateCode(12);
+  console.log('Reporting Comment: \n');
 
-  // if ( !req.body.commentID || !req.body.commentContents || !req.body.postID || !req.body.post || !req.body.userEmail || !req.body.userFullname || !req.body.reportedUserEmail || !req.body.reportedUserName || !req.body.reportReason || req.body.commentDate  ) {
-  //   return res.status(400).json({message: 'Please enter a Comment, Comment ID, Post, Post ID, User name and email of user reporting, and the name and email of user being reported'})
-  // }
+  function generateCode(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
 
+    for ( let i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    console.log('Generated Code: ' + result);
+    return reportedComment = ReportedComment({
+      postID,
+      commentID,
+      commentContents,
+      reportedUserEmail,
+      reportedUserName ,
+      reportedUserProfilePicture,
+      reportReason,
+      userEmail,
+      userFullname,
+      reportedUID: result,
+    });
+ }
   // Add Current Date to Post
-
-  let reportedComment = ReportedComment(req.body);
+  
+  console.log(reportedComment);
   reportedComment.save( (err, comment ) => {
 
     if ( err ) return res.status(400).json(err)
     if ( !comment ) return res.status(400).json({message: 'There were no comments to save'})
     if ( comment ) {
+      console.log('Comment Made: ')
       return res.status(200).json({message: 'comment report made!'});
     }
   });
