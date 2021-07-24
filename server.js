@@ -1,11 +1,11 @@
 const config                  = require("config");
 const express                 = require("express");
 const app                     = express();
-
-const mongoose   = require("mongoose");
+const mongoose                = require("mongoose");
 const passport 	              = require('passport');
 const cors                    = require('cors');
 const dotenv                  = require('dotenv');
+const WebSocket               = require('ws');
 
 // User Routes
 const landingRoute           = require("./routes/landing.route");
@@ -31,8 +31,6 @@ if (!config.get("jwtSecret")) {
   process.exit(1);
 }
 
-// config and connect to mongodb
-// console.log('Attempting connection to Mongo Atlas...');
 console.log(process.env.DB_HOST_DEV)
 console.log('Connecting via Mongoose to host: ');
 mongoose
@@ -72,3 +70,32 @@ server = app.listen(port, () => {
   console.log('Starting FYF Server\n');
   console.log(`Listening on port ${port}...`)
 });
+
+// WebSockets
+const wss = new WebSocket.Server({ port: 8081 });
+
+wss.on('connection', ws => {
+  onConnection(ws);
+  ws.on('message', message => {
+    onMessage(message, ws);
+  });
+  ws.on('error', error => {
+    OnError(error);
+  });
+   ws.on('close', ws=> {
+    onClose();
+})
+});
+
+function onConnection(ws) {
+  console.log('Connected to Web Socket');
+}
+function onMessage(message, ws) {
+  console.log(message)
+}
+function OnError(err) {
+  console.log(err)
+}
+function onClose(ws) {
+  console.log('Web Socket Closed.')
+}

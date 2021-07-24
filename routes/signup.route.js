@@ -17,6 +17,7 @@ router.post("/", (req, res) => {
         console.log(req.body);
         let user = {
           fullName: req.body.fullName,
+          phone: req.body.phone,
           about: req.body.about,
           gender: req.body.gender,
           dob: req.body.dob,
