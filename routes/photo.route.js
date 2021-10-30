@@ -16,7 +16,7 @@ aws.config.update({
     secretAccessKey: process.env.AWS_ACCESS_KEY,
     accessKeyId: process.env.AWS_ACCESS_ID,
     region: 'us-east-2'
-})
+});
 
 // Creates a S3 instances
 const s3 = new aws.S3();
