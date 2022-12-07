@@ -31,7 +31,8 @@ exports.registerUser = (req, res) => {
     });
 };
 exports.loginUser = (req, res) => {
-    console.log('Attempting to log in...')
+    console.log('Attempting to log in...');
+    console.log(req.body)
     if (!req.body.email || !req.body.password) {
         return res.status(400).send({ 'msg': 'You need to send email and password' });
     }

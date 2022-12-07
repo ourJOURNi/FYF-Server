@@ -1,5 +1,5 @@
 const aws        = require('aws-sdk');
-const multer     = require('multer');
+// const multer     = require('multer');
 const dotenv     = require('dotenv');
 const express    = require("express");
 const router     = express.Router();
@@ -26,34 +26,34 @@ const s3 = new aws.S3();
 var counter = 1;
 
 // Creates directory for profile pictures
-const profilePictureStorage = multer.diskStorage({
-    destination : 'profile-picture-uploads/',
+// const profilePictureStorage = multer.diskStorage({
+//     destination : 'profile-picture-uploads/',
 
-    filename: function (req, file, cb) {
-      // Adding the a counter and current date to each filename so that each file is unique
-      cb(null, '00' + counter + '00' + Date.now() + '_profile-picture' + path.extname(file.originalname));
-    }
-});
+//     filename: function (req, file, cb) {
+//       // Adding the a counter and current date to each filename so that each file is unique
+//       cb(null, '00' + counter + '00' + Date.now() + '_profile-picture' + path.extname(file.originalname));
+//     }
+// });
 
 
-const uploadUser = multer({
-  storage: profilePictureStorage,
-  // Filters what the files that are uploaded
-  fileFilter: ( req, file, callback ) => {
-    console.log('This is the file');
-    console.log(file);
+// const uploadUser = multer({
+//   storage: profilePictureStorage,
+//   // Filters what the files that are uploaded
+//   fileFilter: ( req, file, callback ) => {
+//     console.log('This is the file');
+//     console.log(file);
 
-    // captures to extension of the file e.i .png
-    var ext = path.extname(file.originalname)
+//     // captures to extension of the file e.i .png
+//     var ext = path.extname(file.originalname)
 
-    // Makes sure that the image file is either a .jpg, .jpeg, or .png file.
-    if( ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
-       console.log('The file extention is correct. Good Job!')
-    } else {
-      return callback(new Error('Only jpg, jpeg, or png image files are allowed.'))
-    }
-  callback(null, true)
-  },});
+//     // Makes sure that the image file is either a .jpg, .jpeg, or .png file.
+//     if( ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+//        console.log('The file extention is correct. Good Job!')
+//     } else {
+//       return callback(new Error('Only jpg, jpeg, or png image files are allowed.'))
+//     }
+//   callback(null, true)
+//   },});
 
 uploadProfilePicture = ( source, targetName, res ) => {
 
@@ -229,32 +229,32 @@ changeProfilePicture = (oldPhotoKey, res) => {
   })
 }
 
-partnerPictureStorage = multer.diskStorage({
-  destination: 'booth-partner-logos',
-  filename: function (req, file, cb) {
-    // Adding the a counter and current date to each filename so that each file is unique
-    cb(null, '00' + counter + '00' + Date.now() + '_booth-partner-logo' + path.extname(file.originalname));
-  }
-});
+// partnerPictureStorage = multer.diskStorage({
+//   destination: 'booth-partner-logos',
+//   filename: function (req, file, cb) {
+//     // Adding the a counter and current date to each filename so that each file is unique
+//     cb(null, '00' + counter + '00' + Date.now() + '_booth-partner-logo' + path.extname(file.originalname));
+//   }
+// });
 
-const uploadPartner = multer({
-  storage: partnerPictureStorage,
-  // Filters what the files that are uploaded
-  fileFilter: ( req, file, callback ) => {
-    console.log('This is the file');
-    console.log(file);
+// const uploadPartner = multer({
+//   storage: partnerPictureStorage,
+//   // Filters what the files that are uploaded
+//   fileFilter: ( req, file, callback ) => {
+//     console.log('This is the file');
+//     console.log(file);
 
-    // captures to extension of the file e.i .png
-    var ext = path.extname(file.originalname)
+//     // captures to extension of the file e.i .png
+//     var ext = path.extname(file.originalname)
 
-    // Makes sure that the image file is either a .jpg, .jpeg, or .png file.
-    if( ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
-       console.log('The file extention is correct. Good Job!')
-    } else {
-      return callback(new Error('Only jpg, jpeg, or png image files are allowed.'))
-    }
-  callback(null, true)
-  },});
+//     // Makes sure that the image file is either a .jpg, .jpeg, or .png file.
+//     if( ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+//        console.log('The file extention is correct. Good Job!')
+//     } else {
+//       return callback(new Error('Only jpg, jpeg, or png image files are allowed.'))
+//     }
+//   callback(null, true)
+//   },});
 
 uploadPartnerLogo = ( source, targetName, res ) => {
 
@@ -314,26 +314,26 @@ uploadPartnerLogo = ( source, targetName, res ) => {
     });
 }
 
-router.post('/upload-profile-picture', uploadUser.single('profile-picture'), (req, res) => {
-  //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
-  console.log('File: ', req.file);
+// router.post('/upload-profile-picture', uploadUser.single('profile-picture'), (req, res) => {
+//   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+//   console.log('File: ', req.file);
 
-  // uploadProfilePicture(source, targetName, res)
-  uploadProfilePicture(req.file.path, req.file.filename, res);
-})
+//   // uploadProfilePicture(source, targetName, res)
+//   uploadProfilePicture(req.file.path, req.file.filename, res);
+// })
 
-router.post('/change-profile-picture', uploadUser.single('profile-picture-update'), (req, res) => {
-  //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+// router.post('/change-profile-picture', uploadUser.single('profile-picture-update'), (req, res) => {
+//   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
 
-  changeProfilePicture(req.body.oldPhotoKey)
-  uploadChangedProfilePicture(req.file.path, req.file.filename, req.body.email , res);
-});
+//   changeProfilePicture(req.body.oldPhotoKey)
+//   uploadChangedProfilePicture(req.file.path, req.file.filename, req.body.email , res);
+// });
 
-router.post('/upload-booth-partner-logo', uploadPartner.single('booth-partner-logo'), (req, res) => {
-  //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+// router.post('/upload-booth-partner-logo', uploadPartner.single('booth-partner-logo'), (req, res) => {
+//   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
 
-  uploadPartnerLogo(req.file.path, req.file.filename, res);
-});
+//   uploadPartnerLogo(req.file.path, req.file.filename, res);
+// });
 
 
 module.exports = router;

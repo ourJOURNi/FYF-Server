@@ -1,5 +1,5 @@
 const aws        = require('aws-sdk');
-const multer     = require('multer');
+// const multer     = require('multer');
 const dotenv     = require('dotenv');
 const express    = require("express");
 const router     = express.Router();
@@ -26,22 +26,22 @@ const s3 = new aws.S3();
 var counter = 1;
 
 // Creates directory for profile pictures
-const resumeStorage = multer.diskStorage({
-    destination : 'resume-uploads/',
+// const resumeStorage = multer.diskStorage({
+//     destination : 'resume-uploads/',
 
-    filename: function (req, file, cb) {
-      // Adding the a counter and current date to each filename so that each file is unique
-      cb(null, '00' + counter + '00' + Date.now() + '_resume');
-    }
-});
+//     filename: function (req, file, cb) {
+//       // Adding the a counter and current date to each filename so that each file is unique
+//       cb(null, '00' + counter + '00' + Date.now() + '_resume');
+//     }
+// });
 
-const upload = multer({
-  storage: resumeStorage,
-  // Filters what the files that are uploaded
-  fileFilter: ( req, file, callback ) => {
-  callback(null, true)
-  },
-  limits: 1024 * 1024 });
+// const upload = multer({
+//   storage: resumeStorage,
+//   // Filters what the files that are uploaded
+//   fileFilter: ( req, file, callback ) => {
+//   callback(null, true)
+//   },
+//   limits: 1024 * 1024 });
 
 uploadResume = ( file, source, targetName, res ) => {
 
@@ -199,21 +199,21 @@ changeResume = (oldResumeKey, res) => {
 }
 
 
-router.post('/upload-resume', upload.single('resume'), (req, res) => {
-  //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+// router.post('/upload-resume', upload.single('resume'), (req, res) => {
+//   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
 
-  // uploadProfilePicture(source, targetName, res)
-  uploadResume(req.file, req.file.path, req.file.filename ,res);
-})
+//   // uploadProfilePicture(source, targetName, res)
+//   uploadResume(req.file, req.file.path, req.file.filename ,res);
+// })
 
-router.post('/change-resume', upload.single('resume-update'), (req, res) => {
-  //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
+// router.post('/change-resume', upload.single('resume-update'), (req, res) => {
+//   //Multer middleware adds file(in case of single file ) or files(multiple files) object to the request object.
 
-  console.log(req.body.oldResumeKey);
-  console.log(req.body.email);
+//   console.log(req.body.oldResumeKey);
+//   console.log(req.body.email);
 
-  changeResume(req.body.oldResumeKey)
-  uploadChangedResume(req.file.path, req.file.filename, req.body.email , res);
-})
+//   changeResume(req.body.oldResumeKey)
+//   uploadChangedResume(req.file.path, req.file.filename, req.body.email , res);
+// })
 
 module.exports = router;
